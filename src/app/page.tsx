@@ -2,7 +2,7 @@
 
 import Footer from "@/components/Footer";
 import Landing from "@/container/Landing";
-import { ReactQueryProvider } from "@/apiClient";
+import { ReactQueryProvider } from "@/config/apiClient";
 import { MapFilterProvider } from "@/context/MapFilterContext";
 
 export default function Home() {
