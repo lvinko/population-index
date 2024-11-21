@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -43,10 +43,10 @@ const Map = ({ data }: { data: PopulationData }) => {
     mapRef.current?.on('load', () => {
       mapRef.current?.addSource('ukraine', {
         type: 'geojson',
-        data: UkraineRegions as any,
+        data: UkraineRegions as unknown as GeoJSON.FeatureCollection,
       });
 
-      // // Add fill layer for regions
+      // Add fill layer for regions
       mapRef.current?.addLayer({
         id: 'ukraine-regions',
         type: 'fill',
@@ -78,7 +78,8 @@ const Map = ({ data }: { data: PopulationData }) => {
 
     // When the user moves their mouse over the state-fill layer, we'll update the
     // feature state for the feature under the mouse.
-    mapRef.current?.on('mousemove', 'ukraine-regions', (e: any) => {
+    mapRef.current?.on('mousemove', 'ukraine-regions', (e: mapboxgl.MapMouseEvent & { features?: mapboxgl.GeoJSONFeature[] }) => {
+      
       if (e.features && e.features.length > 0) {
         if (!!hoveredPolygonId) {
           mapRef.current?.setFeatureState(
@@ -86,13 +87,13 @@ const Map = ({ data }: { data: PopulationData }) => {
             { hover: false }
           );
         }
-        hoveredPolygonId = e.features[0].id;
+        hoveredPolygonId = e.features[0].id?.toString() ?? null;
         mapRef.current?.setFeatureState(
           { source: 'ukraine', id: hoveredPolygonId as string },
           { hover: true }
         );
-        const region = e.features[0].properties.name;
-        const regionId = e.features[0].properties.id;
+        const region = e.features[0]?.properties?.name;
+        const regionId = e.features[0]?.properties?.id;
         const yearData = data.find((item) => item.year === filters.year);
         const regionData = yearData?.regions.find((r) => r.id === regionId);
         const population = regionData?.dataset.population.find((p) => p.type === filters.type)?.value;

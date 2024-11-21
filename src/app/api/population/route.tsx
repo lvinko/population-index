@@ -1,7 +1,7 @@
 
-import { NextResponse, NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import UkraineData from '@/helpers/ua-data.json';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   return NextResponse.json(UkraineData);
 }
