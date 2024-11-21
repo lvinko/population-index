@@ -96,10 +96,14 @@ const Map = ({ data }: { data: PopulationData }) => {
         const yearData = data.find((item) => item.year === filters.year);
         const regionData = yearData?.regions.find((r) => r.id === regionId);
         const population = regionData?.dataset.population.find((p) => p.type === filters.type)?.value;
+        let hint = '';
+        if (regionId === 'UA43') {
+          hint = 'Дані втрачені через агресію росії';
+        }
 
         // Set popup content
         popup.setLngLat(e.lngLat)
-          .setHTML(`<div class="tooltip text-sm text-gray-500"><strong>${region}</strong><br>Population: ${population}</div>`)
+          .setHTML(`<div class="tooltip text-sm text-gray-500"><strong>${region}</strong><br>Population: ${population}<br><small>${hint}</small></div>`)
           .addTo(mapRef.current as mapboxgl.Map);
       }
     });

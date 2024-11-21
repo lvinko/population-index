@@ -14,8 +14,8 @@ const Landing = () => {
 
   return (
     <>
-      <MapFilter />
       <Map data={data} />
+      <MapFilter />
     </>
   );
 };

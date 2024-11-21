@@ -3,7 +3,7 @@ import Image from "next/image";
 const Footer = () => {
   return (
     <div>
-      <div className="h-16">
+      <div className="h-16 mt-10">
         <Image
           src="/logo.png"
           alt="Map"

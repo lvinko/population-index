@@ -4,7 +4,7 @@ const MapFilter = () => {
   const { filters, setFilters } = useMapFilter();
 
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex gap-4 items-center absolute bottom-24 right-8 z-10 text-zinc-900">
       <select
         value={filters.year}
         onChange={(e) => setFilters(prev => ({...prev, year: parseInt(e.target.value)}))}
