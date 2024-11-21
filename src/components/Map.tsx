@@ -1,11 +1,18 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import UkraineRegions from '@/helpers/ua.json';
 
-const Map = () => {
+import UkraineRegions from '@/helpers/ua.json';
+import { PopulationData } from '@/types/population';
+import { useMapFilter } from '@/context/MapFilterContext';
+
+const Map = ({ data }: { data: PopulationData }) => {
+  const { filters } = useMapFilter();
+  const mapRef = useRef<mapboxgl.Map | null>(null);
+
+  // NOTE: init map
   useEffect(() => {
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
     const map = new mapboxgl.Map({
@@ -15,7 +22,15 @@ const Map = () => {
       center: [30.5233, 48.5069],
       zoom: 6
     });
+    mapRef.current = map;
 
+    return () => {
+      mapRef.current?.remove();
+    }
+  }, []);
+
+  // NOTE: handle map events
+  useEffect(() => {
     let hoveredPolygonId: string | null;
 
     // Create a popup but don’t add it to the map yet
@@ -25,14 +40,14 @@ const Map = () => {
     });
 
     // Add Ukraine regions layer
-    map.on('load', () => {
-      map.addSource('ukraine', {
+    mapRef.current?.on('load', () => {
+      mapRef.current?.addSource('ukraine', {
         type: 'geojson',
         data: UkraineRegions as any,
       });
 
       // // Add fill layer for regions
-      map.addLayer({
+      mapRef.current?.addLayer({
         id: 'ukraine-regions',
         type: 'fill',
         source: 'ukraine',
@@ -49,7 +64,7 @@ const Map = () => {
       });
 
       // Add border line for regions
-      map.addLayer({
+      mapRef.current?.addLayer({
         id: 'ukraine-borders',
         type: 'line',
         source: 'ukraine',
@@ -63,34 +78,37 @@ const Map = () => {
 
     // When the user moves their mouse over the state-fill layer, we'll update the
     // feature state for the feature under the mouse.
-    map.on('mousemove', 'ukraine-regions', (e: any) => {
+    mapRef.current?.on('mousemove', 'ukraine-regions', (e: any) => {
       if (e.features && e.features.length > 0) {
         if (!!hoveredPolygonId) {
-          map.setFeatureState(
+          mapRef.current?.setFeatureState(
             { source: 'ukraine', id: hoveredPolygonId },
             { hover: false }
           );
         }
         hoveredPolygonId = e.features[0].id;
-        map.setFeatureState(
+        mapRef.current?.setFeatureState(
           { source: 'ukraine', id: hoveredPolygonId as string },
           { hover: true }
         );
         const region = e.features[0].properties.name;
-        const population = e.features[0].properties.population || 'unknown';
+        const regionId = e.features[0].properties.id;
+        const yearData = data.find((item) => item.year === filters.year);
+        const regionData = yearData?.regions.find((r) => r.id === regionId);
+        const population = regionData?.dataset.population.find((p) => p.type === filters.type)?.value;
 
         // Set popup content
         popup.setLngLat(e.lngLat)
-          .setHTML(`<div class="tooltip"><strong>${region}</strong><br>Population: ${population}</div>`)
-          .addTo(map);
+          .setHTML(`<div class="tooltip text-sm text-gray-500"><strong>${region}</strong><br>Population: ${population}</div>`)
+          .addTo(mapRef.current as mapboxgl.Map);
       }
     });
 
     // When the mouse leaves the state-fill layer, update the feature state of the
     // previously hovered feature.
-    map.on('mouseleave', 'ukraine-regions', () => {
+    mapRef.current?.on('mouseleave', 'ukraine-regions', () => {
       if (!!hoveredPolygonId) {
-        map.setFeatureState(
+        mapRef.current?.setFeatureState(
           { source: 'ukraine', id: hoveredPolygonId },
           { hover: false }
         );
@@ -99,11 +117,7 @@ const Map = () => {
 
       popup.remove();
     });
-
-    return () => {
-      map.remove();
-    }
-  }, []);
+  }, [filters]);
 
   return <div id="map" className="flex-1 w-full h-full"></div>
 }
