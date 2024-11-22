@@ -95,7 +95,7 @@ const Map = ({ data }: { data: PopulationData }) => {
         const region = e.features[0]?.properties?.name;
         const regionId = e.features[0]?.properties?.id;
         const yearData = data.find((item) => item.year === filters.year);
-        const regionData = yearData?.regions.find((r) => r.id === regionId);
+        const regionData = yearData?.regions.find((r) => r.code === regionId);
         const population = regionData?.dataset.population.find((p) => p.type === filters.type)?.value;
         let hint = '';
         if (regionId === 'UA43') {

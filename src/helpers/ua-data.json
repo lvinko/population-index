@@ -1,13 +1,13 @@
 [
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2003,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -30,8 +30,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -54,8 +54,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -78,8 +78,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -102,8 +102,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -126,8 +126,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -150,8 +150,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -174,8 +174,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -198,8 +198,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -222,8 +222,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -246,8 +246,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -270,8 +270,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -294,8 +294,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -318,8 +318,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -342,8 +342,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -366,8 +366,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -390,8 +390,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -414,8 +414,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -438,8 +438,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -462,8 +462,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -486,8 +486,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -510,8 +510,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -534,8 +534,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -558,8 +558,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -582,8 +582,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -608,13 +608,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2004,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -637,8 +637,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -661,8 +661,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -685,8 +685,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -709,8 +709,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -733,8 +733,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -757,8 +757,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -781,8 +781,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -805,8 +805,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -829,8 +829,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -853,8 +853,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -877,8 +877,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -901,8 +901,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -925,8 +925,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -949,8 +949,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -973,8 +973,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -997,8 +997,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -1021,8 +1021,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -1045,8 +1045,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -1069,8 +1069,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -1093,8 +1093,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -1117,8 +1117,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -1141,8 +1141,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -1165,8 +1165,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -1189,8 +1189,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -1215,13 +1215,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2005,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -1244,8 +1244,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -1268,8 +1268,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -1292,8 +1292,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -1316,8 +1316,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -1340,8 +1340,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -1364,8 +1364,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -1388,8 +1388,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -1412,8 +1412,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -1436,8 +1436,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -1460,8 +1460,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -1484,8 +1484,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -1508,8 +1508,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -1532,8 +1532,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -1556,8 +1556,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -1580,8 +1580,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -1604,8 +1604,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -1628,8 +1628,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -1652,8 +1652,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -1676,8 +1676,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -1700,8 +1700,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -1724,8 +1724,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -1748,8 +1748,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -1772,8 +1772,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -1796,8 +1796,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -1822,13 +1822,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2006,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -1851,8 +1851,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -1875,8 +1875,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -1899,8 +1899,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -1923,8 +1923,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -1947,8 +1947,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -1971,8 +1971,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -1995,8 +1995,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -2019,8 +2019,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -2043,8 +2043,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -2067,8 +2067,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -2091,8 +2091,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -2115,8 +2115,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -2139,8 +2139,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -2163,8 +2163,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -2187,8 +2187,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -2211,8 +2211,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -2235,8 +2235,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -2259,8 +2259,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -2283,8 +2283,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -2307,8 +2307,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -2331,8 +2331,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -2355,8 +2355,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -2379,8 +2379,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -2403,8 +2403,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -2429,13 +2429,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2007,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -2458,8 +2458,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -2482,8 +2482,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -2506,8 +2506,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -2530,8 +2530,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -2554,8 +2554,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -2578,8 +2578,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -2602,8 +2602,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -2626,8 +2626,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -2650,8 +2650,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -2674,8 +2674,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -2698,8 +2698,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -2722,8 +2722,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -2746,8 +2746,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -2770,8 +2770,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -2794,8 +2794,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -2818,8 +2818,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -2842,8 +2842,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -2866,8 +2866,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -2890,8 +2890,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -2914,8 +2914,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -2938,8 +2938,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -2962,8 +2962,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -2986,8 +2986,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -3010,8 +3010,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -3036,13 +3036,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2008,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -3065,8 +3065,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -3089,8 +3089,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -3113,8 +3113,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -3137,8 +3137,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -3161,8 +3161,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -3185,8 +3185,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -3209,8 +3209,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -3233,8 +3233,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -3257,8 +3257,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -3281,8 +3281,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -3305,8 +3305,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -3329,8 +3329,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -3353,8 +3353,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -3377,8 +3377,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -3401,8 +3401,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -3425,8 +3425,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -3449,8 +3449,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -3473,8 +3473,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -3497,8 +3497,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -3521,8 +3521,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -3545,8 +3545,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -3569,8 +3569,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -3593,8 +3593,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -3617,8 +3617,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -3643,13 +3643,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2009,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -3672,8 +3672,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -3696,8 +3696,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -3720,8 +3720,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -3744,8 +3744,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -3768,8 +3768,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -3792,8 +3792,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -3816,8 +3816,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -3840,8 +3840,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -3864,8 +3864,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -3888,8 +3888,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -3912,8 +3912,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -3936,8 +3936,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -3960,8 +3960,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -3984,8 +3984,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -4008,8 +4008,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -4032,8 +4032,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -4056,8 +4056,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -4080,8 +4080,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -4104,8 +4104,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -4128,8 +4128,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -4152,8 +4152,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -4176,8 +4176,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -4200,8 +4200,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -4224,8 +4224,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -4250,13 +4250,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2010,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -4279,8 +4279,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -4303,8 +4303,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -4327,8 +4327,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -4351,8 +4351,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -4375,8 +4375,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -4399,8 +4399,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -4423,8 +4423,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -4447,8 +4447,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -4471,8 +4471,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -4495,8 +4495,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -4519,8 +4519,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -4543,8 +4543,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -4567,8 +4567,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -4591,8 +4591,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -4615,8 +4615,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -4639,8 +4639,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -4663,8 +4663,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -4687,8 +4687,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -4711,8 +4711,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -4735,8 +4735,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -4759,8 +4759,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -4783,8 +4783,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -4807,8 +4807,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -4831,8 +4831,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -4857,13 +4857,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2011,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -4886,8 +4886,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -4910,8 +4910,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -4934,8 +4934,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -4958,8 +4958,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -4982,8 +4982,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -5006,8 +5006,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -5030,8 +5030,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -5054,8 +5054,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -5078,8 +5078,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -5102,8 +5102,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -5126,8 +5126,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -5150,8 +5150,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -5174,8 +5174,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -5198,8 +5198,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -5222,8 +5222,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -5246,8 +5246,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -5270,8 +5270,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -5294,8 +5294,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -5318,8 +5318,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -5342,8 +5342,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -5366,8 +5366,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -5390,8 +5390,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -5414,8 +5414,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -5438,8 +5438,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -5464,13 +5464,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2012,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -5493,8 +5493,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -5517,8 +5517,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -5541,8 +5541,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -5565,8 +5565,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -5589,8 +5589,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -5613,8 +5613,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -5637,8 +5637,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -5661,8 +5661,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -5685,8 +5685,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -5709,8 +5709,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -5733,8 +5733,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -5757,8 +5757,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -5781,8 +5781,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -5805,8 +5805,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -5829,8 +5829,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -5853,8 +5853,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -5877,8 +5877,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -5901,8 +5901,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -5925,8 +5925,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -5949,8 +5949,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -5973,8 +5973,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -5997,8 +5997,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -6021,8 +6021,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -6045,8 +6045,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -6071,13 +6071,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2013,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -6100,8 +6100,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -6124,8 +6124,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -6148,8 +6148,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -6172,8 +6172,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -6196,8 +6196,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -6220,8 +6220,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -6244,8 +6244,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -6268,8 +6268,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -6292,8 +6292,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -6316,8 +6316,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -6340,8 +6340,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -6364,8 +6364,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -6388,8 +6388,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -6412,8 +6412,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -6436,8 +6436,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -6460,8 +6460,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -6484,8 +6484,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -6508,8 +6508,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -6532,8 +6532,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -6556,8 +6556,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -6580,8 +6580,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -6604,8 +6604,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -6628,8 +6628,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -6652,8 +6652,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -6678,13 +6678,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2014,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -6707,8 +6707,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -6731,8 +6731,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -6755,8 +6755,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -6779,8 +6779,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -6803,8 +6803,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -6827,8 +6827,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -6851,8 +6851,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -6875,8 +6875,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -6899,8 +6899,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -6923,8 +6923,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -6947,8 +6947,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -6971,8 +6971,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -6995,8 +6995,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -7019,8 +7019,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -7043,8 +7043,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -7067,8 +7067,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -7091,8 +7091,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -7115,8 +7115,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -7139,8 +7139,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -7163,8 +7163,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -7187,8 +7187,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -7211,8 +7211,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -7235,8 +7235,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -7259,8 +7259,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -7285,13 +7285,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2015,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -7314,8 +7314,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -7338,8 +7338,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -7362,8 +7362,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -7386,8 +7386,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -7410,8 +7410,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -7434,8 +7434,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -7458,8 +7458,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -7482,8 +7482,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -7506,8 +7506,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -7530,8 +7530,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -7554,8 +7554,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -7578,8 +7578,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -7602,8 +7602,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -7626,8 +7626,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -7650,8 +7650,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -7674,8 +7674,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -7698,8 +7698,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -7722,8 +7722,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -7746,8 +7746,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -7770,8 +7770,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -7794,8 +7794,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -7818,8 +7818,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -7842,8 +7842,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -7866,8 +7866,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -7892,13 +7892,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2016,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -7921,8 +7921,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -7945,8 +7945,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -7969,8 +7969,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -7993,8 +7993,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -8017,8 +8017,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -8041,8 +8041,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -8065,8 +8065,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -8089,8 +8089,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -8113,8 +8113,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -8137,8 +8137,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -8161,8 +8161,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -8185,8 +8185,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -8209,8 +8209,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -8233,8 +8233,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -8257,8 +8257,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -8281,8 +8281,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -8305,8 +8305,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -8329,8 +8329,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -8353,8 +8353,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -8377,8 +8377,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -8401,8 +8401,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -8425,8 +8425,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -8449,8 +8449,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -8473,8 +8473,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -8499,13 +8499,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2017,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -8528,8 +8528,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -8552,8 +8552,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -8576,8 +8576,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -8600,8 +8600,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -8624,8 +8624,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -8648,8 +8648,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -8672,8 +8672,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -8696,8 +8696,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -8720,8 +8720,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -8744,8 +8744,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -8768,8 +8768,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -8792,8 +8792,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -8816,8 +8816,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -8840,8 +8840,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -8864,8 +8864,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -8888,8 +8888,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -8912,8 +8912,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -8936,8 +8936,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -8960,8 +8960,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -8984,8 +8984,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -9008,8 +9008,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -9032,8 +9032,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -9056,8 +9056,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -9080,8 +9080,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -9106,13 +9106,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2018,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -9135,8 +9135,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -9159,8 +9159,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -9183,8 +9183,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -9207,8 +9207,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -9231,8 +9231,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -9255,8 +9255,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -9279,8 +9279,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -9303,8 +9303,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -9327,8 +9327,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -9351,8 +9351,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -9375,8 +9375,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -9399,8 +9399,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -9423,8 +9423,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -9447,8 +9447,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -9471,8 +9471,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -9495,8 +9495,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -9519,8 +9519,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -9543,8 +9543,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -9567,8 +9567,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -9591,8 +9591,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -9615,8 +9615,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -9639,8 +9639,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -9663,8 +9663,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -9687,8 +9687,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -9713,13 +9713,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2019,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -9742,8 +9742,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -9766,8 +9766,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -9790,8 +9790,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -9814,8 +9814,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -9838,8 +9838,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -9862,8 +9862,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -9886,8 +9886,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -9910,8 +9910,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -9934,8 +9934,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -9958,8 +9958,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -9982,8 +9982,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -10006,8 +10006,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -10030,8 +10030,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -10054,8 +10054,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -10078,8 +10078,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -10102,8 +10102,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -10126,8 +10126,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -10150,8 +10150,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -10174,8 +10174,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -10198,8 +10198,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -10222,8 +10222,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -10246,8 +10246,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -10270,8 +10270,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -10294,8 +10294,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -10320,13 +10320,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2020,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -10349,8 +10349,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -10373,8 +10373,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -10397,8 +10397,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -10421,8 +10421,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -10445,8 +10445,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -10469,8 +10469,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -10493,8 +10493,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -10517,8 +10517,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -10541,8 +10541,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -10565,8 +10565,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -10589,8 +10589,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -10613,8 +10613,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -10637,8 +10637,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -10661,8 +10661,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -10685,8 +10685,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -10709,8 +10709,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -10733,8 +10733,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -10757,8 +10757,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -10781,8 +10781,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -10805,8 +10805,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -10829,8 +10829,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -10853,8 +10853,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -10877,8 +10877,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -10901,8 +10901,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -10927,13 +10927,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2021,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -10956,8 +10956,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -10980,8 +10980,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -11004,8 +11004,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -11028,8 +11028,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -11052,8 +11052,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -11076,8 +11076,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -11100,8 +11100,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -11124,8 +11124,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -11148,8 +11148,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -11172,8 +11172,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -11196,8 +11196,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -11220,8 +11220,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -11244,8 +11244,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -11268,8 +11268,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -11292,8 +11292,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -11316,8 +11316,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -11340,8 +11340,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -11364,8 +11364,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -11388,8 +11388,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -11412,8 +11412,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -11436,8 +11436,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -11460,8 +11460,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -11484,8 +11484,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -11508,8 +11508,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
@@ -11534,13 +11534,13 @@
   },
   {
     "name": "Ukraine",
-    "id": "UA",
+    "code": "UA",
     "year": 2022,
     "regions": [
       {
         "name": "Avtonomna Respublika Krym",
-        "originalName": "Автономна Республіка Крим",
-        "id": "UA43",
+        "label": "Автономна Республіка Крим",
+        "code": "UA43",
         "dataset": {
           "population": [
             {
@@ -11563,8 +11563,8 @@
       },
       {
         "name": "Vinnytska",
-        "originalName": "Вінницька",
-        "id": "UA05",
+        "label": "Вінницька",
+        "code": "UA05",
         "dataset": {
           "population": [
             {
@@ -11587,8 +11587,8 @@
       },
       {
         "name": "Volynska",
-        "originalName": "Волинська",
-        "id": "UA07",
+        "label": "Волинська",
+        "code": "UA07",
         "dataset": {
           "population": [
             {
@@ -11611,8 +11611,8 @@
       },
       {
         "name": "Dnipropetrovska",
-        "originalName": "Дніпропетровська",
-        "id": "UA12",
+        "label": "Дніпропетровська",
+        "code": "UA12",
         "dataset": {
           "population": [
             {
@@ -11635,8 +11635,8 @@
       },
       {
         "name": "Donetska",
-        "originalName": "Донецька",
-        "id": "UA14",
+        "label": "Донецька",
+        "code": "UA14",
         "dataset": {
           "population": [
             {
@@ -11659,8 +11659,8 @@
       },
       {
         "name": "Zhytomyrska",
-        "originalName": "Житомирська",
-        "id": "UA18",
+        "label": "Житомирська",
+        "code": "UA18",
         "dataset": {
           "population": [
             {
@@ -11683,8 +11683,8 @@
       },
       {
         "name": "Zakarpatska",
-        "originalName": "Закарпатська",
-        "id": "UA21",
+        "label": "Закарпатська",
+        "code": "UA21",
         "dataset": {
           "population": [
             {
@@ -11707,8 +11707,8 @@
       },
       {
         "name": "Zaporizka",
-        "originalName": "Запорізька",
-        "id": "UA23",
+        "label": "Запорізька",
+        "code": "UA23",
         "dataset": {
           "population": [
             {
@@ -11731,8 +11731,8 @@
       },
       {
         "name": "Ivano-Frankivska",
-        "originalName": "Івано-Франківська",
-        "id": "UA26",
+        "label": "Івано-Франківська",
+        "code": "UA26",
         "dataset": {
           "population": [
             {
@@ -11755,8 +11755,8 @@
       },
       {
         "name": "Kyivska",
-        "originalName": "Київська",
-        "id": "UA30",
+        "label": "Київська",
+        "code": "UA30",
         "dataset": {
           "population": [
             {
@@ -11779,8 +11779,8 @@
       },
       {
         "name": "Kirovohradska",
-        "originalName": "Кіровоградська",
-        "id": "UA35",
+        "label": "Кіровоградська",
+        "code": "UA35",
         "dataset": {
           "population": [
             {
@@ -11803,8 +11803,8 @@
       },
       {
         "name": "Luhanska",
-        "originalName": "Луганська",
-        "id": "UA09",
+        "label": "Луганська",
+        "code": "UA09",
         "dataset": {
           "population": [
             {
@@ -11827,8 +11827,8 @@
       },
       {
         "name": "Lvivska",
-        "originalName": "Львівська",
-        "id": "UA46",
+        "label": "Львівська",
+        "code": "UA46",
         "dataset": {
           "population": [
             {
@@ -11851,8 +11851,8 @@
       },
       {
         "name": "Mykolaivska",
-        "originalName": "Миколаївська",
-        "id": "UA48",
+        "label": "Миколаївська",
+        "code": "UA48",
         "dataset": {
           "population": [
             {
@@ -11875,8 +11875,8 @@
       },
       {
         "name": "Odeska",
-        "originalName": "Одеська",
-        "id": "UA51",
+        "label": "Одеська",
+        "code": "UA51",
         "dataset": {
           "population": [
             {
@@ -11899,8 +11899,8 @@
       },
       {
         "name": "Poltavska",
-        "originalName": "Полтавська",
-        "id": "UA53",
+        "label": "Полтавська",
+        "code": "UA53",
         "dataset": {
           "population": [
             {
@@ -11923,8 +11923,8 @@
       },
       {
         "name": "Rivnenska",
-        "originalName": "Рівненська",
-        "id": "UA56",
+        "label": "Рівненська",
+        "code": "UA56",
         "dataset": {
           "population": [
             {
@@ -11947,8 +11947,8 @@
       },
       {
         "name": "Sumska",
-        "originalName": "Сумська",
-        "id": "UA59",
+        "label": "Сумська",
+        "code": "UA59",
         "dataset": {
           "population": [
             {
@@ -11971,8 +11971,8 @@
       },
       {
         "name": "Ternopilska",
-        "originalName": "Тернопільська",
-        "id": "UA61",
+        "label": "Тернопільська",
+        "code": "UA61",
         "dataset": {
           "population": [
             {
@@ -11995,8 +11995,8 @@
       },
       {
         "name": "Kharkivska",
-        "originalName": "Харківська",
-        "id": "UA63",
+        "label": "Харківська",
+        "code": "UA63",
         "dataset": {
           "population": [
             {
@@ -12019,8 +12019,8 @@
       },
       {
         "name": "Khersonska",
-        "originalName": "Херсонська",
-        "id": "UA65",
+        "label": "Херсонська",
+        "code": "UA65",
         "dataset": {
           "population": [
             {
@@ -12043,8 +12043,8 @@
       },
       {
         "name": "Khmelnytska",
-        "originalName": "Хмельницька",
-        "id": "UA68",
+        "label": "Хмельницька",
+        "code": "UA68",
         "dataset": {
           "population": [
             {
@@ -12067,8 +12067,8 @@
       },
       {
         "name": "Cherkaska",
-        "originalName": "Черкаська",
-        "id": "UA71",
+        "label": "Черкаська",
+        "code": "UA71",
         "dataset": {
           "population": [
             {
@@ -12091,8 +12091,8 @@
       },
       {
         "name": "Chernivetska",
-        "originalName": "Чернівецька",
-        "id": "UA77",
+        "label": "Чернівецька",
+        "code": "UA77",
         "dataset": {
           "population": [
             {
@@ -12115,8 +12115,8 @@
       },
       {
         "name": "Chernihivska",
-        "originalName": "Чернігівська",
-        "id": "UA74",
+        "label": "Чернігівська",
+        "code": "UA74",
         "dataset": {
           "population": [
             {
