@@ -14,11 +14,11 @@ const tooltipStyles = {
   color: 'white',
 };
 
-type PopulationType = 'urban' | 'rural';
-
-interface PopulationData {
+// Define proper types for the data
+interface RegionData {
   year: string;
-  [key: string]: string | number; // For region names and their values
+  name: string;
+  total: number;
 }
 
 const purple1 = '#6c5efb';
@@ -28,7 +28,7 @@ const purple3 = '#a44afe';
 export type BarStackProps = {
   width: number;
   height: number;
-  data: any[];
+  data: RegionData[];
   margin?: { top: number; right: number; bottom: number; left: number };
 };
 
@@ -45,10 +45,10 @@ const PopulationStackedChart = ({
   // Prepare the data
   const years = Array.from(new Set(data.map(d => d.year))).sort();
   const regions = Array.from(new Set(data.map(d => d.name)));
-  
+
   // Format data for stacking
   const formattedData = years.map(year => {
-    const yearData: any = { year };
+    const yearData: Record<string, string | number> = { year };
     regions.forEach(region => {
       const regionData = data.find(d => d.year === year && d.name === region);
       yearData[region] = regionData ? regionData.total : 0;
@@ -68,8 +68,8 @@ const PopulationStackedChart = ({
   });
 
   const yScale = scaleLinear<number>({
-    domain: [0, Math.max(...formattedData.map(d => 
-      regions.reduce((sum, region) => sum + (d[region] || 0), 0)
+    domain: [0, Math.max(...formattedData.map(d =>
+      regions.reduce((sum: number, region: string) => sum + (d[region] as number || 0), 0)
     ))],
     range: [yMax, 0],
     nice: true,
@@ -79,6 +79,13 @@ const PopulationStackedChart = ({
     domain: regions,
     range: [purple1, purple2, purple3],
   });
+
+  // Add proper typing for tooltip data
+  interface TooltipData {
+    region: string;
+    value: number;
+    year: string;
+  }
 
   return (
     <div style={{ position: 'relative' }}>
@@ -95,7 +102,7 @@ const PopulationStackedChart = ({
           <BarStack
             data={formattedData}
             keys={regions}
-            x={d => d.year}
+            x={d => d.year as string}
             xScale={xScale}
             yScale={yScale}
             color={colorScale}
@@ -120,7 +127,7 @@ const PopulationStackedChart = ({
                       showTooltip({
                         tooltipData: tooltip,
                         tooltipTop: event.clientY,
-                        tooltipLeft: event.clientLeft,
+                        tooltipLeft: event.clientX,
                       });
                     }}
                   />
@@ -128,7 +135,7 @@ const PopulationStackedChart = ({
               )
             }
           </BarStack>
-          <AxisLeft 
+          <AxisLeft
             scale={yScale}
             stroke={'#fff'}
             tickStroke={'#fff'}
@@ -158,11 +165,11 @@ const PopulationStackedChart = ({
           left={tooltipLeft}
           style={tooltipStyles}
         >
-          <div style={{ color: colorScale(tooltipData.region) }}>
-            <strong>{tooltipData.region}</strong>
+          <div style={{ color: colorScale((tooltipData as TooltipData).region) }}>
+            <strong>{(tooltipData as TooltipData).region}</strong>
           </div>
-          <div>Year: {tooltipData.year}</div>
-          <div>Population: {tooltipData.value.toLocaleString()}</div>
+          <div>Year: {(tooltipData as TooltipData).year}</div>
+          <div>Population: {(tooltipData as TooltipData).value.toLocaleString()}</div>
         </Tooltip>
       )}
     </div>
