@@ -6,7 +6,8 @@ import Footer from '@/components/Footer';
 
 const StatsPage = () => {
   const [dimensions, setDimensions] = useState({ width: 1200, height: 800 });
-  const [yearsRange, setYearsRange] = useState([2003, 2022]);
+  const [yearsRange,] = useState([2003, 2022]);
+
   useEffect(() => {
     const handleResize = () => {
       setDimensions({
