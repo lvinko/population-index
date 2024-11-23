@@ -48,16 +48,18 @@ const StatChart = () => {
     }))
   ).filter(d => d.total > 0); // Filter out regions with 0 population
 
-  if (isLoading) return <Spinner />;
+  if (isLoading) return <div className="min-h-screen flex items-center justify-center">
+    <Spinner />
+  </div>;
 
   return (
     <>
-      <div className="flex-1 flex flex-col items-center justify-between p-5 sm:p-8 bg-background text-foreground relative">
+      <div className="flex-1 flex flex-col items-center justify-between p-5 sm:p-8 bg-background text-foreground relative min-h-screen">
         <Header title={`Статистика населення України за ${yearsRange[0]}-${yearsRange[1]}`}>
           <div className="relative">
             <button
               onClick={() => setChartType(chartType === 'stacked' ? 'radial' : 'stacked')}
-              className="flex items-center bg-accent rounded-md text-sm px-4 py-2 gap-2"
+              className="flex items-center bg-black rounded-md text-sm px-4 py-2 gap-2"
             >
               {chartType === 'stacked' ? 'Radial' : 'Stacked'}
               {chartType === 'stacked' && (
