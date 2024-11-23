@@ -1,13 +1,22 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import uaData from '@/helpers/ua-data.json';
+// import uaData from '@/helpers/ua-data.json';
 import PopulationStackedChart from '@/components/PopulationStackedChart';
 import Footer from '@/components/Footer';
 import { RegionData } from '@/types/population';
 import Header from '@/components/Header';
+import { getPopulation } from '@/queries';
+import { useQuery } from '@tanstack/react-query';
+import { Spinner } from '@/components';
+import { PopulationData } from '@/types/population';
 
 const StatChart = () => {
+  const { data, isLoading } = useQuery<PopulationData>({
+    queryKey: ["population"],
+    queryFn: () => getPopulation(),
+  });
+
   // Initialize with null or default values
   const [dimensions, setDimensions] = useState({ width: 1200, height: 800 });
   const [yearsRange,] = useState([2003, 2022]);
@@ -17,7 +26,7 @@ const StatChart = () => {
     const handleResize = () => {
       const isMobile = window.innerWidth < 768;
       setDimensions({
-        width: isMobile ? 1200 : window.innerWidth,
+        width: isMobile ? 1200 : window.innerWidth - 100,
         height: window.innerHeight - 200,
       });
     };
@@ -29,7 +38,7 @@ const StatChart = () => {
   }, []);
 
   // Process the data for the chart
-  const processedData = uaData.flatMap(yearData =>
+  const processedData = data?.flatMap(yearData =>
     yearData.regions.map(region => ({
       year: yearData.year.toString(),
       name: region.name,
@@ -37,10 +46,12 @@ const StatChart = () => {
     }))
   ).filter(d => d.total > 0); // Filter out regions with 0 population
 
+  if (isLoading) return <Spinner />;
+
   return (
     <div className="flex-1 flex flex-col items-center justify-between p-5 sm:p-8 bg-background text-foreground relative">
       <Header title={`Статистика населення України за ${yearsRange[0]}-${yearsRange[1]}`} />
-      <div className="w-full overflow-x-auto pb-4 flex-1">
+      <div className="w-full pb-4" style={{ overflow: 'scroll'}}>
         <div className="min-w-[1200px]">
           <PopulationStackedChart
             width={dimensions.width}
