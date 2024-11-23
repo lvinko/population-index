@@ -14,9 +14,13 @@ const Footer = () => {
             <Image src="/logo-data-bank.png" alt="Держстат" width={60} height={20} />
           </Link>
           <Link href="https://dia.gov.ua/" target="_blank">
-            <Image src="/logo-dia.png" alt="Дія" width={40} height={40} />
+            <Image src="/logo-dia.png" alt="Дія" width={30} height={30} />
           </Link>
         </div>
+
+        <small className="text-xs text-gray-600">
+          Ресурси
+        </small>
       </div>
 
       <div className="w-0.5 h-full bg-gray-600 rounded-full"></div>
