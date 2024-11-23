@@ -106,7 +106,7 @@ const Map = ({ data }: { data: PopulationData }) => {
 
         // Set popup content
         popup.setLngLat(e.lngLat)
-          .setHTML(`<div class="tooltip text-sm text-gray-500"><strong>${region}</strong><br>Кількість населення: ${formattedPopulation}<br><small>${hint}</small></div>`)
+          .setHTML(`<div class="tooltip text-sm text-gray-500"><strong>${region}</strong><br>Чисельність: ${formattedPopulation}<br><small>${hint}</small></div>`)
           .addTo(mapRef.current as mapboxgl.Map);
       }
     });
