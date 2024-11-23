@@ -12,17 +12,17 @@ const MapFilter = () => {
       }))
     },
     type: {
-      label: 'Тип населенного пункту',
+      label: 'Тип',
       options: [
         { value: 'urban', label: 'Міста' },
-        { value: 'rural', label: 'Селища' },
-        { value: 'total', label: 'Всі населені пункти' }
+        { value: 'rural', label: 'Сільська' },
+        { value: 'total', label: 'Всі' }
       ]
     }
   }
 
   return (
-    <div className="flex gap-4 items-center absolute bottom-36 right-8 z-10 text-zinc-900 bg-white p-3 rounded-md">
+    <div className="flex gap-4 items-center absolute bottom-32 sm:right-10 right-5 z-10 text-zinc-900 bg-white p-2 rounded-md">
       <label className="text-sm font-medium">{fitlerLabelMap.year.label}
         <select
           value={filters.year}
@@ -36,7 +36,7 @@ const MapFilter = () => {
           ))}
         </select>
       </label>
-      <div className="h-px bg-black w-px h-4" />
+      <div className="h-6 bg-black w-px" />
 
       <label className="text-sm font-medium">{fitlerLabelMap.type.label}
         <select

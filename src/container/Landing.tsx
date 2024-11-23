@@ -8,6 +8,8 @@ const Landing = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["population"],
     queryFn: () => getPopulation(),
+    // 24 hours
+    staleTime: 1000 * 60 * 60 * 24,
   });
 
   if (isLoading) return <Spinner />;
