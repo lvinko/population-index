@@ -15,6 +15,7 @@ const StatChart = () => {
   const { data, isLoading } = useQuery<PopulationData>({
     queryKey: ["population"],
     queryFn: () => getPopulation(),
+    staleTime: 1000 * 60 * 60 * 24,
   });
 
   // Initialize with null or default values
