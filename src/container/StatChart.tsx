@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-// import uaData from '@/helpers/ua-data.json';
 import PopulationStackedChart from '@/components/PopulationStackedChart';
 import Footer from '@/components/Footer';
 import { RegionData } from '@/types/population';

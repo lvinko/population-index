@@ -194,8 +194,8 @@ const PopulationStackedChart = ({
       </div>
       {tooltipOpen && tooltipData && (
         <Tooltip
-          top={tooltipTop}
-          left={tooltipLeft}
+          top={tooltipTop ? tooltipTop - 100 : 0}
+          left={tooltipLeft ? tooltipLeft - 20 : 0}
           style={tooltipStyles}
         >
           <div style={{ color: colorScale((tooltipData as TooltipData).region) }}>
