@@ -58,7 +58,7 @@ const StatChart = () => {
             width={dimensions.width}
             height={dimensions.height}
             data={processedData as RegionData[]}
-            margin={{ top: 40, right: 40, bottom: 40, left: 80 }}
+            margin={{ top: 120, right: 40, bottom: 40, left: 80 }}
           />
         </div>
       </div>

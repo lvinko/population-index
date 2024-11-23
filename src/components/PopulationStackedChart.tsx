@@ -7,6 +7,7 @@ import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, Tooltip, defaultStyles } from '@visx/tooltip';
 import { RegionData } from '@/types/population';
+import { LegendOrdinal } from '@visx/legend';
 
 const tooltipStyles = {
   ...defaultStyles,
@@ -17,10 +18,31 @@ const tooltipStyles = {
 };
 
 const colorRange = [
-  '#6c5efb', '#c998ff', '#a44afe', '#7b61ff', '#9747FF', '#6B21A8',
-  '#7e3af2', '#b794f4', '#553c9a', '#9f7aea', '#805ad5', '#6b46c1',
-  '#4c1d95', '#5b21b6', '#7c3aed', '#8b5cf6', '#a78bfa', '#c4b5fd',
-  '#7c3aed', '#6d28d9', '#5b21b6', '#4c1d95', '#6b46c1', '#7e22ce', '#9333ea'
+  '#6c5efb', // Original
+  '#9e6fff', // Lightened and shifted
+  '#c998ff', // Existing light lavender
+  '#7b3cff', // Deepened purple-blue
+  '#a55fed', // Lightened magenta-purple
+  '#b589ff', // Soft purple
+  '#8c4bff', // Vivid purple
+  '#5f3fbb', // Dark purple
+  '#9f7aea', // Existing lavender
+  '#6d28d9', // Dark violet
+  '#7e3af2', // Vibrant medium purple
+  '#a78bfa', // Softened lavender
+  '#c4b5fd', // Pale lavender
+  '#4c1d95', // Deep violet-blue
+  '#9333ea', // Bright purple
+  '#805ad5', // Medium lavender
+  '#b589d9', // Lighter purple shade
+  '#6b46c1', // Deep lavender
+  '#7c3aed', // Vivid lavender
+  '#a44afe', // Medium violet
+  '#9747FF', // Medium blue-purple
+  '#6B21A8', // Dark indigo purple
+  '#5b21b6', // Dark purple
+  '#8b5cf6', // Soft vibrant purple
+  '#553c9a'  // Darker violet
 ];
 
 export type BarStackProps = {
@@ -156,6 +178,20 @@ const PopulationStackedChart = ({
           />
         </Group>
       </svg>
+      <div
+        style={{
+          position: 'absolute',
+          top: margin.top / 2 - 10,
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          fontSize: '10px',
+        }}
+      >
+        <div className='overflow-x-auto'>
+          <LegendOrdinal scale={colorScale} direction="row" labelMargin="0 15px 0 0" />
+        </div>
+      </div>
       {tooltipOpen && tooltipData && (
         <Tooltip
           top={tooltipTop}
