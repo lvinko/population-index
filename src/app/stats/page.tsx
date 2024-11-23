@@ -4,17 +4,19 @@ import uaData from '@/helpers/ua-data.json';
 import PopulationStackedChart from '@/components/PopulationStackedChart';
 import Footer from '@/components/Footer';
 import { RegionData } from '@/types/population';
-
+import Header from '@/components/Header';
 const StatsPage = () => {
-  const [dimensions, setDimensions] = useState({ width: 1200, height: 800 });
+  // initial values is width of the screen and height of the screen - header and footer
+  const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight - 120 });
   const [yearsRange,] = useState([2003, 2022]);
 
   useEffect(() => {
     const handleResize = () => {
       const isMobile = window.innerWidth < 768;
+
       setDimensions({
-        width: isMobile ? 1200 : Math.min(window.innerWidth - 40, 1200),
-        height: isMobile ? 500 : Math.min(window.innerHeight - 40, 800),
+        width: isMobile ? 1200 : window.innerWidth,
+        height: window.innerHeight - 200,
       });
     };
 
@@ -34,9 +36,9 @@ const StatsPage = () => {
   ).filter(d => d.total > 0); // Filter out regions with 0 population
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-between min-h-screen p-5 sm:p-8 bg-background text-foreground relative">
-      <h1 className="text-2xl font-bold mb-6 text-center">Статистика населення України за {yearsRange[0]}-{yearsRange[1]}</h1>
-      <div className="w-full overflow-x-auto pb-4">
+    <div className="flex-1 flex flex-col items-center justify-between p-5 sm:p-8 bg-background text-foreground relative">
+      <Header title={`Статистика населення України за ${yearsRange[0]}-${yearsRange[1]}`} />
+      <div className="w-full overflow-x-auto pb-4 flex-1">
         <div className="min-w-[1200px]">
           <PopulationStackedChart
             width={dimensions.width}
