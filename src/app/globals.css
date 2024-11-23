@@ -3,19 +3,55 @@
 @tailwind utilities;
 
 :root {
+  /* Light theme */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1a1a1a;
+  --primary: #2563eb;    /* Accessible blue */
+  --primary-dark: #1d4ed8;
+  --secondary: #4b5563;  /* Neutral gray */
+  --secondary-dark: #374151;
+  --accent: #8b5cf6;     /* Purple for highlights */
+  --accent-dark: #7c3aed;
+  --surface: #f3f4f6;    /* Light gray for cards/sections */
+  --error: #dc2626;      /* Red for errors */
+  --success: #059669;    /* Green for success states */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0f172a;    /* Dark blue-gray */
+    --foreground: #f8fafc;    /* Off-white */
+    --primary: #3b82f6;       /* Bright blue */
+    --primary-dark: #60a5fa;  /* Lighter blue for dark mode hover */
+    --secondary: #94a3b8;     /* Muted blue-gray */
+    --secondary-dark: #cbd5e1;
+    --accent: #a78bfa;        /* Lighter purple for dark mode */
+    --accent-dark: #c4b5fd;
+    --surface: #1e293b;       /* Slightly lighter than background */
+    --error: #ef4444;         /* Brighter red for dark mode */
+    --success: #10b981;       /* Brighter green for dark mode */
   }
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-foreground font-bold;
+  }
+  
+  p, span, div {
+    @apply text-foreground;
+  }
+  
+  a {
+    @apply text-primary hover:text-primary-dark transition-colors duration-200;
+  }
 }

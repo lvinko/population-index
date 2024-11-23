@@ -79,7 +79,7 @@ const Map = ({ data }: { data: PopulationData }) => {
     // When the user moves their mouse over the state-fill layer, we'll update the
     // feature state for the feature under the mouse.
     mapRef.current?.on('mousemove', 'ukraine-regions', (e: mapboxgl.MapMouseEvent & { features?: mapboxgl.GeoJSONFeature[] }) => {
-      
+
       if (e.features && e.features.length > 0) {
         if (!!hoveredPolygonId) {
           mapRef.current?.setFeatureState(
@@ -97,6 +97,8 @@ const Map = ({ data }: { data: PopulationData }) => {
         const yearData = data.find((item) => item.year === filters.year);
         const regionData = yearData?.regions.find((r) => r.code === regionId);
         const population = regionData?.dataset.population.find((p) => p.type === filters.type)?.value;
+        // make number format
+        const formattedPopulation = population?.toLocaleString();
         let hint = '';
         if (regionId === 'UA43') {
           hint = 'Дані втрачені через агресію росії';
@@ -104,7 +106,7 @@ const Map = ({ data }: { data: PopulationData }) => {
 
         // Set popup content
         popup.setLngLat(e.lngLat)
-          .setHTML(`<div class="tooltip text-sm text-gray-500"><strong>${region}</strong><br>Population: ${population}<br><small>${hint}</small></div>`)
+          .setHTML(`<div class="tooltip text-sm text-gray-500"><strong>${region}</strong><br>Кількість населення: ${formattedPopulation}<br><small>${hint}</small></div>`)
           .addTo(mapRef.current as mapboxgl.Map);
       }
     });

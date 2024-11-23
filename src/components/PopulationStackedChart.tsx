@@ -6,21 +6,15 @@ import { Grid } from '@visx/grid';
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, Tooltip, defaultStyles } from '@visx/tooltip';
-import { RegionName } from '@/types/population';
+import { RegionData } from '@/types/population';
 
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
-  backgroundColor: 'rgba(0,0,0,0.9)',
-  color: 'white',
+  backgroundColor: 'var(--background)',
+  color: 'var(--foreground)',
+  stroke: 'var(--foreground)',
 };
-
-// Define proper types for the data
-interface RegionData {
-  year: string;
-  name: RegionName;
-  total: number;
-}
 
 const colorRange = [
   '#6c5efb', '#c998ff', '#a44afe', '#7b61ff', '#9747FF', '#6B21A8',
@@ -100,7 +94,7 @@ const PopulationStackedChart = ({
             width={xMax}
             height={yMax}
             strokeDasharray="1,3"
-            stroke="rgba(255,255,255,0.2)"
+            stroke="var(--foreground)"
           />
           <BarStack
             data={formattedData}
@@ -140,10 +134,10 @@ const PopulationStackedChart = ({
           </BarStack>
           <AxisLeft
             scale={yScale}
-            stroke={'#fff'}
-            tickStroke={'#fff'}
+            stroke="var(--foreground)"
+            tickStroke="var(--foreground)"
             tickLabelProps={{
-              fill: '#fff',
+              fill: 'var(--foreground)',
               fontSize: 11,
               textAnchor: 'end',
               dy: '0.33em',
@@ -152,10 +146,10 @@ const PopulationStackedChart = ({
           <AxisBottom
             top={yMax}
             scale={xScale}
-            stroke={'#fff'}
-            tickStroke={'#fff'}
+            stroke="var(--foreground)"
+            tickStroke="var(--foreground)"
             tickLabelProps={{
-              fill: '#fff',
+              fill: 'var(--foreground)',
               fontSize: 11,
               textAnchor: 'middle',
             }}
