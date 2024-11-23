@@ -6,6 +6,7 @@ import { Grid } from '@visx/grid';
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, Tooltip, defaultStyles } from '@visx/tooltip';
+import { RegionName } from '@/types/population';
 
 const tooltipStyles = {
   ...defaultStyles,
@@ -17,13 +18,16 @@ const tooltipStyles = {
 // Define proper types for the data
 interface RegionData {
   year: string;
-  name: string;
+  name: RegionName;
   total: number;
 }
 
-const purple1 = '#6c5efb';
-const purple2 = '#c998ff';
-const purple3 = '#a44afe';
+const colorRange = [
+  '#6c5efb', '#c998ff', '#a44afe', '#7b61ff', '#9747FF', '#6B21A8',
+  '#7e3af2', '#b794f4', '#553c9a', '#9f7aea', '#805ad5', '#6b46c1',
+  '#4c1d95', '#5b21b6', '#7c3aed', '#8b5cf6', '#a78bfa', '#c4b5fd',
+  '#7c3aed', '#6d28d9', '#5b21b6', '#4c1d95', '#6b46c1', '#7e22ce', '#9333ea'
+];
 
 export type BarStackProps = {
   width: number;
@@ -74,10 +78,9 @@ const PopulationStackedChart = ({
     range: [yMax, 0],
     nice: true,
   });
-
   const colorScale = scaleOrdinal<string, string>({
     domain: regions,
-    range: [purple1, purple2, purple3],
+    range: colorRange,
   });
 
   // Add proper typing for tooltip data
@@ -116,7 +119,7 @@ const PopulationStackedChart = ({
                     y={bar.y}
                     height={bar.height}
                     width={bar.width}
-                    fill={bar.color}
+                    fill={colorScale(barStack.key)}
                     onMouseLeave={() => hideTooltip()}
                     onMouseMove={(event) => {
                       const tooltip = {
