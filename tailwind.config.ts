@@ -11,8 +11,24 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        primary: {
+          DEFAULT: "var(--primary)",
+          dark: "var(--primary-dark)",
+        },
+        secondary: {
+          DEFAULT: "var(--secondary)",
+          dark: "var(--secondary-dark)",
+        },
+        accent: {
+          DEFAULT: "var(--accent)",
+          dark: "var(--accent-dark)",
+        },
+        surface: "var(--surface)",
+        error: "var(--error)",
+        success: "var(--success)",
       },
     },
   },
+  darkMode: "media",
   plugins: [],
 } satisfies Config;
