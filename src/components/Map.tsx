@@ -100,13 +100,13 @@ const Map = ({ data }: { data: PopulationData }) => {
         // make number format
         const formattedPopulation = population?.toLocaleString();
         let hint = '';
-        if (regionId === 'UA43') {
-          hint = 'Дані втрачені через агресію росії';
+        if (regionId === 'UA43' && filters.year > 2014) {
+          hint = 'Дані втрачені через агресію рф';
         }
 
         // Set popup content
         popup.setLngLat(e.lngLat)
-          .setHTML(`<div class="tooltip text-sm text-gray-500"><strong>${region}</strong><br>Кількість населення: ${formattedPopulation}<br><small>${hint}</small></div>`)
+          .setHTML(`<div class="tooltip text-sm text-gray-500"><strong>${region}</strong><br>Чисельність: ${formattedPopulation}<br><small>${hint ? `⚠️${hint}` : ''}</small></div>`)
           .addTo(mapRef.current as mapboxgl.Map);
       }
     });
@@ -124,6 +124,19 @@ const Map = ({ data }: { data: PopulationData }) => {
 
       popup.remove();
     });
+
+    return () => {
+      // remove previous hovered polygon
+      if (!!hoveredPolygonId) {
+        mapRef.current?.setFeatureState(
+          { source: 'ukraine', id: hoveredPolygonId },
+          { hover: false }
+        );
+      }
+
+      // reset popup
+      popup.remove();
+    }
   }, [filters]);
 
   return <div id="map" className="flex-1 w-full h-full"></div>

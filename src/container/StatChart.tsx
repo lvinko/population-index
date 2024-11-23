@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-// import uaData from '@/helpers/ua-data.json';
 import PopulationStackedChart from '@/components/PopulationStackedChart';
 import Footer from '@/components/Footer';
 import { RegionData } from '@/types/population';
@@ -10,6 +9,7 @@ import { getPopulation } from '@/queries';
 import { useQuery } from '@tanstack/react-query';
 import { Spinner } from '@/components';
 import { PopulationData } from '@/types/population';
+import RadialBars from '@/components/RadialBars';
 
 const StatChart = () => {
   const { data, isLoading } = useQuery<PopulationData>({
@@ -21,6 +21,7 @@ const StatChart = () => {
   // Initialize with null or default values
   const [dimensions, setDimensions] = useState({ width: 1200, height: 800 });
   const [yearsRange,] = useState([2003, 2022]);
+  const [chartType, setChartType] = useState<'stacked' | 'radial'>('stacked');
 
   useEffect(() => {
     // Set initial dimensions after component mounts
@@ -50,20 +51,47 @@ const StatChart = () => {
   if (isLoading) return <Spinner />;
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-between p-5 sm:p-8 bg-background text-foreground relative">
-      <Header title={`Статистика населення України за ${yearsRange[0]}-${yearsRange[1]}`} />
-      <div className="w-full pb-4" style={{ overflow: 'scroll'}}>
-        <div className="min-w-[1200px]">
-          <PopulationStackedChart
-            width={dimensions.width}
-            height={dimensions.height}
-            data={processedData as RegionData[]}
-            margin={{ top: 40, right: 40, bottom: 40, left: 80 }}
-          />
-        </div>
+    <>
+      <div className="flex-1 flex flex-col items-center justify-between p-5 sm:p-8 bg-background text-foreground relative">
+        <Header title={`Статистика населення України за ${yearsRange[0]}-${yearsRange[1]}`}>
+          <div className="relative">
+            <button
+              onClick={() => setChartType(chartType === 'stacked' ? 'radial' : 'stacked')}
+              className="flex items-center bg-accent rounded-md text-sm px-4 py-2 gap-2"
+            >
+              {chartType === 'stacked' ? 'Radial' : 'Stacked'}
+              {chartType === 'stacked' && (
+                <div className="bg-background text-accent p-1 text-xs rounded">
+                  Beta
+                </div>
+              )}
+            </button>
+          </div>
+        </Header>
+
+        {chartType === 'stacked' ? (
+          <div className="w-full pb-4" style={{ overflow: 'scroll' }}>
+            <div className="min-w-[1200px]">
+              <PopulationStackedChart
+                width={dimensions.width}
+                height={dimensions.height}
+                data={processedData as RegionData[]}
+                margin={{ top: 120, right: 40, bottom: 40, left: 80 }}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="w-full pb-4 flex justify-center">
+            <RadialBars
+              width={dimensions.width}
+              height={dimensions.height}
+              data={data as PopulationData}
+            />
+          </div>
+        )}
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </>
   );
 };
 
