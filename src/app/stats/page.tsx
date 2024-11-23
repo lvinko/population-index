@@ -1,19 +1,21 @@
 'use client'
+
 import { useState, useEffect } from 'react';
 import uaData from '@/helpers/ua-data.json';
 import PopulationStackedChart from '@/components/PopulationStackedChart';
 import Footer from '@/components/Footer';
 import { RegionData } from '@/types/population';
 import Header from '@/components/Header';
+
 const StatsPage = () => {
-  // initial values is width of the screen and height of the screen - header and footer
-  const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight - 120 });
+  // Initialize with null or default values
+  const [dimensions, setDimensions] = useState({ width: 1200, height: 800 });
   const [yearsRange,] = useState([2003, 2022]);
 
   useEffect(() => {
+    // Set initial dimensions after component mounts
     const handleResize = () => {
       const isMobile = window.innerWidth < 768;
-
       setDimensions({
         width: isMobile ? 1200 : window.innerWidth,
         height: window.innerHeight - 200,
