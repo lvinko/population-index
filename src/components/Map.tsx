@@ -1,16 +1,44 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import UkraineRegions from '@/helpers/ua.json';
 import { PopulationData } from '@/types/population';
 import { useMapFilter } from '@/context/MapFilterContext';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const Map = ({ data }: { data: PopulationData }) => {
   const { filters } = useMapFilter();
   const mapRef = useRef<mapboxgl.Map | null>(null);
+  const navigate = useRouter();
+  const [isUserEngaged, setIsUserEngaged] = useState(false);
+
+  // wait user engagement and then show toast to check chart data visualization page to try it
+  useEffect(() => {
+    const handleUserEngagement = () => {
+      setIsUserEngaged(true);
+      toast(() => (
+        <span className="flex items-center gap-2 text-sm text-foreground bg-background p-2 rounded-md">
+          Перейдіть на сторінку зі статистичними даними, щоб побачити візуалізацію на карті
+          <button onClick={() => navigate.push('/stat')} className="text-blue-500">
+            Перейти
+          </button>
+        </span>
+      ));
+    };
+    document.addEventListener('user:engagement', handleUserEngagement);
+
+    setTimeout(() => {
+      if (!isUserEngaged) {
+        document.dispatchEvent(new Event('user:engagement'));
+      }
+    }, 30000, { once: true });
+
+    return () => document.removeEventListener('user:engagement', handleUserEngagement);
+  }, []);
 
   // NOTE: init map
   useEffect(() => {
@@ -98,15 +126,23 @@ const Map = ({ data }: { data: PopulationData }) => {
         const regionData = yearData?.regions.find((r) => r.code === regionId);
         const population = regionData?.dataset.population.find((p) => p.type === filters.type)?.value;
         // make number format
-        const formattedPopulation = population?.toLocaleString();
+        let formattedPopulation = population?.toLocaleString();
         let hint = '';
         if (regionId === 'UA43' && filters.year > 2014) {
           hint = 'Дані втрачені через агресію рф';
         }
 
+        if (regionId === 'UA32') {
+          formattedPopulation = '🇺🇦';
+        }
+
         // Set popup content
         popup.setLngLat(e.lngLat)
-          .setHTML(`<div class="tooltip text-sm text-gray-500"><strong>${region}</strong><br>Чисельність: ${formattedPopulation}<br><small>${hint ? `⚠️${hint}` : ''}</small></div>`)
+          .setHTML(`<div class="tooltip text-sm text-gray-500">
+              <strong>${region}</strong><br>
+              Чисельність: ${formattedPopulation}<br>
+              <small>${hint ? `⚠️${hint}` : ''}</small>
+            </div>`)
           .addTo(mapRef.current as mapboxgl.Map);
       }
     });

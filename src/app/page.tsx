@@ -5,6 +5,7 @@ import Landing from "@/container/Landing";
 import { ReactQueryProvider } from "@/config/apiClient";
 import { MapFilterProvider } from "@/context/MapFilterContext";
 import Header from "@/components/Header";
+import { Toaster } from 'react-hot-toast';
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Header />
       <ReactQueryProvider>
         <MapFilterProvider>
+          <Toaster />
           <Landing />
         </MapFilterProvider>
       </ReactQueryProvider>

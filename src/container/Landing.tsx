@@ -5,14 +5,14 @@ import { Spinner } from "@/components";
 import MapFilter from "@/components/MapFilter";
 
 const Landing = () => {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isPending } = useQuery({
     queryKey: ["population"],
     queryFn: () => getPopulation(),
     // 24 hours
     staleTime: 1000 * 60 * 60 * 24,
   });
 
-  if (isLoading) return <Spinner />;
+  if (isLoading || isPending) return <Spinner />;
 
   return (
     <>
