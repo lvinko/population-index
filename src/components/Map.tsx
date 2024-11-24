@@ -20,7 +20,7 @@ const Map = ({ data }: { data: PopulationData }) => {
   useEffect(() => {
     const handleUserEngagement = () => {
       setIsUserEngaged(true);
-      toast((t) => (
+      toast(() => (
         <span className="flex items-center gap-2 text-sm text-foreground bg-background p-2 rounded-md">
           Перейдіть на сторінку зі статистичними даними, щоб побачити візуалізацію на карті
           <button onClick={() => navigate.push('/stat')} className="text-blue-500">
