@@ -35,7 +35,7 @@ const Map = ({ data }: { data: PopulationData }) => {
       if (!isUserEngaged) {
         document.dispatchEvent(new Event('user:engagement'));
       }
-    }, 10000, { once: true });
+    }, 30000, { once: true });
 
     return () => document.removeEventListener('user:engagement', handleUserEngagement);
   }, []);
@@ -126,15 +126,23 @@ const Map = ({ data }: { data: PopulationData }) => {
         const regionData = yearData?.regions.find((r) => r.code === regionId);
         const population = regionData?.dataset.population.find((p) => p.type === filters.type)?.value;
         // make number format
-        const formattedPopulation = population?.toLocaleString();
+        let formattedPopulation = population?.toLocaleString();
         let hint = '';
         if (regionId === 'UA43' && filters.year > 2014) {
           hint = 'Дані втрачені через агресію рф';
         }
 
+        if (regionId === 'UA32') {
+          formattedPopulation = '🇺🇦';
+        }
+
         // Set popup content
         popup.setLngLat(e.lngLat)
-          .setHTML(`<div class="tooltip text-sm text-gray-500"><strong>${region}</strong><br>Чисельність: ${formattedPopulation}<br><small>${hint ? `⚠️${hint}` : ''}</small></div>`)
+          .setHTML(`<div class="tooltip text-sm text-gray-500">
+              <strong>${region}</strong><br>
+              Чисельність: ${formattedPopulation}<br>
+              <small>${hint ? `⚠️${hint}` : ''}</small>
+            </div>`)
           .addTo(mapRef.current as mapboxgl.Map);
       }
     });
