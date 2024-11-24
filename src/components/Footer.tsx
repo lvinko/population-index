@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <div className="h-13 mt-5 flex items-center justify-center px-4 gap-2 text-sm">
       <Link href="/" className="mr-5 text-foreground hover:text-primary">Головна</Link>
-      <Link href="/stats" className="mr-5 text-foreground hover:text-primary">Статистика</Link>
+      <Link href="/stat" className="mr-5 text-foreground hover:text-primary">Статистика</Link>
 
       <div className="w-0.5 h-full bg-gray-600 rounded-full"></div>
 
