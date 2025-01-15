@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
-type Filters = {
+export type Filters = {
   year: number;
   type: string;
 };

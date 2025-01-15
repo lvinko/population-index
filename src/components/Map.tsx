@@ -5,12 +5,13 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import UkraineRegions from '@/helpers/ua.json';
-import { PopulationData } from '@/types/population';
+import { PopulationDataByYear } from '@/types/population';
 import { useMapFilter } from '@/context/MapFilterContext';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { Spinner } from './Spinner';
 
-const Map = ({ data }: { data: PopulationData }) => {
+const Map = ({ data, isLoading }: { data: PopulationDataByYear, isLoading: boolean }) => {
   const { filters } = useMapFilter();
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const navigate = useRouter();
@@ -122,8 +123,7 @@ const Map = ({ data }: { data: PopulationData }) => {
         );
         const region = e.features[0]?.properties?.name;
         const regionId = e.features[0]?.properties?.id;
-        const yearData = data.find((item) => item.year === filters.year);
-        const regionData = yearData?.regions.find((r) => r.code === regionId);
+        const regionData = data?.regions.find((r) => r.code === regionId);
         const population = regionData?.dataset.population.find((p) => p.type === filters.type)?.value;
         // make number format
         let formattedPopulation = population?.toLocaleString();
@@ -173,9 +173,12 @@ const Map = ({ data }: { data: PopulationData }) => {
       // reset popup
       popup.remove();
     }
-  }, [filters]);
+  }, [data]);
 
-  return <div id="map" className="flex-1 w-full h-full"></div>
+  return <>
+    <div id="map" className="flex-1 w-full h-full"></div>
+    {isLoading ? <div className="flex-1 w-full h-full fixed inset-0 flex items-center justify-center"><Spinner /></div> : null}
+  </>
 }
 
 export default Map;
