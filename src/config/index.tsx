@@ -1,4 +1,8 @@
 const config = {
+  // env
+  isDev: process.env.NODE_ENV === 'development',
+
+  // mapbox
   mapboxAccessToken: process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN,
 
   // firebase

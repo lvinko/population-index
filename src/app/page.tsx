@@ -11,6 +11,8 @@ import { config } from "@/config";
 
 export default function Home() {
   const setupOneSignal = () => {
+    if (config.isDev) return;
+
     const scriptSrc = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js'
     const script = document.createElement('script');
     script.src = scriptSrc;
