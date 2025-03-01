@@ -1,7 +1,6 @@
 import Map from "@/components/Map";
 import { useQuery } from "@tanstack/react-query";
 import { getPopulationByYear } from "@/queries";
-import { Spinner } from "@/components";
 import MapFilter from "@/components/MapFilter";
 import { useMapFilter } from "@/context/MapFilterContext";
 

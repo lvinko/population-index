@@ -9,6 +9,10 @@ import { Toaster } from 'react-hot-toast';
 import { useEffect } from "react";
 import { config } from "@/config";
 
+interface OneSignal {
+  init(config: { appId: string }): Promise<void>;
+}
+
 export default function Home() {
   const setupOneSignal = () => {
     if (config.isDev) return;
@@ -20,11 +24,11 @@ export default function Home() {
     document.head.appendChild(script);
 
     script.onload = () => {
-      (window as any).OneSignalDeferred = (window as any).OneSignalDeferred || [];
-      (window as any).OneSignalDeferred.push(async function(OneSignal: any) {
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      window.OneSignalDeferred.push(async function(OneSignal: OneSignal) {
         console.log('OneSignalDeferred');
         await OneSignal.init({
-          appId: config.onesignalAppId,
+          appId: config.onesignalAppId as string,
         });
       });
     }
