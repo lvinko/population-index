@@ -70,6 +70,10 @@ const Map = ({ data, isLoading }: { data: PopulationDataByYear, isLoading: boole
 
     // Add Ukraine regions layer
     mapRef.current?.on('load', () => {
+      if (mapRef.current?.getLayer('ukraine-regions')) {
+        return;
+      }
+
       mapRef.current?.addSource('ukraine', {
         type: 'geojson',
         data: UkraineRegions as unknown as GeoJSON.FeatureCollection,
