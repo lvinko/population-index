@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import NotificationButton from "./NotificationButton";
 
 const Header = ({
   title = "Аналіз населення України",
@@ -13,7 +14,10 @@ const Header = ({
       <Image src="/logo.png" alt="Map" width={80} height={30} />
     </Link>
     {children}
-    <h1 className="text-2xl font-bold">{title}</h1>
+    <h1 className="text-2xl font-bold">
+      {title}
+      <NotificationButton />
+    </h1>
   </div>
 };
 
