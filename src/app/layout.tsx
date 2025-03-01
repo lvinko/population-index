@@ -68,7 +68,6 @@ export default function RootLayout({
     <html lang="uk" className="bg-background">
       <head>
         <link rel="canonical" href={siteConfig.url} />
-        <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen`}
