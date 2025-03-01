@@ -26,7 +26,6 @@ export default function Home() {
     script.onload = () => {
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       window.OneSignalDeferred.push(async function(OneSignal: OneSignal) {
-        console.log('OneSignalDeferred');
         await OneSignal.init({
           appId: config.onesignalAppId as string,
         });
