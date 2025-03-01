@@ -15,9 +15,6 @@ const config = {
     appId: process.env.NEXT_PUBLIC_DB_FIREBASE_APP_ID,
     measurementId: process.env.NEXT_PUBLIC_DB_FIREBASE_MEASUREMENT_ID
   },
-
-  // onesignal
-  onesignalAppId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID
 }
 
 
