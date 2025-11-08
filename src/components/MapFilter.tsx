@@ -41,22 +41,23 @@ const MapFilter = () => {
   }, [filters.country, setFilters]);
 
   useEffect(() => {
-    if (stateOptions.length === 0) {
+    if (stateOptions.length === 0 && filters.state !== '') {
       setFilters((prev) => ({
         ...prev,
         state: '',
+        statePopulation: null,
       }));
       return;
     }
 
-    const hasSelectedState = stateOptions.some(
-      (option) => option.value === filters.state
-    );
-
-    if (!hasSelectedState) {
+    if (
+      filters.state &&
+      !stateOptions.some((option) => option.value === filters.state)
+    ) {
       setFilters((prev) => ({
         ...prev,
-        state: stateOptions[0]?.value ?? '',
+        state: '',
+        statePopulation: null,
       }));
     }
   }, [filters.state, setFilters, stateOptions]);
@@ -66,6 +67,7 @@ const MapFilter = () => {
     setFilters((prev) => ({
       ...prev,
       state: nextState,
+      statePopulation: null,
     }));
   };
 
@@ -86,6 +88,7 @@ const MapFilter = () => {
           className="mt-1 px-4 py-2 border rounded-md"
           disabled={isLoading || stateOptions.length === 0}
         >
+          <option value="">{stateOptions.length > 0 ? 'Оберіть область' : 'Завантаження…'}</option>
           {stateOptions.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}

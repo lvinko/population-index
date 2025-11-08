@@ -5,6 +5,7 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 export type Filters = {
   country: string;
   state: string;
+  statePopulation: number | null;
 };
 
 type MapFilterContextType = {
@@ -22,6 +23,7 @@ export function MapFilterProvider({ children }: MapFilterProviderProps) {
   const [filters, setFilters] = useState<Filters>({
     country: 'Ukraine',
     state: '',
+    statePopulation: null,
   });
 
   return (

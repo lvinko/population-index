@@ -45,11 +45,13 @@ export const ensureOblastLayers = (map: mapboxgl.Map) => {
 
 type CityFeatureProperties = {
   name: string;
+  canonicalName: string;
 };
 
 export type CityFeature = GeoJSON.Feature<GeoJSON.Point, CityFeatureProperties>;
 
-const createEmptyFeatureCollection = (): GeoJSON.FeatureCollection<GeoJSON.Point, CityFeatureProperties> => ({
+const createEmptyFeatureCollection =
+  (): GeoJSON.FeatureCollection<GeoJSON.Point, CityFeatureProperties> => ({
   type: 'FeatureCollection',
   features: [],
 });

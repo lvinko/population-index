@@ -12,7 +12,8 @@ type GeocodingResponse = {
 };
 
 type CityCoordinate = {
-  name: string;
+  displayName: string;
+  canonicalName: string;
   coordinates: [number, number];
 };
 
@@ -23,11 +24,6 @@ const mapboxGeocodingClient = ky.create({
     limit: 1,
   },
 });
-
-const cityCoordinateCache = new Map<string, [number, number]>();
-
-const getCacheKey = (countryCode: string, city: string) =>
-  `${countryCode.toLowerCase()}::${city.toLowerCase()}`;
 
 const resolveCountryCode = (country: string) => {
   if (country.toLowerCase() === 'ukraine') {
@@ -49,12 +45,6 @@ export const fetchCityCoordinates = async (
 
   const results = await Promise.all(
     cityNames.map(async (city) => {
-      const cacheKey = getCacheKey(countryCode, city);
-      const cached = cityCoordinateCache.get(cacheKey);
-      if (cached) {
-        return { name: city, coordinates: cached };
-      }
-
       try {
         const response = await mapboxGeocodingClient
           .get(`${encodeURIComponent(city)}.json`, {
@@ -74,10 +64,9 @@ export const fetchCityCoordinates = async (
           return null;
         }
 
-        cityCoordinateCache.set(cacheKey, feature.center);
-
         return {
-          name: feature.text ?? city,
+          displayName: feature.text ?? city,
+          canonicalName: city,
           coordinates: feature.center,
         };
       } catch (error) {
@@ -88,6 +77,11 @@ export const fetchCityCoordinates = async (
     })
   );
 
-  return results.filter((result): result is CityCoordinate => Boolean(result));
+  return results
+    .filter((result): result is CityCoordinate => Boolean(result))
+    .map((result) => ({
+      ...result,
+      displayName: result.displayName || result.canonicalName,
+    }));
 };
 
