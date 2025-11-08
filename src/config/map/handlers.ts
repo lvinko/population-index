@@ -1,29 +1,28 @@
 import mapboxgl from 'mapbox-gl';
 
-import { HOVER_POPUP_CLASS_NAME, MAJOR_CITIES, MAJOR_CITIES_LAYER_ID, TAP_POPUP_CLASS_NAME, UNKNOWN_CITY_LABEL } from './constants';
+import {
+  HOVER_POPUP_CLASS_NAME,
+  MAJOR_CITIES_LAYER_ID,
+  TAP_POPUP_CLASS_NAME,
+  UNKNOWN_CITY_LABEL,
+} from './constants';
 import type { CleanupCallback, LayerEvent, MapInstance } from './types';
 
-const getLocalizedCityName = (feature?: mapboxgl.MapboxGeoJSONFeature) => {
+const getCityName = (feature?: mapboxgl.MapboxGeoJSONFeature) => {
   const properties = feature?.properties as Record<string, unknown> | undefined;
-  const nameEn =
-    (properties?.name_en as string | undefined) ??
+  const name =
     (properties?.name as string | undefined) ??
+    (properties?.name_en as string | undefined) ??
+    (properties?.text as string | undefined) ??
     '';
 
-  if (!nameEn) {
-    return UNKNOWN_CITY_LABEL;
-  }
-
-  const normalized = nameEn.toLowerCase();
-  const match = MAJOR_CITIES.find((city) => city.nameEn.toLowerCase() === normalized);
-
-  return match?.nameUk ?? nameEn;
+  return name || UNKNOWN_CITY_LABEL;
 };
 
-export const attachMajorCitiesInteractions = (
+export const attachCityInteractions = (
   map: MapInstance,
-  cleanupCallbacks: CleanupCallback[]
-) => {
+  layerId = MAJOR_CITIES_LAYER_ID
+): CleanupCallback => {
   const hoverPopup = new mapboxgl.Popup({
     closeButton: false,
     closeOnClick: false,
@@ -48,7 +47,7 @@ export const attachMajorCitiesInteractions = (
       return;
     }
 
-    const cityName = getLocalizedCityName(feature);
+    const cityName = getCityName(feature);
 
     hoverPopup
       .setLngLat(event.lngLat)
@@ -67,29 +66,27 @@ export const attachMajorCitiesInteractions = (
       return;
     }
 
-    const cityName = getLocalizedCityName(feature);
+    const cityName = getCityName(feature);
 
-    tapPopup
-      .setLngLat(event.lngLat)
-      .setHTML(`<div class="text-sm font-medium">${cityName}</div>`)
-      .addTo(map);
+    tapPopup.setLngLat(event.lngLat).setHTML(
+      `<div class="text-sm font-medium">${cityName}</div>`
+    );
+
+    tapPopup.addTo(map);
   };
 
-  map.on('mouseenter', MAJOR_CITIES_LAYER_ID, handleMouseEnter);
-  cleanupCallbacks.push(() => map.off('mouseenter', MAJOR_CITIES_LAYER_ID, handleMouseEnter));
+  map.on('mouseenter', layerId, handleMouseEnter);
+  map.on('mousemove', layerId, handleMouseMove);
+  map.on('mouseleave', layerId, handleMouseLeave);
+  map.on('click', layerId, handleClick);
 
-  map.on('mousemove', MAJOR_CITIES_LAYER_ID, handleMouseMove);
-  cleanupCallbacks.push(() => map.off('mousemove', MAJOR_CITIES_LAYER_ID, handleMouseMove));
-
-  map.on('mouseleave', MAJOR_CITIES_LAYER_ID, handleMouseLeave);
-  cleanupCallbacks.push(() => map.off('mouseleave', MAJOR_CITIES_LAYER_ID, handleMouseLeave));
-
-  map.on('click', MAJOR_CITIES_LAYER_ID, handleClick);
-  cleanupCallbacks.push(() => map.off('click', MAJOR_CITIES_LAYER_ID, handleClick));
-
-  cleanupCallbacks.push(() => {
+  return () => {
+    map.off('mouseenter', layerId, handleMouseEnter);
+    map.off('mousemove', layerId, handleMouseMove);
+    map.off('mouseleave', layerId, handleMouseLeave);
+    map.off('click', layerId, handleClick);
     hoverPopup.remove();
     tapPopup.remove();
-  });
+  };
 };
 

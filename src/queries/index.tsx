@@ -1,17 +1,44 @@
-const getPopulationByYear = async (filters: { year?: number }) => {
-  const { year } = filters;
-  const queryParams = new URLSearchParams();
-  if (year) {
-    queryParams.set("year", year.toString());
-  }
+import ky from 'ky';
 
-  const response = await fetch(`/api/populationByYear?${queryParams.toString()}`);
-  return response.json();
+type PopulationQueryParams = {
+  country?: string;
+  year?: number;
 };
 
-const getPopulation = async () => {
-  const response = await fetch(`/api/population`);
-  return response.json();
+const buildQueryString = (params: PopulationQueryParams) => {
+  const searchParams = new URLSearchParams();
+
+  if (params.country) {
+    searchParams.set('country', params.country);
+  }
+
+  if (typeof params.year === 'number') {
+    searchParams.set('year', params.year.toString());
+  }
+
+  return searchParams.toString();
+};
+
+const internalApi = ky.create({
+  prefixUrl: '/api',
+  timeout: 10000,
+  retry: {
+    limit: 2,
+  },
+});
+
+const getPopulationByYear = async (params: Required<Pick<PopulationQueryParams, 'year'>> & { country?: string }) => {
+  const queryString = buildQueryString(params);
+  return internalApi.get(`populationByYear?${queryString}`).json();
+};
+
+const getPopulation = async (params: Pick<PopulationQueryParams, 'country'> = {}) => {
+  const queryString = buildQueryString(params);
+  const endpoint = queryString ? `population?${queryString}` : 'population';
+  return internalApi.get(endpoint).json();
 };
 
 export { getPopulationByYear, getPopulation };
+
+export * from './countriesNow';
+export * from './mapbox';

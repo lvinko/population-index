@@ -2,7 +2,13 @@ import type mapboxgl from 'mapbox-gl';
 
 import UkraineRegions from '@/helpers/ua.json';
 
-import { MAJOR_CITIES_LAYER_ID, MAJOR_CITY_NAMES_EN, UKRAINE_OBLAST_FILL_LAYER_ID, UKRAINE_OBLAST_OUTLINE_LAYER_ID, UKRAINE_OBLAST_SOURCE_ID } from './constants';
+import {
+  STATE_CITIES_LAYER_ID,
+  STATE_CITIES_SOURCE_ID,
+  UKRAINE_OBLAST_FILL_LAYER_ID,
+  UKRAINE_OBLAST_OUTLINE_LAYER_ID,
+  UKRAINE_OBLAST_SOURCE_ID,
+} from './constants';
 
 export const ensureOblastLayers = (map: mapboxgl.Map) => {
   if (!map.getSource(UKRAINE_OBLAST_SOURCE_ID)) {
@@ -18,7 +24,7 @@ export const ensureOblastLayers = (map: mapboxgl.Map) => {
       type: 'fill',
       source: UKRAINE_OBLAST_SOURCE_ID,
       paint: {
-        'fill-color': '#000000',
+        'fill-color': '#FF8800',
         'fill-opacity': 0,
       },
     });
@@ -37,21 +43,52 @@ export const ensureOblastLayers = (map: mapboxgl.Map) => {
   }
 };
 
-export const ensureMajorCitiesLayer = (map: mapboxgl.Map) => {
-  if (map.getLayer(MAJOR_CITIES_LAYER_ID)) {
+type CityFeatureProperties = {
+  name: string;
+};
+
+export type CityFeature = GeoJSON.Feature<GeoJSON.Point, CityFeatureProperties>;
+
+const createEmptyFeatureCollection = (): GeoJSON.FeatureCollection<GeoJSON.Point, CityFeatureProperties> => ({
+  type: 'FeatureCollection',
+  features: [],
+});
+
+export const ensureStateCitiesLayer = (map: mapboxgl.Map) => {
+  if (!map.getSource(STATE_CITIES_SOURCE_ID)) {
+    map.addSource(STATE_CITIES_SOURCE_ID, {
+      type: 'geojson',
+      data: createEmptyFeatureCollection(),
+    });
+  }
+
+  if (!map.getLayer(STATE_CITIES_LAYER_ID)) {
+    map.addLayer({
+      id: STATE_CITIES_LAYER_ID,
+      type: 'circle',
+      source: STATE_CITIES_SOURCE_ID,
+      paint: {
+        'circle-radius': 6,
+        'circle-color': '#FF0000',
+        'circle-stroke-width': 1.5,
+        'circle-stroke-color': '#FFFFFF',
+      },
+    });
+  }
+};
+
+export const updateStateCitiesLayer = (map: mapboxgl.Map, features: CityFeature[]) => {
+  ensureStateCitiesLayer(map);
+
+  const source = map.getSource(STATE_CITIES_SOURCE_ID) as mapboxgl.GeoJSONSource | undefined;
+  if (!source) {
     return;
   }
 
-  map.addLayer({
-    id: MAJOR_CITIES_LAYER_ID,
-    type: 'circle',
-    source: 'composite',
-    'source-layer': 'place_label',
-    filter: ['match', ['get', 'name_en'], [...MAJOR_CITY_NAMES_EN], true, false],
-    paint: {
-      'circle-radius': 6,
-      'circle-color': '#FF0000',
-    },
-  });
-};
+  const collection: GeoJSON.FeatureCollection<GeoJSON.Point, CityFeatureProperties> = {
+    type: 'FeatureCollection',
+    features,
+  };
 
+  source.setData(collection);
+};

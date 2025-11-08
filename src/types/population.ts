@@ -1,16 +1,20 @@
-import UkraineData from "@/helpers/ua-data.json";
-
-type PopulationData = typeof UkraineData;
-type PopulationDataByYear = (typeof UkraineData)[number];
-
-type RegionName = 'Avtonomna Respublika Krym' | 'Vinnytska' | 'Volynska' | 'Dnipropetrovska' | 'Donetska' | 'Zhytomyrska' | 'Zakarpatska' | 'Zaporizka' | 'Ivano-Frankivska' | 'Kyivska' | 'Kirovohradska' | 'Luhanska' | 'Lvivska' | 'Mykolaivska' | 'Odeska' | 'Poltavska' | 'Rivnenska' | 'Sumska' | 'Ternopilska' | 'Kharkivska' | 'Khersonska' | 'Khmelnytska' | 'Cherkaska' | 'Chernivetska' | 'Chernihivska';
-
-// Define proper types for the data
-interface RegionData {
+export type PopulationCount = {
   year: string;
-  name: RegionName;
-  total: number;
-}
+  value: number;
+  sex?: string;
+  reliability?: string;
+};
 
-export type { PopulationData, RegionName, RegionData, PopulationDataByYear };
+export type CountryPopulation = {
+  country: string;
+  code: string;
+  iso3: string;
+  populationCounts: PopulationCount[];
+};
+
+export type CountryPopulationResponse = {
+  error: boolean;
+  msg: string;
+  data: CountryPopulation;
+};
 

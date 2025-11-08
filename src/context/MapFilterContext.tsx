@@ -1,8 +1,10 @@
+'use client';
+
 import { createContext, useContext, useState, ReactNode } from 'react';
 
 export type Filters = {
-  year: number;
-  type: string;
+  country: string;
+  state: string;
 };
 
 type MapFilterContextType = {
@@ -17,10 +19,9 @@ type MapFilterProviderProps = {
 };
 
 export function MapFilterProvider({ children }: MapFilterProviderProps) {
-  // NOTE: default values
   const [filters, setFilters] = useState<Filters>({
-    year: 2022,
-    type: 'total',
+    country: 'Ukraine',
+    state: '',
   });
 
   return (
