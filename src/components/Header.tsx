@@ -9,7 +9,7 @@ const Header = ({
   title?: string;
   children?: React.ReactNode;
 }) => {
-  return <div className="w-full h-12 mb-2 flex items-center justify-between">
+  return <div className="w-full h-12 mb-2 flex items-center justify-between p-8">
     <Link href="/">
       <Image src="/logo.png" alt="Map" width={80} height={30} />
     </Link>

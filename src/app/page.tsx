@@ -9,7 +9,7 @@ import { Toaster } from 'react-hot-toast';
 
 export default function Home() {
   return (
-    <div className="flex-1 flex flex-col items-center justify-between min-h-screen p-5 sm:p-8 bg-background text-foreground relative">
+    <div className="flex-1 flex flex-col items-center justify-between min-h-screen  bg-background text-foreground relative">
       <Header />
       <ReactQueryProvider>
         <MapFilterProvider>
