@@ -12,6 +12,7 @@ type SelectOption<TValue> = {
 };
 
 const COUNTRY = 'Ukraine';
+const COUNTRY_ISO3 = 'UKR';
 
 const MapFilter = () => {
   const { filters, setFilters } = useMapFilter();
@@ -32,20 +33,20 @@ const MapFilter = () => {
   }, [statesResponse]);
 
   useEffect(() => {
-    if (filters.country !== COUNTRY) {
+    if (filters.country !== COUNTRY || filters.countryIso3 !== COUNTRY_ISO3) {
       setFilters((prev) => ({
         ...prev,
         country: COUNTRY,
+        countryIso3: COUNTRY_ISO3,
       }));
     }
-  }, [filters.country, setFilters]);
+  }, [filters.country, filters.countryIso3, setFilters]);
 
   useEffect(() => {
     if (stateOptions.length === 0 && filters.state !== '') {
       setFilters((prev) => ({
         ...prev,
         state: '',
-        statePopulation: null,
       }));
       return;
     }
@@ -57,7 +58,6 @@ const MapFilter = () => {
       setFilters((prev) => ({
         ...prev,
         state: '',
-        statePopulation: null,
       }));
     }
   }, [filters.state, setFilters, stateOptions]);
@@ -67,7 +67,6 @@ const MapFilter = () => {
     setFilters((prev) => ({
       ...prev,
       state: nextState,
-      statePopulation: null,
     }));
   };
 

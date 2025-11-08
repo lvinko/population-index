@@ -56,34 +56,52 @@ const formatPopulation = (population: number | null | undefined) => {
   return population.toLocaleString('uk-UA');
 };
 
-const buildPopupContent = ({
-  cityName,
-  population,
-  status,
-}: {
-  cityName: string;
-  population?: number | null;
-  status: 'idle' | 'loading' | 'error';
-}) => {
+type CityPopupState =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'error' }
+  | { status: 'success'; population: number | null; year?: number };
+
+const buildPopupContent = (cityName: string, state: CityPopupState) => {
   const safeCityName = escapeHtml(cityName);
 
-  const populationContent =
-    status === 'loading'
-      ? '<span class="text-xs text-zinc-500">Завантаження населення…</span>'
-      : status === 'error'
-        ? '<span class="text-xs text-red-500">Не вдалося отримати населення</span>'
-        : population != null
-          ? `<span class="text-xs text-zinc-600">Населення: ${formatPopulation(population)}</span>`
+  let body: string;
+
+  switch (state.status) {
+    case 'loading':
+      body = '<span class="text-xs text-zinc-500">Завантаження населення…</span>';
+      break;
+    case 'error':
+      body = '<span class="text-xs text-red-500">Не вдалося отримати населення</span>';
+      break;
+    case 'success': {
+      const formatted = formatPopulation(state.population);
+      body =
+        formatted != null
+          ? `<span class="text-xs text-zinc-600">Населення${
+              state.year ? ` (${state.year})` : ''
+            }: ${formatted}</span>`
           : '<span class="text-xs text-zinc-500">Немає даних про населення</span>';
+      break;
+    }
+    default:
+      body = '<span class="text-xs text-zinc-500">Натисніть, щоб переглянути населення</span>';
+      break;
+  }
 
   return `<div class="flex flex-col gap-1">
     <span class="text-sm font-medium">${safeCityName}</span>
-    ${populationContent}
+    ${body}
   </div>`;
 };
 
+type CityPopulationResolverResult = {
+  population: number | null;
+  year?: number;
+};
+
 type AttachCityInteractionsOptions = {
-  getCityPopulation?: (cityName: string) => Promise<number | null>;
+  getCityPopulation?: (cityName: string) => Promise<CityPopulationResolverResult>;
 };
 
 export const attachCityInteractions = (
@@ -121,12 +139,7 @@ export const attachCityInteractions = (
 
     hoverPopup
       .setLngLat(event.lngLat)
-      .setHTML(
-        buildPopupContent({
-          cityName,
-          status: 'idle',
-        })
-      )
+      .setHTML(buildPopupContent(cityName, { status: 'idle' }))
       .addTo(map);
   };
 
@@ -147,8 +160,7 @@ export const attachCityInteractions = (
     tapPopup
       .setLngLat(event.lngLat)
       .setHTML(
-        buildPopupContent({
-          cityName,
+        buildPopupContent(cityName, {
           status: options.getCityPopulation ? 'loading' : 'idle',
         })
       );
@@ -163,16 +175,16 @@ export const attachCityInteractions = (
 
     options
       .getCityPopulation(canonicalCityName)
-      .then((population) => {
+      .then((result) => {
         if (tapRequestId !== requestId) {
           return;
         }
 
         tapPopup.setLngLat(event.lngLat).setHTML(
-          buildPopupContent({
-            cityName,
-            population,
-            status: 'idle',
+          buildPopupContent(cityName, {
+            status: 'success',
+            population: result.population,
+            year: result.year,
           })
         );
       })
@@ -182,8 +194,7 @@ export const attachCityInteractions = (
         }
 
         tapPopup.setLngLat(event.lngLat).setHTML(
-          buildPopupContent({
-            cityName,
+          buildPopupContent(cityName, {
             status: 'error',
           })
         );

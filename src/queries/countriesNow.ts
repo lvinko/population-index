@@ -29,10 +29,6 @@ type StateCitiesResponse = {
   data: string[];
 };
 
-type CountryPopulationRequest = {
-  country: string;
-};
-
 type PopulationCount = {
   year: string;
   value: number;
@@ -58,15 +54,24 @@ type CityPopulationRequest = {
   city: string;
 };
 
-type CityPopulationRecord = {
-  year: string;
+type CityPopulationRecordRaw = {
+  year: number | string;
   value: number | string;
+  sex?: string;
+  reliability?: string;
+};
+
+type CityPopulationRecord = {
+  year: number;
+  value: number;
+  sex?: string;
+  reliability?: string;
 };
 
 type CityPopulationData = {
   country: string;
-  name: string;
-  populationCounts: CityPopulationRecord[];
+  city: string;
+  populationCounts: CityPopulationRecordRaw[];
 };
 
 type CityPopulationResponse = {
@@ -75,16 +80,10 @@ type CityPopulationResponse = {
   data: CityPopulationData;
 };
 
-type CityPopulationSearchRecord = {
-  city?: string;
-  name?: string;
-  cityName?: string;
-};
-
-type CityPopulationSearchResponse = {
-  error: boolean;
-  msg: string;
-  data: CityPopulationSearchRecord[] | null;
+export type CityPopulationResult = {
+  country: string;
+  city: string;
+  populationCounts: CityPopulationRecord[];
 };
 
 const countriesNowClient = ky.create({
@@ -135,16 +134,18 @@ export const fetchStateCities = async (country: string, state: string) => {
 };
 
 export const fetchCountryPopulation = async (
-  country: string
+  iso3: string
 ): Promise<CountryPopulationResponse> => {
-  if (!country) {
-    throw new Error('Country is required');
+  if (!iso3) {
+    throw new Error('ISO3 code is required');
   }
 
-  const payload: CountryPopulationRequest = { country };
-
   const data = await countriesNowClient
-    .post('countries/population', { json: payload })
+    .get('countries/population/q', {
+      searchParams: {
+        iso3: iso3.toUpperCase(),
+      },
+    })
     .json<CountryPopulationResponse>();
 
   if (data.error) {
@@ -163,173 +164,12 @@ export const fetchCountryPopulation = async (
   };
 };
 
-const getLatestPopulation = (records: CityPopulationRecord[]) => {
-  if (!Array.isArray(records) || records.length === 0) {
-    return null;
-  }
-
-  const sorted = [...records].sort((a, b) => {
-    const yearA = Number.parseInt(a.year, 10);
-    const yearB = Number.parseInt(b.year, 10);
-    return yearB - yearA;
-  });
-
-  for (const record of sorted) {
-    const numericValue =
-      typeof record.value === 'number' ? record.value : Number(record.value);
-    if (Number.isFinite(numericValue)) {
-      return numericValue;
-    }
-  }
-
-  return null;
-};
-
-const HYPHEN_REGEX = /[-–—]/g;
-const DIACRITIC_REGEX = /[\u0300-\u036f]/g;
-const COMMON_SUFFIXES = ['raion', 'rayon', 'district', 'region', 'oblast', 'municipality'];
-
-const normalizeSpacing = (value: string) => value.replace(/\s+/g, ' ').trim();
-
-const removeParentheticalSegments = (value: string) => value.replace(/\s*\(.*?\)\s*/g, ' ').trim();
-
-const stripCommonSuffixes = (value: string) => {
-  let result = value;
-  let changed = false;
-
-  do {
-    changed = false;
-    for (const suffix of COMMON_SUFFIXES) {
-      const regex = new RegExp(`(?:\\s|-)${suffix}$`, 'i');
-      if (regex.test(result)) {
-        result = result.replace(regex, '');
-        changed = true;
-      }
-    }
-  } while (changed);
-
-  return normalizeSpacing(result);
-};
-
-const removeDiacritics = (value: string) => value.normalize('NFD').replace(DIACRITIC_REGEX, '');
-
-const removeApostrophes = (value: string) => value.replace(/[’'`]/g, '');
-
-const adjustAdjectiveSuffixes = (value: string) =>
-  value.replace(/skyi\b/gi, 'sky').replace(/skyy\b/gi, 'sky').replace(/skij\b/gi, 'sky');
-
-const toTitleCase = (value: string) =>
-  value
-    .toLowerCase()
-    .split(' ')
-    .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-
-const generateCityQueryCandidates = (city: string) => {
-  const queue: string[] = [];
-  const seen = new Set<string>();
-
-  const enqueue = (input: string) => {
-    const normalized = normalizeSpacing(input);
-    if (!normalized) {
-      return;
-    }
-
-    const title = toTitleCase(normalized);
-    if (!title || seen.has(title)) {
-      return;
-    }
-
-    seen.add(title);
-    queue.push(title);
-  };
-
-  const processVariant = (variant: string) => {
-    enqueue(variant);
-
-    const hyphenVariant = variant.replace(HYPHEN_REGEX, ' ');
-    enqueue(hyphenVariant);
-
-    const noDiacritics = removeDiacritics(hyphenVariant);
-    enqueue(noDiacritics);
-
-    const noApostrophes = removeApostrophes(noDiacritics);
-    enqueue(noApostrophes);
-
-    const stripped = stripCommonSuffixes(noApostrophes);
-    enqueue(stripped);
-
-    const adjusted = adjustAdjectiveSuffixes(stripped);
-    enqueue(adjusted);
-  };
-
-  processVariant(city);
-
-  const withoutParentheses = removeParentheticalSegments(city);
-  if (withoutParentheses && withoutParentheses !== city) {
-    processVariant(withoutParentheses);
-  }
-
-  return queue;
-};
-
-const fetchCityPopulationSearchSuggestions = async (
-  country: string,
-  query: string
-): Promise<string[]> => {
-  try {
-    const response = await countriesNowClient
-      .post('countries/population/cities/q', {
-        searchParams: {
-          country,
-          city: query,
-        },
-      })
-      .json<CityPopulationSearchResponse>();
-
-    if (response.error || !Array.isArray(response.data)) {
-      return [];
-    }
-
-    const suggestions = response.data
-      .map((record) => record.city ?? record.name ?? record.cityName ?? '')
-      .map((value) => toTitleCase(normalizeSpacing(value)))
-      .filter(Boolean);
-
-    return Array.from(new Set(suggestions));
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.warn(`City population suggestions request failed for "${query}":`, error);
-    return [];
-  }
-};
-
-const requestCityPopulationValue = async (
-  country: string,
-  cityName: string
-): Promise<number | null> => {
-  const payload: CityPopulationRequest = {
-    country,
-    city: cityName,
-  };
-
-  const response = await countriesNowClient
-    .post('countries/population/cities', { json: payload })
-    .json<CityPopulationResponse>();
-
-  if (response.error) {
-    return null;
-  }
-
-  const latestPopulation = getLatestPopulation(response.data.populationCounts ?? []);
-  return latestPopulation;
-};
-
-type CityPopulationResult = {
-  city: string;
-  population: number | null;
-};
+const normalizeCityPopulationRecord = (record: CityPopulationRecordRaw): CityPopulationRecord => ({
+  year: Number(record.year),
+  value: Number(record.value),
+  sex: record.sex,
+  reliability: record.reliability,
+});
 
 export const fetchCityPopulation = async (
   country: string,
@@ -339,51 +179,22 @@ export const fetchCityPopulation = async (
     throw new Error('Country and city are required');
   }
 
-  const baseCity = normalizeSpacing(city);
-  if (!baseCity) {
-    throw new Error('City is required');
-  }
+  const payload: CityPopulationRequest = {
+    country,
+    city,
+  };
 
-  const initialCandidates = generateCityQueryCandidates(baseCity);
-  const candidateNames = initialCandidates.length > 0 ? initialCandidates : [toTitleCase(baseCity)];
+  const data = await countriesNowClient
+    .post('countries/population/cities', { json: payload })
+    .json<CityPopulationResponse>();
 
-  let lastError: unknown = null;
-  const dynamicCandidates = [...candidateNames];
-  const seenCandidates = new Set(dynamicCandidates);
-
-  for (let index = 0; index < dynamicCandidates.length; index += 1) {
-    const candidate = dynamicCandidates[index];
-
-    try {
-      const population = await requestCityPopulationValue(country, candidate);
-
-      if (population !== null) {
-        return {
-          city: baseCity,
-          population,
-        };
-      }
-
-      if (index === 0) {
-        const suggestions = await fetchCityPopulationSearchSuggestions(country, candidate);
-        for (const suggestion of suggestions) {
-          if (!seenCandidates.has(suggestion)) {
-            seenCandidates.add(suggestion);
-            dynamicCandidates.push(suggestion);
-          }
-        }
-      }
-    } catch (error) {
-      lastError = error;
-    }
-  }
-
-  if (lastError) {
-    throw lastError;
+  if (data.error) {
+    throw new Error(data.msg || `Unable to retrieve population for ${city}`);
   }
 
   return {
-    city: baseCity,
-    population: null,
+    country: data.data.country,
+    city: data.data.city,
+    populationCounts: (data.data.populationCounts ?? []).map(normalizeCityPopulationRecord),
   };
 };

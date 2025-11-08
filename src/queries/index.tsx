@@ -2,6 +2,7 @@ import ky from 'ky';
 
 type PopulationQueryParams = {
   country?: string;
+  iso3?: string;
   year?: number;
 };
 
@@ -10,6 +11,10 @@ const buildQueryString = (params: PopulationQueryParams) => {
 
   if (params.country) {
     searchParams.set('country', params.country);
+  }
+
+  if (params.iso3) {
+    searchParams.set('iso3', params.iso3);
   }
 
   if (typeof params.year === 'number') {
@@ -27,13 +32,27 @@ const internalApi = ky.create({
   },
 });
 
-const getPopulationByYear = async (params: Required<Pick<PopulationQueryParams, 'year'>> & { country?: string }) => {
-  const queryString = buildQueryString(params);
+const withDefaultIso3 = (params: PopulationQueryParams) => {
+  if (!params.country && !params.iso3) {
+    return {
+      ...params,
+      iso3: 'UKR',
+    };
+  }
+
+  return params;
+};
+
+const getPopulationByYear = async (
+  params: Required<Pick<PopulationQueryParams, 'year'>> & { country?: string; iso3?: string }
+) => {
+  const queryString = buildQueryString(withDefaultIso3(params));
   return internalApi.get(`populationByYear?${queryString}`).json();
 };
 
-const getPopulation = async (params: Pick<PopulationQueryParams, 'country'> = {}) => {
-  const queryString = buildQueryString(params);
+const getPopulation = async (params: Pick<PopulationQueryParams, 'country' | 'iso3'> = {}) => {
+  const endpointParams = withDefaultIso3(params);
+  const queryString = buildQueryString(endpointParams);
   const endpoint = queryString ? `population?${queryString}` : 'population';
   return internalApi.get(endpoint).json();
 };

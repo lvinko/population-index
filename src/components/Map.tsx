@@ -29,7 +29,7 @@ const Map = () => {
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const majorCitiesCleanupRef = useRef<CleanupCallback | null>(null);
   const previousStateRef = useRef<string | null>(null);
-  const { filters, setFilters } = useMapFilter();
+  const { filters } = useMapFilter();
 
   const {
     data: citiesResponse,
@@ -82,93 +82,61 @@ const Map = () => {
     }));
   }, [cityCoordinates]);
 
-  const cityPopulationStoreRef = useRef<Record<string, number | null>>({});
-  const cityPopulationRequestsRef = useRef<Record<string, Promise<number | null>>>({});
+  type CityPopulationSummary = {
+    population: number | null;
+    year?: number;
+  };
+
+  const cityPopulationStoreRef = useRef<Partial<Record<string, CityPopulationSummary>>>({});
+  const cityPopulationRequestsRef = useRef<Partial<Record<string, Promise<CityPopulationSummary>>>>({});
 
   useEffect(() => {
     cityPopulationStoreRef.current = {};
     cityPopulationRequestsRef.current = {};
-  }, [filters.state]);
+  }, [filters.state, filters.country]);
 
   const getCityPopulation = useCallback(
     async (canonicalCityName: string) => {
+      const key = canonicalCityName.trim();
+      if (!key) {
+        return { population: null };
+      }
+
       const store = cityPopulationStoreRef.current;
-      if (Object.prototype.hasOwnProperty.call(store, canonicalCityName)) {
-        return store[canonicalCityName] ?? null;
+      if (store[key]) {
+        return store[key];
       }
 
       const pendingRequests = cityPopulationRequestsRef.current;
-      const existingRequest = pendingRequests[canonicalCityName];
-      if (existingRequest) {
-        return existingRequest;
+      if (pendingRequests[key]) {
+        return pendingRequests[key];
       }
 
       const requestPromise = (async () => {
-        const { population } = await fetchCityPopulation(filters.country, canonicalCityName);
+        const response = await fetchCityPopulation(filters.country, key);
+        const sorted = [...response.populationCounts].sort((a, b) => b.year - a.year);
+        const latest = sorted.find((entry) => Number.isFinite(entry.value));
 
-        const nextStore = cityPopulationStoreRef.current;
-        const previousPopulation = nextStore[canonicalCityName];
-        if (previousPopulation !== population) {
-          nextStore[canonicalCityName] = population;
-          const total = Object.values(nextStore).reduce<number>((acc, value) => acc + (value ?? 0), 0);
+        const summary: CityPopulationSummary = {
+          population: latest ? latest.value : null,
+          year: latest?.year,
+        };
 
-          setFilters((prev) =>
-            prev.state === filters.state && prev.statePopulation !== total
-              ? {
-                  ...prev,
-                  statePopulation: total,
-                }
-              : prev
-          );
-        }
-
-        return population;
+        cityPopulationStoreRef.current[key] = summary;
+        return summary;
       })();
 
-      cityPopulationRequestsRef.current[canonicalCityName] = requestPromise;
+      pendingRequests[key] = requestPromise;
 
       try {
-        return await requestPromise;
+        const result = await requestPromise;
+        return result;
       } finally {
-        delete cityPopulationRequestsRef.current[canonicalCityName];
+        delete pendingRequests[key];
       }
     },
-    [filters.country, filters.state, setFilters]
+    [filters.country]
   );
-
-  useEffect(() => {
-    if (!filters.state || cityNames.length === 0) {
-      return;
-    }
-
-    let isCancelled = false;
-
-    const run = async () => {
-      for (const rawName of cityNames) {
-        if (isCancelled) {
-          break;
-        }
-
-        const canonicalName = rawName?.trim();
-        if (!canonicalName) {
-          continue;
-        }
-
-        try {
-          await getCityPopulation(canonicalName);
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn(`Не вдалося отримати населення для міста "${canonicalName}":`, error);
-        }
-      }
-    };
-
-    void run();
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [cityNames, filters.state, getCityPopulation]);
 
   useEffect(() => {
     if (mapRef.current || !mapContainerRef.current) {
