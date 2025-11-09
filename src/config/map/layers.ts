@@ -24,8 +24,15 @@ export const ensureOblastLayers = (map: mapboxgl.Map) => {
       type: 'fill',
       source: UKRAINE_OBLAST_SOURCE_ID,
       paint: {
-        'fill-color': '#FF8800',
-        'fill-opacity': 0,
+        'fill-color': '#2563eb',
+        'fill-opacity': [
+          'case',
+          ['boolean', ['feature-state', 'selected'], false],
+          0.42,
+          ['boolean', ['feature-state', 'hover'], false],
+          0.24,
+          0,
+        ],
       },
     });
   }
@@ -36,8 +43,16 @@ export const ensureOblastLayers = (map: mapboxgl.Map) => {
       type: 'line',
       source: UKRAINE_OBLAST_SOURCE_ID,
       paint: {
-        'line-color': '#FF8800',
-        'line-width': 1,
+        'line-color': '#2563eb',
+        'line-width': [
+          'case',
+          ['boolean', ['feature-state', 'selected'], false],
+          2.2,
+          ['boolean', ['feature-state', 'hover'], false],
+          1.6,
+          1,
+        ],
+        'line-opacity': 0.8,
       },
     });
   }

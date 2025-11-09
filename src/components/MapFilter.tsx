@@ -3,6 +3,7 @@ import { ChangeEvent, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import { useMapFilter } from '@/context/MapFilterContext';
+import { getUkraineOblastLabelByName } from '@/config/map';
 import { fetchCountryStates } from '@/queries';
 import { Spinner } from '@/components';
 
@@ -28,7 +29,7 @@ const MapFilter = () => {
     const states = statesResponse?.data.states ?? [];
     return states.map((state) => ({
       value: state.name,
-      label: state.name,
+      label: getUkraineOblastLabelByName(state.name) ?? state.name,
     }));
   }, [statesResponse]);
 

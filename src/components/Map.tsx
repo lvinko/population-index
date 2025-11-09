@@ -13,11 +13,14 @@ import {
   MAP_INITIAL_ZOOM,
   MAP_STYLE,
   STATE_CITIES_LAYER_ID,
+  UKRAINE_OBLAST_SOURCE_ID,
   attachCityInteractions,
+  attachOblastInteractions,
   ensureOblastLayers,
   ensureStateCitiesLayer,
   updateStateCitiesLayer,
   type CityFeature,
+  getUkraineOblastCodeByName,
 } from '@/config/map';
 import type { CleanupCallback } from '@/config/map';
 import { useMapFilter, normalizeCityKey } from '@/context/MapFilterContext';
@@ -97,7 +100,10 @@ const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const majorCitiesCleanupRef = useRef<CleanupCallback | null>(null);
+  const oblastInteractionsCleanupRef = useRef<CleanupCallback | null>(null);
   const previousStateRef = useRef<string | null>(null);
+  const selectedOblastFeatureIdRef = useRef<number | string | null>(null);
+  const selectedOblastCodeRef = useRef<string | null>(null);
   const { filters, setFilters } = useMapFilter();
 
   const {
@@ -359,11 +365,30 @@ const Map = () => {
     return () => {
       mapInstance.off('load', handleLoad);
       majorCitiesCleanupRef.current?.();
+      oblastInteractionsCleanupRef.current?.();
       mapRef.current?.remove();
       mapRef.current = null;
       majorCitiesCleanupRef.current = null;
+      oblastInteractionsCleanupRef.current = null;
     };
   }, []);
+
+  const handleStateSelection = useCallback(
+    ({ name }: { code: string; name: string; label: string }) => {
+      setFilters((prev) => {
+        if (prev.state === name) {
+          return prev;
+        }
+
+        return {
+          ...prev,
+          state: name,
+          selectedCity: null,
+        };
+      });
+    },
+    [setFilters]
+  );
 
   useEffect(() => {
     const mapInstance = mapRef.current;
@@ -402,6 +427,39 @@ const Map = () => {
 
   useEffect(() => {
     const mapInstance = mapRef.current;
+    if (!mapInstance) {
+      return;
+    }
+
+    const setup = () => {
+      ensureOblastLayers(mapInstance);
+      oblastInteractionsCleanupRef.current?.();
+      oblastInteractionsCleanupRef.current = attachOblastInteractions(mapInstance, undefined, {
+        onStateSelected: handleStateSelection,
+      });
+    };
+
+    if (!mapInstance.isStyleLoaded()) {
+      const onLoad = () => {
+        setup();
+        mapInstance.off('load', onLoad);
+      };
+      mapInstance.on('load', onLoad);
+      return () => {
+        mapInstance.off('load', onLoad);
+      };
+    }
+
+    setup();
+
+    return () => {
+      oblastInteractionsCleanupRef.current?.();
+      oblastInteractionsCleanupRef.current = null;
+    };
+  }, [handleStateSelection]);
+
+  useEffect(() => {
+    const mapInstance = mapRef.current;
     if (!mapInstance || cityFeatures.length === 0) {
       return;
     }
@@ -428,6 +486,92 @@ const Map = () => {
     previousStateRef.current = filters.state;
   }, [cityFeatures, filters.state]);
 
+  useEffect(() => {
+    const mapInstance = mapRef.current;
+    if (!mapInstance) {
+      return;
+    }
+
+    const clearSelectedOblast = () => {
+      if (selectedOblastFeatureIdRef.current == null) {
+        return;
+      }
+
+      if (mapInstance.getSource(UKRAINE_OBLAST_SOURCE_ID)) {
+        mapInstance.setFeatureState(
+          {
+            source: UKRAINE_OBLAST_SOURCE_ID,
+            id: selectedOblastFeatureIdRef.current,
+          },
+          { selected: false }
+        );
+      }
+
+      selectedOblastFeatureIdRef.current = null;
+      selectedOblastCodeRef.current = null;
+    };
+
+    const applySelection = () => {
+      if (!mapInstance.getSource(UKRAINE_OBLAST_SOURCE_ID)) {
+        return;
+      }
+
+      if (!filters.state) {
+        clearSelectedOblast();
+        return;
+      }
+
+      const code = getUkraineOblastCodeByName(filters.state);
+      if (!code) {
+        clearSelectedOblast();
+        return;
+      }
+
+      const normalizedCode = code.toUpperCase();
+      if (selectedOblastCodeRef.current === normalizedCode) {
+        return;
+      }
+
+      clearSelectedOblast();
+
+      const features = mapInstance.querySourceFeatures(UKRAINE_OBLAST_SOURCE_ID, {
+        filter: ['==', ['get', 'id'], normalizedCode],
+      });
+      const target = features[0];
+      if (!target || target.id == null) {
+        selectedOblastCodeRef.current = null;
+        return;
+      }
+
+      mapInstance.setFeatureState(
+        {
+          source: UKRAINE_OBLAST_SOURCE_ID,
+          id: target.id,
+        },
+        { selected: true }
+      );
+      selectedOblastFeatureIdRef.current = target.id;
+      selectedOblastCodeRef.current = normalizedCode;
+    };
+
+    if (!mapInstance.isStyleLoaded()) {
+      const onLoad = () => {
+        applySelection();
+        mapInstance.off('load', onLoad);
+      };
+      mapInstance.on('load', onLoad);
+      return () => {
+        mapInstance.off('load', onLoad);
+      };
+    }
+
+    applySelection();
+
+    return () => {
+      clearSelectedOblast();
+    };
+  }, [filters.state]);
+
   const isFetchingCityList = isStateSelected ? isFetchingStateCities : false;
   const showLoadingOverlay =
     !mapRef.current ||
@@ -437,7 +581,7 @@ const Map = () => {
   const loadingMessage = !mapRef.current
     ? 'Підготовка карти…'
     : !isStateSelected
-      ? 'Select state to start'
+      ? 'Оберіть область, щоб почати'
       : isFetchingCityList
         ? 'Завантаження міст області…'
         : isLoadingCountryCityPopulations

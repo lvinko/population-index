@@ -1,6 +1,13 @@
 import mapboxgl from 'mapbox-gl';
 
-import { MAJOR_CITIES_LAYER_ID, TAP_POPUP_CLASS_NAME, UNKNOWN_CITY_LABEL } from './constants';
+import {
+  MAJOR_CITIES_LAYER_ID,
+  TAP_POPUP_CLASS_NAME,
+  UNKNOWN_CITY_LABEL,
+  UKRAINE_OBLAST_FILL_LAYER_ID,
+  UKRAINE_OBLAST_SOURCE_ID,
+} from './constants';
+import { getUkraineOblastLabelByCode, getUkraineOblastNameByCode } from './regions';
 import type { CleanupCallback, LayerEvent, MapInstance } from './types';
 
 const getCityName = (feature?: mapboxgl.MapboxGeoJSONFeature) => {
@@ -215,4 +222,141 @@ export const attachCityInteractions = (
     tapPopup.remove();
   };
 };
+
+type OblastSelectionPayload = {
+  code: string;
+  name: string;
+  label: string;
+};
+
+type AttachOblastInteractionsOptions = {
+  onStateSelected?: (payload: OblastSelectionPayload) => void;
+};
+
+const getOblastFeatureCode = (feature?: mapboxgl.MapboxGeoJSONFeature) => {
+  const properties = feature?.properties as Record<string, unknown> | undefined;
+  const directId = properties?.id;
+  if (typeof directId === 'string' && directId.trim().length > 0) {
+    return directId;
+  }
+
+  const featureId = feature?.id;
+  if (typeof featureId === 'string') {
+    return featureId;
+  }
+
+  return null;
+};
+
+const getOblastName = (feature?: mapboxgl.MapboxGeoJSONFeature) => {
+  const code = getOblastFeatureCode(feature);
+  if (!code) {
+    return null;
+  }
+
+  const normalizedCode = code.toString();
+  const mappedName = getUkraineOblastNameByCode(normalizedCode);
+  if (!mappedName) {
+    return null;
+  }
+
+  return {
+    code: normalizedCode,
+    name: mappedName,
+    label: getUkraineOblastLabelByCode(normalizedCode) ?? mappedName,
+  };
+};
+
+export const attachOblastInteractions = (
+  map: MapInstance,
+  layerId = UKRAINE_OBLAST_FILL_LAYER_ID,
+  options: AttachOblastInteractionsOptions = {}
+): CleanupCallback => {
+  let hoveredFeatureId: number | string | null = null;
+  const hasOblastSource = () => Boolean(map.getSource(UKRAINE_OBLAST_SOURCE_ID));
+
+  const resetHoverState = () => {
+    if (hoveredFeatureId == null) {
+      return;
+    }
+
+    if (hasOblastSource()) {
+      map.setFeatureState(
+        { source: UKRAINE_OBLAST_SOURCE_ID, id: hoveredFeatureId },
+        { hover: false }
+      );
+    }
+    hoveredFeatureId = null;
+  };
+
+  const applyHoverState = (featureId: number | string | undefined) => {
+    if (featureId == null || hoveredFeatureId === featureId) {
+      return;
+    }
+
+    resetHoverState();
+
+    if (hasOblastSource()) {
+      map.setFeatureState({ source: UKRAINE_OBLAST_SOURCE_ID, id: featureId }, { hover: true });
+      hoveredFeatureId = featureId;
+      return;
+    }
+
+    hoveredFeatureId = featureId;
+  };
+
+  const handleMouseEnter = () => {
+    map.getCanvas().style.cursor = 'pointer';
+  };
+
+  const handleMouseMove = (event: LayerEvent) => {
+    const feature = event.features?.[0];
+    if (!feature) {
+      resetHoverState();
+      return;
+    }
+
+    applyHoverState(feature.id);
+  };
+
+  const handleMouseLeave = () => {
+    map.getCanvas().style.cursor = '';
+    resetHoverState();
+  };
+
+  const handleOblastClick = (event: LayerEvent) => {
+    const feature = event.features?.[0];
+    if (!feature) {
+      return;
+    }
+
+    const oblast = getOblastName(feature);
+    if (!oblast) {
+      return;
+    }
+
+    if (options.onStateSelected) {
+      options.onStateSelected({
+        code: oblast.code.toUpperCase(),
+        name: oblast.name,
+        label: oblast.label,
+      });
+    }
+  };
+
+  map.on('mouseenter', layerId, handleMouseEnter);
+  map.on('mousemove', layerId, handleMouseMove);
+  map.on('mouseleave', layerId, handleMouseLeave);
+  map.on('click', layerId, handleOblastClick);
+
+  return () => {
+    resetHoverState();
+    map.off('mouseenter', layerId, handleMouseEnter);
+    map.off('mousemove', layerId, handleMouseMove);
+    map.off('mouseleave', layerId, handleMouseLeave);
+    map.off('click', layerId, handleOblastClick);
+    map.getCanvas().style.cursor = '';
+  };
+};
+
 

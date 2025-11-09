@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import { useMapFilter, normalizeCityKey } from '@/context/MapFilterContext';
+import { getUkraineOblastLabelByName } from '@/config/map';
 import { Spinner } from '@/components';
 import { fetchCountryPopulation } from '@/queries';
 
@@ -127,6 +128,10 @@ const StatePopulationPanel = () => {
   );
 
   const isStateSelected = Boolean(filters.state);
+  const selectedStateLabel = useMemo(
+    () => getUkraineOblastLabelByName(filters.state) ?? filters.state,
+    [filters.state]
+  );
 
   return (
     <div className="absolute top-24 right-5 sm:right-10 z-10 pointer-events-none">
@@ -136,7 +141,7 @@ const StatePopulationPanel = () => {
         </h2>
         <p className="text-sm text-zinc-600 mt-1">{filters.country}</p>
         <p className="text-xs text-zinc-500 mt-2">
-          {isStateSelected ? `Обрана область: ${filters.state}` : 'Область не обрана'}
+          {isStateSelected ? `Обрана область: ${selectedStateLabel}` : 'Область не обрана'}
         </p>
         {!isLoading && !isError && availableYears.length > 0 && (
           <label className="mt-3 flex flex-col gap-1 text-xs text-zinc-500">
