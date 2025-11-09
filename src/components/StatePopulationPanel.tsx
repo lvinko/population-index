@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { useMapFilter } from '@/context/MapFilterContext';
+import { useMapFilter, normalizeCityKey } from '@/context/MapFilterContext';
 import { Spinner } from '@/components';
 import { fetchCountryPopulation } from '@/queries';
 
@@ -72,6 +72,60 @@ const StatePopulationPanel = () => {
     [selectedPopulation]
   );
 
+  const selectedCity = filters.selectedCity;
+  const selectedCityEntry = useMemo(() => {
+    if (!selectedCity) {
+      return null;
+    }
+    const catalog = filters.cityPopulationCatalog;
+    const directMatch = catalog[normalizeCityKey(selectedCity.name)];
+    if (directMatch) {
+      return directMatch;
+    }
+
+    if (selectedCity.canonicalName) {
+      return catalog[normalizeCityKey(selectedCity.canonicalName)] ?? null;
+    }
+
+    return null;
+  }, [filters.cityPopulationCatalog, selectedCity]);
+
+  const cityPopulationForYear = useMemo(() => {
+    if (!selectedCityEntry) {
+      return null;
+    }
+    if (selectedYear == null) {
+      const latest = [...selectedCityEntry.populationCounts].sort(
+        (a, b) => Number(b.year) - Number(a.year)
+      )[0];
+      if (!latest || !Number.isFinite(latest.value)) {
+        return null;
+      }
+      return {
+        value: Number(latest.value),
+        year: Number(latest.year),
+      };
+    }
+
+    const matching = selectedCityEntry.populationCounts.find(
+      (entry) => Number(entry.year) === selectedYear
+    );
+
+    if (!matching || !Number.isFinite(matching.value)) {
+      return null;
+    }
+
+    return {
+      value: Number(matching.value),
+      year: Number(matching.year),
+    };
+  }, [selectedCityEntry, selectedYear]);
+
+  const formattedCityPopulation = useMemo(
+    () => (cityPopulationForYear ? formatPopulation(cityPopulationForYear.value) : null),
+    [cityPopulationForYear]
+  );
+
   const isStateSelected = Boolean(filters.state);
 
   return (
@@ -120,10 +174,44 @@ const StatePopulationPanel = () => {
             </span>
           )}
         </div>
-        <p className="mt-3 text-[11px] leading-4 text-zinc-500">
-          CountriesNow не надає дані населення для міст та областей. Відображено
-          статистику для всієї країни.
-        </p>
+        <div className="mt-4 border-t border-zinc-200 pt-3">
+          <h3 className="text-xs uppercase tracking-wide text-zinc-500">
+            {selectedCity ? 'Населення міста' : 'Місто не обрано'}
+          </h3>
+          {selectedCity ? (
+            <>
+              <p className="text-sm text-zinc-600 mt-1">{selectedCity.name}</p>
+              <div className="mt-2 min-h-[32px] flex flex-col">
+                {selectedCity.error ? (
+                  <span className="text-xs text-red-500">
+                    Не вдалося отримати дані про населення
+                  </span>
+                ) : formattedCityPopulation ? (
+                  <span className="text-lg font-semibold text-zinc-900">
+                    {formattedCityPopulation}
+                    {cityPopulationForYear?.year ? (
+                      <span className="text-xs text-zinc-500 ml-1">
+                        ({cityPopulationForYear.year})
+                      </span>
+                    ) : null}
+                  </span>
+                ) : selectedCityEntry ? (
+                  <span className="text-xs text-zinc-500">
+                    Немає даних про населення для обраного року
+                  </span>
+                ) : (
+                  <span className="text-xs text-zinc-500">
+                    Немає даних про населення для цього міста
+                  </span>
+                )}
+              </div>
+            </>
+          ) : (
+            <p className="text-xs text-zinc-500 mt-1">
+              Оберіть місто на карті, щоб переглянути його населення.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

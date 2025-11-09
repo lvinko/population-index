@@ -1,11 +1,6 @@
 import mapboxgl from 'mapbox-gl';
 
-import {
-  HOVER_POPUP_CLASS_NAME,
-  MAJOR_CITIES_LAYER_ID,
-  TAP_POPUP_CLASS_NAME,
-  UNKNOWN_CITY_LABEL,
-} from './constants';
+import { MAJOR_CITIES_LAYER_ID, TAP_POPUP_CLASS_NAME, UNKNOWN_CITY_LABEL } from './constants';
 import type { CleanupCallback, LayerEvent, MapInstance } from './types';
 
 const getCityName = (feature?: mapboxgl.MapboxGeoJSONFeature) => {
@@ -98,10 +93,25 @@ const buildPopupContent = (cityName: string, state: CityPopupState) => {
 type CityPopulationResolverResult = {
   population: number | null;
   year?: number;
+  records?: CityPopulationRecordSummary[];
 };
 
 type AttachCityInteractionsOptions = {
   getCityPopulation?: (cityName: string) => Promise<CityPopulationResolverResult>;
+  onCitySelected?: (payload: {
+    cityName: string;
+    canonicalCityName: string;
+    result: CityPopulationResolverResult | null;
+    records?: CityPopulationRecordSummary[];
+    error?: string;
+  }) => void;
+};
+
+type CityPopulationRecordSummary = {
+  year: number;
+  value: number;
+  sex?: string;
+  reliability?: string;
 };
 
 export const attachCityInteractions = (
@@ -109,13 +119,6 @@ export const attachCityInteractions = (
   layerId = MAJOR_CITIES_LAYER_ID,
   options: AttachCityInteractionsOptions = {}
 ): CleanupCallback => {
-  const hoverPopup = new mapboxgl.Popup({
-    closeButton: false,
-    closeOnClick: false,
-    offset: 12,
-    className: HOVER_POPUP_CLASS_NAME,
-  });
-
   const tapPopup = new mapboxgl.Popup({
     closeButton: true,
     closeOnClick: true,
@@ -129,23 +132,8 @@ export const attachCityInteractions = (
     map.getCanvas().style.cursor = 'pointer';
   };
 
-  const handleMouseMove = (event: LayerEvent) => {
-    const feature = event.features?.[0];
-    if (!feature) {
-      return;
-    }
-
-    const cityName = getCityName(feature);
-
-    hoverPopup
-      .setLngLat(event.lngLat)
-      .setHTML(buildPopupContent(cityName, { status: 'idle' }))
-      .addTo(map);
-  };
-
   const handleMouseLeave = () => {
     map.getCanvas().style.cursor = '';
-    hoverPopup.remove();
   };
 
   const handleClick = (event: LayerEvent) => {
@@ -187,8 +175,15 @@ export const attachCityInteractions = (
             year: result.year,
           })
         );
+
+        options.onCitySelected?.({
+          cityName,
+          canonicalCityName,
+          result,
+          records: result.records ?? [],
+        });
       })
-      .catch(() => {
+      .catch((error) => {
         if (tapRequestId !== requestId) {
           return;
         }
@@ -198,20 +193,25 @@ export const attachCityInteractions = (
             status: 'error',
           })
         );
+
+        options.onCitySelected?.({
+          cityName,
+          canonicalCityName,
+          result: null,
+          records: [],
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
       });
   };
 
   map.on('mouseenter', layerId, handleMouseEnter);
-  map.on('mousemove', layerId, handleMouseMove);
   map.on('mouseleave', layerId, handleMouseLeave);
   map.on('click', layerId, handleClick);
 
   return () => {
     map.off('mouseenter', layerId, handleMouseEnter);
-    map.off('mousemove', layerId, handleMouseMove);
     map.off('mouseleave', layerId, handleMouseLeave);
     map.off('click', layerId, handleClick);
-    hoverPopup.remove();
     tapPopup.remove();
   };
 };

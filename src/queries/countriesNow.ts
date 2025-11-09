@@ -49,19 +49,15 @@ export type CountryPopulationResponse = {
   data: CountryPopulationData;
 };
 
-type CityPopulationRequest = {
-  country: string;
-  city: string;
-};
-
 type CityPopulationRecordRaw = {
   year: number | string;
   value: number | string;
   sex?: string;
   reliability?: string;
+  reliabilty?: string;
 };
 
-type CityPopulationRecord = {
+export type CityPopulationRecord = {
   year: number;
   value: number;
   sex?: string;
@@ -74,15 +70,26 @@ type CityPopulationData = {
   populationCounts: CityPopulationRecordRaw[];
 };
 
-type CityPopulationResponse = {
+type CountryCitiesPopulationResponse = {
   error: boolean;
   msg: string;
-  data: CityPopulationData;
+  data: {
+    city: string;
+    country: string;
+    populationCounts: CityPopulationRecordRaw[];
+  }[];
 };
 
-export type CityPopulationResult = {
+type CountryCitiesPopulationParams = {
   country: string;
+  limit?: number;
+  order?: 'asc' | 'desc';
+  orderBy?: string;
+};
+
+export type CityPopulationCatalogEntry = {
   city: string;
+  country: string;
   populationCounts: CityPopulationRecord[];
 };
 
@@ -168,33 +175,39 @@ const normalizeCityPopulationRecord = (record: CityPopulationRecordRaw): CityPop
   year: Number(record.year),
   value: Number(record.value),
   sex: record.sex,
-  reliability: record.reliability,
+  reliability: record.reliability ?? record.reliabilty,
 });
 
-export const fetchCityPopulation = async (
-  country: string,
-  city: string
-): Promise<CityPopulationResult> => {
-  if (!country || !city) {
-    throw new Error('Country and city are required');
+export const fetchCountryCitiesPopulation = async (
+  params: CountryCitiesPopulationParams
+): Promise<CityPopulationCatalogEntry[]> => {
+  if (!params.country) {
+    throw new Error('Country is required');
   }
-
-  const payload: CityPopulationRequest = {
-    country,
-    city,
-  };
 
   const data = await countriesNowClient
-    .post('countries/population/cities', { json: payload })
-    .json<CityPopulationResponse>();
+    .get('countries/population/cities/filter/q', {
+      searchParams: {
+        country: params.country,
+        limit: params.limit ?? 200,
+        order: params.order ?? 'asc',
+        orderBy: params.orderBy ?? 'name',
+      },
+      timeout: 20000,
+    })
+    .json<CountryCitiesPopulationResponse>();
 
   if (data.error) {
-    throw new Error(data.msg || `Unable to retrieve population for ${city}`);
+    throw new Error(data.msg || 'Unable to retrieve cities population for the selected country');
   }
 
-  return {
-    country: data.data.country,
-    city: data.data.city,
-    populationCounts: (data.data.populationCounts ?? []).map(normalizeCityPopulationRecord),
-  };
+  return (data.data ?? [])
+    .filter(
+      (entry) => entry.country?.toLowerCase() === params.country.toLowerCase()
+    )
+    .map((entry) => ({
+      city: entry.city,
+      country: entry.country,
+      populationCounts: (entry.populationCounts ?? []).map(normalizeCityPopulationRecord),
+    }));
 };

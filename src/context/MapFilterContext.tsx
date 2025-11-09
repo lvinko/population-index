@@ -2,10 +2,36 @@
 
 import { createContext, useContext, useState, ReactNode } from 'react';
 
+import type { CityPopulationRecord } from '@/queries/countriesNow';
+
+export type SelectedCity = {
+  name: string;
+  canonicalName?: string;
+  error?: string;
+};
+
+export type CityPopulationCatalogEntry = {
+  city: string;
+  populationCounts: CityPopulationRecord[];
+};
+
+export type CityPopulationCatalog = Record<string, CityPopulationCatalogEntry>;
+
+export const normalizeCityKey = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/['’`]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
 export type Filters = {
   country: string;
   countryIso3: string;
   state: string;
+  selectedCity: SelectedCity | null;
+  cityPopulationCatalog: CityPopulationCatalog;
 };
 
 type MapFilterContextType = {
@@ -24,6 +50,8 @@ export function MapFilterProvider({ children }: MapFilterProviderProps) {
     country: 'Ukraine',
     countryIso3: 'UKR',
     state: '',
+    cityPopulationCatalog: {},
+    selectedCity: null,
   });
 
   return (

@@ -38,6 +38,8 @@ const MapFilter = () => {
         ...prev,
         country: COUNTRY,
         countryIso3: COUNTRY_ISO3,
+        cityPopulationCatalog: {},
+        selectedCity: null,
       }));
     }
   }, [filters.country, filters.countryIso3, setFilters]);
@@ -47,6 +49,7 @@ const MapFilter = () => {
       setFilters((prev) => ({
         ...prev,
         state: '',
+        selectedCity: null,
       }));
       return;
     }
@@ -58,6 +61,7 @@ const MapFilter = () => {
       setFilters((prev) => ({
         ...prev,
         state: '',
+        selectedCity: null,
       }));
     }
   }, [filters.state, setFilters, stateOptions]);
@@ -67,6 +71,7 @@ const MapFilter = () => {
     setFilters((prev) => ({
       ...prev,
       state: nextState,
+      selectedCity: null,
     }));
   };
 
