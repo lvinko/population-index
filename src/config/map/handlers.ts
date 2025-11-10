@@ -9,6 +9,7 @@ import {
 } from './constants';
 import { getUkraineOblastLabelByCode, getUkraineOblastNameByCode } from './regions';
 import type { CleanupCallback, LayerEvent, MapInstance } from './types';
+import type { CityArticleResponse } from '@/types/wikidata';
 
 const getCityName = (feature?: mapboxgl.MapboxGeoJSONFeature) => {
   const properties = feature?.properties as Record<string, unknown> | undefined;
@@ -50,19 +51,11 @@ const escapeHtml = (value: string) =>
     }
   });
 
-const formatPopulation = (population: number | null | undefined) => {
-  if (population == null) {
-    return null;
-  }
-
-  return population.toLocaleString('uk-UA');
-};
-
 type CityPopupState =
   | { status: 'idle' }
   | { status: 'loading' }
   | { status: 'error' }
-  | { status: 'success'; population: number | null; year?: number };
+  | { status: 'success'; summary?: string | null; wikipediaUrl?: string | null };
 
 const buildPopupContent = (cityName: string, state: CityPopupState) => {
   const safeCityName = escapeHtml(cityName);
@@ -71,23 +64,22 @@ const buildPopupContent = (cityName: string, state: CityPopupState) => {
 
   switch (state.status) {
     case 'loading':
-      body = '<span class="text-xs text-zinc-500">Завантаження населення…</span>';
+      body = '<span class="text-xs text-zinc-500">Завантаження даних…</span>';
       break;
     case 'error':
-      body = '<span class="text-xs text-red-500">Не вдалося отримати населення</span>';
+      body = '<span class="text-xs text-red-500">Не вдалося отримати інформацію</span>';
       break;
-    case 'success': {
-      const formatted = formatPopulation(state.population);
-      body =
-        formatted != null
-          ? `<span class="text-xs text-zinc-600">Населення${
-              state.year ? ` (${state.year})` : ''
-            }: ${formatted}</span>`
-          : '<span class="text-xs text-zinc-500">Немає даних про населення</span>';
+    case 'success':
+      body = state.summary
+        ? `<span class="text-xs text-zinc-600 leading-snug">${escapeHtml(state.summary)}</span>${
+            state.wikipediaUrl
+              ? `<a href="${escapeHtml(state.wikipediaUrl)}" target="_blank" rel="noreferrer" class="text-xs text-emerald-600 underline">Відкрити у Вікіпедії</a>`
+              : ''
+          }`
+        : '<span class="text-xs text-zinc-500">Немає короткого опису</span>';
       break;
-    }
     default:
-      body = '<span class="text-xs text-zinc-500">Натисніть, щоб переглянути населення</span>';
+      body = '<span class="text-xs text-zinc-500">Натисніть, щоб переглянути інформацію</span>';
       break;
   }
 
@@ -97,28 +89,24 @@ const buildPopupContent = (cityName: string, state: CityPopupState) => {
   </div>`;
 };
 
-type CityPopulationResolverResult = {
-  population: number | null;
-  year?: number;
-  records?: CityPopulationRecordSummary[];
+type CityInfoResolverResult = Pick<
+  CityArticleResponse,
+  'cityLabel' | 'summary' | 'wikipediaUrl' | 'coordinates' | 'language' | 'wikidataId' | 'wikidataEntity'
+>;
+
+type CityInfoResolverInput = {
+  canonicalCityName: string;
+  cityName: string;
 };
 
 type AttachCityInteractionsOptions = {
-  getCityPopulation?: (cityName: string) => Promise<CityPopulationResolverResult>;
+  getCityDetails?: (payload: CityInfoResolverInput) => Promise<CityInfoResolverResult>;
   onCitySelected?: (payload: {
     cityName: string;
     canonicalCityName: string;
-    result: CityPopulationResolverResult | null;
-    records?: CityPopulationRecordSummary[];
+    result: CityInfoResolverResult | null;
     error?: string;
   }) => void;
-};
-
-type CityPopulationRecordSummary = {
-  year: number;
-  value: number;
-  sex?: string;
-  reliability?: string;
 };
 
 export const attachCityInteractions = (
@@ -156,20 +144,23 @@ export const attachCityInteractions = (
       .setLngLat(event.lngLat)
       .setHTML(
         buildPopupContent(cityName, {
-          status: options.getCityPopulation ? 'loading' : 'idle',
+          status: options.getCityDetails ? 'loading' : 'idle',
         })
       );
 
     tapPopup.addTo(map);
 
-    if (!options.getCityPopulation) {
+    if (!options.getCityDetails) {
       return;
     }
 
     const requestId = ++tapRequestId;
 
     options
-      .getCityPopulation(canonicalCityName)
+      .getCityDetails({
+        canonicalCityName,
+        cityName,
+      })
       .then((result) => {
         if (tapRequestId !== requestId) {
           return;
@@ -178,8 +169,8 @@ export const attachCityInteractions = (
         tapPopup.setLngLat(event.lngLat).setHTML(
           buildPopupContent(cityName, {
             status: 'success',
-            population: result.population,
-            year: result.year,
+            summary: result.summary,
+            wikipediaUrl: result.wikipediaUrl ?? undefined,
           })
         );
 
@@ -187,7 +178,6 @@ export const attachCityInteractions = (
           cityName,
           canonicalCityName,
           result,
-          records: result.records ?? [],
         });
       })
       .catch((error) => {
@@ -205,7 +195,6 @@ export const attachCityInteractions = (
           cityName,
           canonicalCityName,
           result: null,
-          records: [],
           error: error instanceof Error ? error.message : 'Unknown error',
         });
       });

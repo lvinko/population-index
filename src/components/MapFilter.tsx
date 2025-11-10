@@ -39,7 +39,6 @@ const MapFilter = () => {
         ...prev,
         country: COUNTRY,
         countryIso3: COUNTRY_ISO3,
-        cityPopulationCatalog: {},
         selectedCity: null,
       }));
     }

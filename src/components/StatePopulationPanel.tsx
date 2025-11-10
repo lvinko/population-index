@@ -74,59 +74,6 @@ const StatePopulationPanel = () => {
   );
 
   const selectedCity = filters.selectedCity;
-  const selectedCityEntry = useMemo(() => {
-    if (!selectedCity) {
-      return null;
-    }
-    const catalog = filters.cityPopulationCatalog;
-    const directMatch = catalog[normalizeCityKey(selectedCity.name)];
-    if (directMatch) {
-      return directMatch;
-    }
-
-    if (selectedCity.canonicalName) {
-      return catalog[normalizeCityKey(selectedCity.canonicalName)] ?? null;
-    }
-
-    return null;
-  }, [filters.cityPopulationCatalog, selectedCity]);
-
-  const cityPopulationForYear = useMemo(() => {
-    if (!selectedCityEntry) {
-      return null;
-    }
-    if (selectedYear == null) {
-      const latest = [...selectedCityEntry.populationCounts].sort(
-        (a, b) => Number(b.year) - Number(a.year)
-      )[0];
-      if (!latest || !Number.isFinite(latest.value)) {
-        return null;
-      }
-      return {
-        value: Number(latest.value),
-        year: Number(latest.year),
-      };
-    }
-
-    const matching = selectedCityEntry.populationCounts.find(
-      (entry) => Number(entry.year) === selectedYear
-    );
-
-    if (!matching || !Number.isFinite(matching.value)) {
-      return null;
-    }
-
-    return {
-      value: Number(matching.value),
-      year: Number(matching.year),
-    };
-  }, [selectedCityEntry, selectedYear]);
-
-  const formattedCityPopulation = useMemo(
-    () => (cityPopulationForYear ? formatPopulation(cityPopulationForYear.value) : null),
-    [cityPopulationForYear]
-  );
-
   const isStateSelected = Boolean(filters.state);
   const selectedStateLabel = useMemo(
     () => getUkraineOblastLabelByName(filters.state) ?? filters.state,
@@ -179,41 +126,40 @@ const StatePopulationPanel = () => {
             </span>
           )}
         </div>
-        <div className="mt-4 border-t border-zinc-200 pt-3">
+        <div className="mt-4 border-t border-zinc-200 pt-3 flex flex-col gap-2">
           <h3 className="text-xs uppercase tracking-wide text-zinc-500">
-            {selectedCity ? 'Населення міста' : 'Місто не обрано'}
+            {selectedCity ? 'Інформація про місто' : 'Місто не обрано'}
           </h3>
           {selectedCity ? (
             <>
-              <p className="text-sm text-zinc-600 mt-1">{selectedCity.name}</p>
-              <div className="mt-2 min-h-[32px] flex flex-col">
-                {selectedCity.error ? (
-                  <span className="text-xs text-red-500">
-                    Не вдалося отримати дані про населення
-                  </span>
-                ) : formattedCityPopulation ? (
-                  <span className="text-lg font-semibold text-zinc-900">
-                    {formattedCityPopulation}
-                    {cityPopulationForYear?.year ? (
-                      <span className="text-xs text-zinc-500 ml-1">
-                        ({cityPopulationForYear.year})
-                      </span>
-                    ) : null}
-                  </span>
-                ) : selectedCityEntry ? (
-                  <span className="text-xs text-zinc-500">
-                    Немає даних про населення для обраного року
-                  </span>
-                ) : (
-                  <span className="text-xs text-zinc-500">
-                    Немає даних про населення для цього міста
-                  </span>
-                )}
-              </div>
+              <p className="text-sm text-zinc-600 mt-1">
+                {selectedCity.canonicalName && selectedCity.canonicalName !== selectedCity.name
+                  ? `${selectedCity.name} (${selectedCity.canonicalName})`
+                  : selectedCity.name}
+              </p>
+              {selectedCity.error ? (
+                <span className="text-xs text-red-500">
+                  Не вдалося отримати інформацію про це місто
+                </span>
+              ) : selectedCity.summary ? (
+                <p className="text-xs text-zinc-600 leading-snug">{selectedCity.summary}</p>
+              ) : (
+                <span className="text-xs text-zinc-500">Опис для цього міста відсутній.</span>
+              )}
+              {selectedCity.wikipediaUrl && (
+                <a
+                  href={selectedCity.wikipediaUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs text-emerald-600 underline"
+                >
+                  Переглянути у Вікіпедії
+                </a>
+              )}
             </>
           ) : (
             <p className="text-xs text-zinc-500 mt-1">
-              Оберіть місто на карті, щоб переглянути його населення.
+              Оберіть місто на карті, щоб переглянути короткий опис.
             </p>
           )}
         </div>

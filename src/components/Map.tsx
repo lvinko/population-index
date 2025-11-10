@@ -24,77 +24,10 @@ import {
 } from '@/config/map';
 import type { CleanupCallback } from '@/config/map';
 import { useMapFilter, normalizeCityKey } from '@/context/MapFilterContext';
-import type { Filters } from '@/context/MapFilterContext';
-import { fetchCityCoordinates, fetchCountryCitiesPopulation, fetchStateCities } from '@/queries';
-import type { CityPopulationRecord } from '@/queries/countriesNow';
+import { fetchCityCoordinates, fetchStateCities, fetchCityArticle } from '@/queries';
+import type { CityArticleResponse } from '@/types/wikidata';
 import { Spinner } from '@/components';
-
-const CITY_NAME_ALIASES: Record<string, string[]> = {
-  kiev: ['kyiv', 'kyyiv'],
-  odessa: ['odesa'],
-  kharkov: ['kharkiv'],
-  nikolaev: ['mykolaiv'],
-  lugansk: ['luhansk'],
-  zaporozhe: ['zaporizhzhia', 'zaporizhia'],
-  zaporozhye: ['zaporizhzhia', 'zaporizhia'],
-  dnipropetrovsk: ['dnipro'],
-  dnepropetrovsk: ['dnipro'],
-  kremenchug: ['kremenchuk'],
-  rovno: ['rivne'],
-  chernigov: ['chernihiv'],
-  kirovograd: ['kropyvnytskyi'],
-  'ivano-frankovsk': ['ivano-frankivsk'],
-  uzhgorod: ['uzhhorod'],
-  khmelnitskiy: ['khmelnytskyi', 'khmelnytskyy'],
-  ternopol: ['ternopil'],
-  chernovtsy: ['chernivtsi'],
-};
-
-const generateCityVariants = (value: string) => {
-  const trimmed = value.replace(/\s+/g, ' ').trim();
-  const withoutParens = trimmed.replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
-  const segments = withoutParens
-    .split(/[,/]/)
-    .map((part) => part.trim())
-    .filter(Boolean);
-
-  return [trimmed, withoutParens, ...segments];
-};
-
-const resolveCatalogEntry = (
-  catalog: Filters['cityPopulationCatalog'],
-  ...names: (string | undefined | null)[]
-) => {
-  for (const name of names) {
-    if (!name) {
-      continue;
-    }
-
-    for (const variant of generateCityVariants(name)) {
-      const normalized = normalizeCityKey(variant);
-      if (!normalized) {
-        continue;
-      }
-
-      const directMatch = catalog[normalized];
-      if (directMatch) {
-        return directMatch;
-      }
-
-      const aliasList = CITY_NAME_ALIASES[normalized];
-      if (aliasList) {
-        for (const alias of aliasList) {
-          const aliasNormalized = normalizeCityKey(alias);
-          if (aliasNormalized && catalog[aliasNormalized]) {
-            return catalog[aliasNormalized];
-          }
-        }
-      }
-    }
-  }
-
-  return null;
-};
+import { CITY_NAME_ALIASES, generateCityVariants } from '@/utils/cityNameVariants';
 
 const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -147,108 +80,6 @@ const Map = () => {
     gcTime: 1000 * 60 * 60 * 24,
   });
 
-  const {
-    data: countryCityPopulations,
-    isLoading: isLoadingCountryCityPopulations,
-  } = useQuery({
-    queryKey: ['country-city-populations', filters.country],
-    queryFn: () =>
-      fetchCountryCitiesPopulation({
-        country: filters.country,
-        limit: 200,
-        order: 'asc',
-        orderBy: 'name',
-      }),
-    enabled: Boolean(filters.country),
-    staleTime: 1000 * 60 * 60 * 24,
-    gcTime: 1000 * 60 * 60 * 24,
-  });
-
-  useEffect(() => {
-    if (!countryCityPopulations) {
-      return;
-    }
-
-    const registerVariant = (
-      catalog: Filters['cityPopulationCatalog'],
-      entry: (typeof countryCityPopulations)[number],
-      value: string | undefined | null
-    ) => {
-      if (!value) {
-        return;
-      }
-
-      const normalized = normalizeCityKey(value);
-      if (!normalized || normalized.length === 0 || catalog[normalized]) {
-        return;
-      }
-
-      catalog[normalized] = entry;
-    };
-
-    setFilters((prev) => {
-      const nextCatalog = countryCityPopulations.reduce((acc, entry) => {
-        registerVariant(acc, entry, entry.city);
-
-        const normalizedCity = normalizeCityKey(entry.city);
-        const aliasVariants = CITY_NAME_ALIASES[normalizedCity] ?? [];
-        aliasVariants.forEach((alias) => registerVariant(acc, entry, alias));
-
-        const noParens = entry.city.replace(/\([^)]*\)/g, ' ');
-        registerVariant(acc, entry, noParens);
-
-        const parenthesesMatches = [...entry.city.matchAll(/\(([^)]+)\)/g)];
-        parenthesesMatches.forEach((match) => registerVariant(acc, entry, match[1]));
-
-        noParens
-          .split(/[,/]/)
-          .map((part) => part.trim())
-          .filter(Boolean)
-          .forEach((part) => registerVariant(acc, entry, part));
-
-        return acc;
-      }, {} as typeof prev.cityPopulationCatalog);
-
-      const selectedCityKey = prev.selectedCity
-        ? normalizeCityKey(prev.selectedCity.canonicalName ?? prev.selectedCity.name)
-        : null;
-
-      const hasSelectedCity =
-        selectedCityKey != null && nextCatalog[selectedCityKey] !== undefined;
-
-      const prevKeys = Object.keys(prev.cityPopulationCatalog);
-      const nextKeys = Object.keys(nextCatalog);
-
-      const catalogsDiffer =
-        prevKeys.length !== nextKeys.length ||
-        nextKeys.some((key) => {
-          const nextEntry = nextCatalog[key];
-          const prevEntry = prev.cityPopulationCatalog[key];
-          if (!prevEntry) {
-            return true;
-          }
-          if (prevEntry.populationCounts.length !== nextEntry.populationCounts.length) {
-            return true;
-          }
-          return false;
-        });
-
-      if (!catalogsDiffer && hasSelectedCity === Boolean(prev.selectedCity)) {
-        return prev;
-      }
-
-      const nextSelectedCity = hasSelectedCity && prev.selectedCity
-        ? { ...prev.selectedCity, error: undefined }
-        : null;
-
-      return {
-        ...prev,
-        cityPopulationCatalog: nextCatalog,
-        selectedCity: nextSelectedCity,
-      };
-    });
-  }, [countryCityPopulations, setFilters]);
-
   const cityFeatures = useMemo<CityFeature[]>(() => {
     if (!cityCoordinates) {
       return [];
@@ -267,29 +98,28 @@ const Map = () => {
     }));
   }, [cityCoordinates]);
 
-  const getCityPopulation = useCallback(
-    async (canonicalCityName: string) => {
-      const catalog = filters.cityPopulationCatalog;
-      if (Object.keys(catalog).length === 0) {
-        throw new Error('Дані про населення міст завантажуються…');
+  const getCityDetails = useCallback(
+    async ({ canonicalCityName, cityName }: { canonicalCityName: string; cityName: string }) => {
+      const fallbackNames = Array.from(
+        new Set([
+          ...generateCityVariants(cityName),
+          ...generateCityVariants(canonicalCityName),
+          ...(CITY_NAME_ALIASES[normalizeCityKey(canonicalCityName)] ?? []),
+        ])
+      );
+
+      const response = await fetchCityArticle({
+        cityName: canonicalCityName,
+        fallbackNames,
+      });
+
+      if (!response.summary && !response.cityLabel) {
+        throw new Error(`Сторінку для "${canonicalCityName}" не знайдено`);
       }
 
-      const entry = resolveCatalogEntry(catalog, canonicalCityName);
-
-      if (!entry) {
-        throw new Error(`Дані про населення для "${canonicalCityName}" не знайдено`);
-      }
-
-      const sorted = [...entry.populationCounts].sort((a, b) => Number(b.year) - Number(a.year));
-      const latest = sorted.find((record) => Number.isFinite(record.value));
-
-      return {
-        population: latest ? Number(latest.value) : null,
-        year: latest ? Number(latest.year) : undefined,
-        records: entry.populationCounts,
-      };
+      return response;
     },
-    [filters.cityPopulationCatalog]
+    []
   );
 
   const handleCitySelection = useCallback(
@@ -297,37 +127,27 @@ const Map = () => {
       cityName,
       canonicalCityName,
       error,
-      result: _result,
-      records,
+      result,
     }: {
       cityName: string;
       canonicalCityName: string;
       error?: string;
-      result?: { population: number | null; year?: number | null } | null;
-      records?: CityPopulationRecord[];
+      result?: CityArticleResponse | null;
     }) => {
-      setFilters((prev) => {
-        const catalogEntry = resolveCatalogEntry(
-          prev.cityPopulationCatalog,
-          canonicalCityName,
-          cityName
-        );
-
-        const nextError = error ?? (records && records.length > 0
-          ? undefined
-          : catalogEntry
-            ? undefined
-            : 'Дані про населення для цього міста не знайдено');
-
-        return {
-          ...prev,
-          selectedCity: {
-            name: cityName,
-            canonicalName: canonicalCityName,
-            error: nextError ?? undefined,
-          },
-        };
-      });
+      setFilters((prev) => ({
+        ...prev,
+        selectedCity: {
+          name: result?.cityLabel ?? cityName,
+          canonicalName: canonicalCityName,
+          summary: result?.summary ?? null,
+          wikipediaUrl: result?.wikipediaUrl ?? null,
+          coordinates: result?.coordinates ?? null,
+          language: result?.language ?? null,
+          wikidataId: result?.wikidataId ?? null,
+          wikidataEntity: result?.wikidataEntity ?? null,
+          error,
+        },
+      }));
     },
     [setFilters]
   );
@@ -403,7 +223,7 @@ const Map = () => {
       majorCitiesCleanupRef.current?.();
       if (cityFeatures.length > 0) {
         majorCitiesCleanupRef.current = attachCityInteractions(mapInstance, STATE_CITIES_LAYER_ID, {
-          getCityPopulation,
+          getCityDetails,
           onCitySelected: handleCitySelection,
         });
       } else {
@@ -423,7 +243,7 @@ const Map = () => {
     }
 
     apply();
-  }, [cityFeatures, getCityPopulation, handleCitySelection]);
+  }, [cityFeatures, getCityDetails, handleCitySelection]);
 
   useEffect(() => {
     const mapInstance = mapRef.current;
@@ -577,23 +397,21 @@ const Map = () => {
     !mapRef.current ||
     !isStateSelected ||
     isFetchingCityList ||
-    (isStateSelected && (isFetchingCoordinates || isLoadingCountryCityPopulations));
+    (isStateSelected && isFetchingCoordinates);
   const loadingMessage = !mapRef.current
     ? 'Підготовка карти…'
     : !isStateSelected
       ? 'Оберіть область, щоб почати'
       : isFetchingCityList
         ? 'Завантаження міст області…'
-        : isLoadingCountryCityPopulations
-          ? 'Завантаження даних про населення міст…'
-          : isFetchingCoordinates
-            ? 'Геокодування міст…'
-            : 'Оновлення міст…';
+        : isFetchingCoordinates
+          ? 'Геокодування міст…'
+          : 'Оновлення міст…';
   const spinnerSize = !mapRef.current ? 'md' : 'sm';
   const showSpinner =
     !mapRef.current ||
     isFetchingCityList ||
-    (isStateSelected && (isFetchingCoordinates || isLoadingCountryCityPopulations));
+    (isStateSelected && isFetchingCoordinates);
 
   return (
     <div className="relative w-screen h-screen flex-1 flex" >

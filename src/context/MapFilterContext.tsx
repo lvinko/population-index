@@ -2,20 +2,20 @@
 
 import { createContext, useContext, useState, ReactNode } from 'react';
 
-import type { CityPopulationRecord } from '@/queries/countriesNow';
-
 export type SelectedCity = {
   name: string;
   canonicalName?: string;
+  summary?: string | null;
+  wikipediaUrl?: string | null;
+  coordinates?: {
+    lat: number | null;
+    lon: number | null;
+  } | null;
+  language?: string | null;
+  wikidataId?: string | null;
+  wikidataEntity?: unknown | null;
   error?: string;
 };
-
-export type CityPopulationCatalogEntry = {
-  city: string;
-  populationCounts: CityPopulationRecord[];
-};
-
-export type CityPopulationCatalog = Record<string, CityPopulationCatalogEntry>;
 
 export const normalizeCityKey = (value: string) =>
   value
@@ -31,7 +31,6 @@ export type Filters = {
   countryIso3: string;
   state: string;
   selectedCity: SelectedCity | null;
-  cityPopulationCatalog: CityPopulationCatalog;
 };
 
 type MapFilterContextType = {
@@ -50,7 +49,6 @@ export function MapFilterProvider({ children }: MapFilterProviderProps) {
     country: 'Ukraine',
     countryIso3: 'UKR',
     state: '',
-    cityPopulationCatalog: {},
     selectedCity: null,
   });
 

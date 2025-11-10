@@ -61,3 +61,4 @@ export { getPopulationByYear, getPopulation };
 
 export * from './countriesNow';
 export * from './mapbox';
+export * from './city';
