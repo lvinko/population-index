@@ -15,6 +15,7 @@ export type SelectedCity = {
   wikidataId?: string | null;
   wikidataEntity?: unknown | null;
   error?: string;
+  status?: 'idle' | 'loading' | 'success' | 'error';
 };
 
 export const normalizeCityKey = (value: string) =>

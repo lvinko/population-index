@@ -1,12 +1,6 @@
 import mapboxgl from 'mapbox-gl';
 
-import {
-  MAJOR_CITIES_LAYER_ID,
-  TAP_POPUP_CLASS_NAME,
-  UNKNOWN_CITY_LABEL,
-  UKRAINE_OBLAST_FILL_LAYER_ID,
-  UKRAINE_OBLAST_SOURCE_ID,
-} from './constants';
+import { MAJOR_CITIES_LAYER_ID, UNKNOWN_CITY_LABEL, UKRAINE_OBLAST_FILL_LAYER_ID, UKRAINE_OBLAST_SOURCE_ID } from './constants';
 import { getUkraineOblastLabelByCode, getUkraineOblastNameByCode } from './regions';
 import type { CleanupCallback, LayerEvent, MapInstance } from './types';
 import type { CityArticleResponse } from '@/types/wikidata';
@@ -33,62 +27,6 @@ const getCanonicalCityName = (feature?: mapboxgl.MapboxGeoJSONFeature) => {
   return canonical;
 };
 
-const escapeHtml = (value: string) =>
-  value.replace(/[&<>"']/g, (character) => {
-    switch (character) {
-      case '&':
-        return '&amp;';
-      case '<':
-        return '&lt;';
-      case '>':
-        return '&gt;';
-      case '"':
-        return '&quot;';
-      case "'":
-        return '&#39;';
-      default:
-        return character;
-    }
-  });
-
-type CityPopupState =
-  | { status: 'idle' }
-  | { status: 'loading' }
-  | { status: 'error' }
-  | { status: 'success'; summary?: string | null; wikipediaUrl?: string | null };
-
-const buildPopupContent = (cityName: string, state: CityPopupState) => {
-  const safeCityName = escapeHtml(cityName);
-
-  let body: string;
-
-  switch (state.status) {
-    case 'loading':
-      body = '<span class="text-xs text-zinc-500">Завантаження даних…</span>';
-      break;
-    case 'error':
-      body = '<span class="text-xs text-red-500">Не вдалося отримати інформацію</span>';
-      break;
-    case 'success':
-      body = state.summary
-        ? `<span class="text-xs text-zinc-600 leading-snug">${escapeHtml(state.summary)}</span>${
-            state.wikipediaUrl
-              ? `<a href="${escapeHtml(state.wikipediaUrl)}" target="_blank" rel="noreferrer" class="text-xs text-emerald-600 underline">Відкрити у Вікіпедії</a>`
-              : ''
-          }`
-        : '<span class="text-xs text-zinc-500">Немає короткого опису</span>';
-      break;
-    default:
-      body = '<span class="text-xs text-zinc-500">Натисніть, щоб переглянути інформацію</span>';
-      break;
-  }
-
-  return `<div class="flex flex-col gap-1">
-    <span class="text-sm font-medium">${safeCityName}</span>
-    ${body}
-  </div>`;
-};
-
 type CityInfoResolverResult = Pick<
   CityArticleResponse,
   'cityLabel' | 'summary' | 'wikipediaUrl' | 'coordinates' | 'language' | 'wikidataId' | 'wikidataEntity'
@@ -101,6 +39,10 @@ type CityInfoResolverInput = {
 
 type AttachCityInteractionsOptions = {
   getCityDetails?: (payload: CityInfoResolverInput) => Promise<CityInfoResolverResult>;
+  onCityLoading?: (payload: {
+    cityName: string;
+    canonicalCityName: string;
+  }) => void;
   onCitySelected?: (payload: {
     cityName: string;
     canonicalCityName: string;
@@ -118,7 +60,7 @@ export const attachCityInteractions = (
     closeButton: true,
     closeOnClick: true,
     offset: 12,
-    className: TAP_POPUP_CLASS_NAME,
+    className: 'city-pin-popup',
   });
 
   let tapRequestId = 0;
@@ -142,13 +84,13 @@ export const attachCityInteractions = (
 
     tapPopup
       .setLngLat(event.lngLat)
-      .setHTML(
-        buildPopupContent(cityName, {
-          status: options.getCityDetails ? 'loading' : 'idle',
-        })
-      );
+      .setHTML('<div class="flex items-center justify-center text-xl">📍</div>')
+      .addTo(map);
 
-    tapPopup.addTo(map);
+    options.onCityLoading?.({
+      cityName,
+      canonicalCityName,
+    });
 
     if (!options.getCityDetails) {
       return;
@@ -166,14 +108,6 @@ export const attachCityInteractions = (
           return;
         }
 
-        tapPopup.setLngLat(event.lngLat).setHTML(
-          buildPopupContent(cityName, {
-            status: 'success',
-            summary: result.summary,
-            wikipediaUrl: result.wikipediaUrl ?? undefined,
-          })
-        );
-
         options.onCitySelected?.({
           cityName,
           canonicalCityName,
@@ -184,12 +118,6 @@ export const attachCityInteractions = (
         if (tapRequestId !== requestId) {
           return;
         }
-
-        tapPopup.setLngLat(event.lngLat).setHTML(
-          buildPopupContent(cityName, {
-            status: 'error',
-          })
-        );
 
         options.onCitySelected?.({
           cityName,

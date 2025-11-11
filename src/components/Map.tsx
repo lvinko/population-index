@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -37,6 +37,7 @@ const Map = () => {
   const previousStateRef = useRef<string | null>(null);
   const selectedOblastFeatureIdRef = useRef<number | string | null>(null);
   const selectedOblastCodeRef = useRef<string | null>(null);
+  const [isMapReady, setIsMapReady] = useState(false);
   const { filters, setFilters } = useMapFilter();
 
   const {
@@ -85,17 +86,22 @@ const Map = () => {
       return [];
     }
 
-    return cityCoordinates.map((entry) => ({
-      type: 'Feature' as const,
-      properties: {
-        name: entry.displayName,
-        canonicalName: entry.canonicalName,
-      },
-      geometry: {
-        type: 'Point' as const,
-        coordinates: entry.coordinates,
-      },
-    }));
+    return cityCoordinates.map((entry) => {
+      const featureId = `${normalizeCityKey(entry.canonicalName)}|${entry.coordinates[0]}|${entry.coordinates[1]}`;
+
+      return {
+        type: 'Feature' as const,
+        id: featureId,
+        properties: {
+          name: entry.displayName,
+          canonicalName: entry.canonicalName,
+        },
+        geometry: {
+          type: 'Point' as const,
+          coordinates: entry.coordinates,
+        },
+      };
+    });
   }, [cityCoordinates]);
 
   const getCityDetails = useCallback(
@@ -122,6 +128,26 @@ const Map = () => {
     []
   );
 
+  const handleCityLoading = useCallback(
+    ({ cityName, canonicalCityName }: { cityName: string; canonicalCityName: string }) => {
+      setFilters((prev) => ({
+        ...prev,
+        selectedCity: {
+          name: cityName,
+          canonicalName: canonicalCityName,
+          summary: null,
+          wikipediaUrl: null,
+          coordinates: null,
+          language: null,
+          wikidataId: null,
+          wikidataEntity: null,
+          status: 'loading',
+        },
+      }));
+    },
+    [setFilters]
+  );
+
   const handleCitySelection = useCallback(
     ({
       cityName,
@@ -146,6 +172,7 @@ const Map = () => {
           wikidataId: result?.wikidataId ?? null,
           wikidataEntity: result?.wikidataEntity ?? null,
           error,
+          status: error ? 'error' : 'success',
         },
       }));
     },
@@ -178,6 +205,7 @@ const Map = () => {
     const handleLoad = () => {
       ensureOblastLayers(mapInstance);
       ensureStateCitiesLayer(mapInstance);
+      setIsMapReady(true);
     };
 
     mapInstance.on('load', handleLoad);
@@ -190,6 +218,7 @@ const Map = () => {
       mapRef.current = null;
       majorCitiesCleanupRef.current = null;
       oblastInteractionsCleanupRef.current = null;
+      setIsMapReady(false);
     };
   }, []);
 
@@ -224,6 +253,7 @@ const Map = () => {
       if (cityFeatures.length > 0) {
         majorCitiesCleanupRef.current = attachCityInteractions(mapInstance, STATE_CITIES_LAYER_ID, {
           getCityDetails,
+          onCityLoading: handleCityLoading,
           onCitySelected: handleCitySelection,
         });
       } else {
@@ -243,7 +273,7 @@ const Map = () => {
     }
 
     apply();
-  }, [cityFeatures, getCityDetails, handleCitySelection]);
+  }, [cityFeatures, getCityDetails, handleCityLoading, handleCitySelection]);
 
   useEffect(() => {
     const mapInstance = mapRef.current;
@@ -393,25 +423,61 @@ const Map = () => {
   }, [filters.state]);
 
   const isFetchingCityList = isStateSelected ? isFetchingStateCities : false;
-  const showLoadingOverlay =
-    !mapRef.current ||
-    !isStateSelected ||
-    isFetchingCityList ||
-    (isStateSelected && isFetchingCoordinates);
-  const loadingMessage = !mapRef.current
-    ? 'Підготовка карти…'
-    : !isStateSelected
-      ? 'Оберіть область, щоб почати'
-      : isFetchingCityList
-        ? 'Завантаження міст області…'
-        : isFetchingCoordinates
-          ? 'Геокодування міст…'
-          : 'Оновлення міст…';
-  const spinnerSize = !mapRef.current ? 'md' : 'sm';
-  const showSpinner =
-    !mapRef.current ||
-    isFetchingCityList ||
-    (isStateSelected && isFetchingCoordinates);
+
+  const overlayState = useMemo(
+    () => {
+      if (!isMapReady) {
+        return {
+          show: true,
+          message: 'Підготовка карти…',
+          showSpinner: true,
+          spinnerSize: 'md' as const,
+        };
+      }
+
+      if (!isStateSelected) {
+        return {
+          show: true,
+          message: 'Оберіть область, щоб почати',
+          showSpinner: false,
+          spinnerSize: 'sm' as const,
+        };
+      }
+
+      if (isFetchingCityList) {
+        return {
+          show: true,
+          message: 'Завантаження міст області…',
+          showSpinner: true,
+          spinnerSize: 'sm' as const,
+        };
+      }
+
+      if (isFetchingCoordinates) {
+        return {
+          show: true,
+          message: 'Геокодування міст…',
+          showSpinner: true,
+          spinnerSize: 'sm' as const,
+        };
+      }
+
+      return {
+        show: false,
+        message: '',
+        showSpinner: false,
+        spinnerSize: 'sm' as const,
+      };
+    },
+    [isFetchingCityList, isFetchingCoordinates, isMapReady, isStateSelected]
+  );
+
+  const {
+    show: showLoadingOverlay,
+    message: loadingMessage,
+    showSpinner,
+    spinnerSize,
+  } = overlayState;
 
   return (
     <div className="relative w-screen h-screen flex-1 flex" >

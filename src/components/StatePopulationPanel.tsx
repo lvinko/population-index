@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { useMapFilter, normalizeCityKey } from '@/context/MapFilterContext';
+import { useMapFilter } from '@/context/MapFilterContext';
 import { getUkraineOblastLabelByName } from '@/config/map';
 import { Spinner } from '@/components';
 import { fetchCountryPopulation } from '@/queries';
@@ -79,6 +79,80 @@ const StatePopulationPanel = () => {
     () => getUkraineOblastLabelByName(filters.state) ?? filters.state,
     [filters.state]
   );
+  const cityStatus = selectedCity?.status ?? 'idle';
+  const isCityLoading = cityStatus === 'loading';
+  const isCityError = cityStatus === 'error';
+  const isCitySuccess = cityStatus === 'success';
+
+  const renderCitySection = () => {
+    if (!selectedCity) {
+      return (
+        <>
+          <h3 className="text-xs uppercase tracking-wide text-zinc-500">Місто не обрано</h3>
+          <p className="text-xs text-zinc-500 mt-1">
+            Оберіть місто на карті, щоб переглянути короткий опис.
+          </p>
+        </>
+      );
+    }
+
+    const nameLine = (
+      <p className="text-sm text-zinc-600 mt-1">
+        {selectedCity.canonicalName && selectedCity.canonicalName !== selectedCity.name
+          ? `${selectedCity.name} (${selectedCity.canonicalName})`
+          : selectedCity.name}
+      </p>
+    );
+
+    if (isCityLoading) {
+      return (
+        <>
+          <h3 className="text-xs uppercase tracking-wide text-zinc-500">Інформація про місто</h3>
+          {nameLine}
+          <div className="flex items-center gap-2 text-xs text-zinc-500">
+            <Spinner size="sm" />
+            <span>Завантаження опису міста…</span>
+          </div>
+        </>
+      );
+    }
+
+    if (isCityError) {
+      return (
+        <>
+          <h3 className="text-xs uppercase tracking-wide text-zinc-500">Інформація про місто</h3>
+          {nameLine}
+          <span className="text-xs text-red-500">
+            Не вдалося отримати інформацію про це місто
+          </span>
+        </>
+      );
+    }
+
+    const description = selectedCity.summary ? (
+      <p className="text-xs text-zinc-600 leading-snug">{selectedCity.summary}</p>
+    ) : (
+      <span className="text-xs text-zinc-500">Опис для цього міста відсутній.</span>
+    );
+
+    return (
+      <>
+        <h3 className="text-xs uppercase tracking-wide text-zinc-500">Інформація про місто</h3>
+        {nameLine}
+        {description}
+        {selectedCity.wikipediaUrl && (
+          <a
+            href={selectedCity.wikipediaUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="text-xs text-emerald-600 underline"
+          >
+            Переглянути у Вікіпедії
+          </a>
+        )}
+      </>
+    );
+  };
 
   return (
     <div className="absolute top-24 right-5 sm:right-10 z-10 pointer-events-none">
@@ -127,41 +201,7 @@ const StatePopulationPanel = () => {
           )}
         </div>
         <div className="mt-4 border-t border-zinc-200 pt-3 flex flex-col gap-2">
-          <h3 className="text-xs uppercase tracking-wide text-zinc-500">
-            {selectedCity ? 'Інформація про місто' : 'Місто не обрано'}
-          </h3>
-          {selectedCity ? (
-            <>
-              <p className="text-sm text-zinc-600 mt-1">
-                {selectedCity.canonicalName && selectedCity.canonicalName !== selectedCity.name
-                  ? `${selectedCity.name} (${selectedCity.canonicalName})`
-                  : selectedCity.name}
-              </p>
-              {selectedCity.error ? (
-                <span className="text-xs text-red-500">
-                  Не вдалося отримати інформацію про це місто
-                </span>
-              ) : selectedCity.summary ? (
-                <p className="text-xs text-zinc-600 leading-snug">{selectedCity.summary}</p>
-              ) : (
-                <span className="text-xs text-zinc-500">Опис для цього міста відсутній.</span>
-              )}
-              {selectedCity.wikipediaUrl && (
-                <a
-                  href={selectedCity.wikipediaUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-xs text-emerald-600 underline"
-                >
-                  Переглянути у Вікіпедії
-                </a>
-              )}
-            </>
-          ) : (
-            <p className="text-xs text-zinc-500 mt-1">
-              Оберіть місто на карті, щоб переглянути короткий опис.
-            </p>
-          )}
+          {renderCitySection()}
         </div>
       </div>
     </div>
