@@ -1,0 +1,29 @@
+.prediction-form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.prediction-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.prediction-form__label {
+  font-weight: 500;
+}
+
+.prediction-form__range {
+  width: 100%;
+}
+
+.prediction-form__controls {
+  display: grid;
+  gap: 1rem;
+}
+
+.prediction-form__result {
+  display: grid;
+  gap: 1.5rem;
+}
+
