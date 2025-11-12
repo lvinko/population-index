@@ -48,15 +48,17 @@ function selectComparisonPoint(data: PopulationDataPoint[], base: PopulationData
 /**
  * Calculate base growth rate using multiple historical data points for better accuracy.
  * Uses linear regression on log-transformed population values to get a more stable growth rate.
+ * Now uses up to 30 years of historical data for more precise calculations.
  */
 function calculateBaseGrowthRate(
   data: PopulationDataPoint[],
   baseYear: number,
-  lookbackYears: number = 10
+  lookbackYears: number = 30
 ): number {
   const sorted = [...data].sort((a, b) => a.year - b.year);
   
   // Filter data points within the lookback period from base year
+  // Use all available data if we have less than lookbackYears, but prioritize recent data
   const relevantData = sorted.filter(
     (point) => point.year <= baseYear && point.year >= baseYear - lookbackYears
   );
@@ -78,8 +80,9 @@ function calculateBaseGrowthRate(
     }
     
     if (growthRates.length > 0) {
-      // Use weighted average (more recent data has higher weight)
-      const weights = growthRates.map((_, i) => i + 1);
+      // Use weighted average (more recent data has exponentially higher weight)
+      // This gives recent trends more influence while still using long-term patterns
+      const weights = growthRates.map((_, i) => Math.exp((i + 1) / growthRates.length));
       const weightedSum = growthRates.reduce((sum, rate, i) => sum + rate * weights[i], 0);
       const weightSum = weights.reduce((sum, w) => sum + w, 0);
       return weightedSum / weightSum;
@@ -104,13 +107,15 @@ function buildChartData(
   baseGrowthRate: number
 ): PopulationDataPoint[] {
   const startYear = Math.max(base.year, input.baseYear);
-  // Show more historical context (10 years) when we have data from 1960
-  const historicalStartYear = Math.max(startYear - 10, historical[0]?.year ?? startYear);
+  // Show all available historical data from 1960 for better context
+  // This provides a complete picture of population trends over time
+  const historicalStartYear = historical[0]?.year ?? startYear;
 
   const chartMap = new Map<number, PopulationDataPoint>();
 
+  // Include all historical data from the earliest available year up to the base year
   historical
-    .filter((point) => point.year >= historicalStartYear)
+    .filter((point) => point.year >= historicalStartYear && point.year <= startYear)
     .forEach((point) => chartMap.set(point.year, { year: point.year, value: point.value }));
 
   const historicalYears = Array.from(chartMap.keys());
@@ -164,7 +169,8 @@ export async function POST(req: Request) {
     
     // Use improved growth rate calculation with multiple historical data points
     // This leverages the full dataset from 1960 for better accuracy
-    const baseGrowthRate = calculateBaseGrowthRate(data, input.baseYear, 10);
+    // Using 30 years of lookback to capture long-term trends while weighting recent data more heavily
+    const baseGrowthRate = calculateBaseGrowthRate(data, input.baseYear, 30);
     const normalizedInput: PredictionInput = { ...input, baseYear: basePoint.year };
     const globalFactors = await fetchExternalFactors();
     const prediction = predictPopulationAdvanced(
