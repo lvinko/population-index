@@ -11,7 +11,7 @@ import { config } from '@/config';
 import {
   MAP_CENTER,
   MAP_INITIAL_ZOOM,
-  MAP_STYLE,
+  getMapStyle,
   STATE_CITIES_LAYER_ID,
   UKRAINE_OBLAST_SOURCE_ID,
   attachCityInteractions,
@@ -38,6 +38,7 @@ const Map = () => {
   const selectedOblastFeatureIdRef = useRef<number | string | null>(null);
   const selectedOblastCodeRef = useRef<string | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
   const { filters, setFilters } = useMapFilter();
 
   const {
@@ -193,9 +194,13 @@ const Map = () => {
     (mapboxgl as unknown as { setTelemetryEnabled?: (enabled: boolean) => void }).setTelemetryEnabled?.(false);
     mapboxgl.accessToken = config.mapboxAccessToken;
 
+    // Get initial theme from document
+    const initialTheme = (document.documentElement.getAttribute('data-theme') || 'light') as 'light' | 'dark';
+    setCurrentTheme(initialTheme);
+
     const mapInstance = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: MAP_STYLE,
+      style: getMapStyle(initialTheme),
       center: MAP_CENTER,
       zoom: MAP_INITIAL_ZOOM,
     });
@@ -421,6 +426,83 @@ const Map = () => {
       clearSelectedOblast();
     };
   }, [filters.state]);
+
+  // Listen for theme changes and update map style
+  useEffect(() => {
+    const mapInstance = mapRef.current;
+    if (!mapInstance || !isMapReady) {
+      return;
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+          const newTheme = (document.documentElement.getAttribute('data-theme') || 'light') as 'light' | 'dark';
+          if (newTheme !== currentTheme) {
+            setCurrentTheme(newTheme);
+            const newStyle = getMapStyle(newTheme);
+            
+            // Change map style
+            mapInstance.setStyle(newStyle);
+            
+            // Re-initialize layers after style loads
+            mapInstance.once('style.load', () => {
+              ensureOblastLayers(mapInstance);
+              ensureStateCitiesLayer(mapInstance);
+              updateStateCitiesLayer(mapInstance, cityFeatures);
+              
+              // Re-attach interactions
+              majorCitiesCleanupRef.current?.();
+              if (cityFeatures.length > 0) {
+                majorCitiesCleanupRef.current = attachCityInteractions(mapInstance, STATE_CITIES_LAYER_ID, {
+                  getCityDetails,
+                  onCityLoading: handleCityLoading,
+                  onCitySelected: handleCitySelection,
+                });
+              }
+              
+              oblastInteractionsCleanupRef.current?.();
+              oblastInteractionsCleanupRef.current = attachOblastInteractions(mapInstance, undefined, {
+                onStateSelected: handleStateSelection,
+              });
+              
+              // Re-apply selected oblast state if one was selected
+              if (filters.state && selectedOblastCodeRef.current) {
+                const code = getUkraineOblastCodeByName(filters.state);
+                if (code) {
+                  const normalizedCode = code.toUpperCase();
+                  const features = mapInstance.querySourceFeatures(UKRAINE_OBLAST_SOURCE_ID, {
+                    filter: ['==', ['get', 'id'], normalizedCode],
+                  });
+                  const target = features[0];
+                  if (target && target.id != null) {
+                    mapInstance.setFeatureState(
+                      {
+                        source: UKRAINE_OBLAST_SOURCE_ID,
+                        id: target.id,
+                      },
+                      { selected: true }
+                    );
+                    selectedOblastFeatureIdRef.current = target.id;
+                    selectedOblastCodeRef.current = normalizedCode;
+                  }
+                }
+              }
+            });
+          }
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [isMapReady, currentTheme, cityFeatures, filters.state, getCityDetails, handleCityLoading, handleCitySelection, handleStateSelection]);
 
   const isFetchingCityList = isStateSelected ? isFetchingStateCities : false;
 

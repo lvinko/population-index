@@ -5,7 +5,7 @@ import { ReactQueryProvider } from '@/config/apiClient';
 
 const StatsPage = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-base-100 text-base-content">
+    <div className="flex-1 flex flex-col bg-base-100 text-base-content">
       <ReactQueryProvider>
         <StatChart />
       </ReactQueryProvider>

@@ -2,7 +2,7 @@ import PredictionForm from './components/PredictionForm';
 
 export default function PredictPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-base-100 text-base-content">
+    <div className="flex-1 flex flex-col bg-base-100 text-base-content">
       <main className="flex-1 max-w-4xl mx-auto w-full py-8 px-4 sm:px-6">
         <div className="space-y-6">
           <div tabIndex={0} className="collapse bg-base-100 border-base-300 border">

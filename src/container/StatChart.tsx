@@ -290,13 +290,11 @@ const StatChart = () => {
       <div className="max-w-7xl mx-auto space-y-4">
         {/* Header */}
         <div className="card bg-base-200 shadow-xl">
-          <div className="card-body p-4 sm:p-6">
-            <h2 className="card-title text-lg sm:text-xl mb-1">
-              Статистика населення України за {yearsRange[0]}-{yearsRange[1]}
-            </h2>
-            <p className="text-sm text-base-content/70">
-              Візуалізація демографічних даних по регіонах
-            </p>
+          <div tabIndex={0} className="collapse bg-base-100 border-base-300 border">
+            <div className="collapse-title font-semibold">Як працює статистика?</div>
+            <div className="collapse-content text-sm">
+              Статистика розраховується на основі демографічних даних України та зовнішніх факторів, таких як війна, економічна ситуація, смертність, народжуваність, міграція тощо.
+            </div>
           </div>
         </div>
 

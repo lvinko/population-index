@@ -72,7 +72,7 @@ export default function RootLayout({
         <link rel="canonical" href={siteConfig.url} />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-base-100 text-base-content min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-base-100 text-base-content min-h-screen flex flex-col`}
       >
         <Header />
         {children}
