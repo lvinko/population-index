@@ -1,5 +1,3 @@
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,8 +8,6 @@ export const metadata: Metadata = {
 const AboutPage = () => {
   return (
     <div className="flex flex-col min-h-screen p-5 sm:p-8 bg-base-100 text-base-content">
-      <Header title="Про проект" />
-
       <main className="flex-1 max-w-3xl mx-auto">
         <div className="space-y-6 py-8">
           <section className="space-y-4">
@@ -103,8 +99,6 @@ const AboutPage = () => {
           </section>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };

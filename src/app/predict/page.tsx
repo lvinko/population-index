@@ -2,14 +2,20 @@ import PredictionForm from './components/PredictionForm';
 
 export default function PredictPage() {
   return (
-    <main className="max-w-4xl mx-auto py-8 px-4">
-      <h1 className="text-3xl font-semibold mb-6">Population Prediction (Ukraine)</h1>
-      <p className="mb-6 text-gray-600">
-        Explore how demographic trends and external factors could influence Ukraine&apos;s future population.
-        Adjust the inputs below to simulate different scenarios.
-      </p>
-      <PredictionForm />
-    </main>
+    <div className="flex flex-col min-h-screen bg-base-100 text-base-content">
+      <main className="flex-1 max-w-4xl mx-auto w-full py-8 px-4 sm:px-6">
+        <div className="space-y-6">
+          <div tabIndex={0} className="collapse bg-base-100 border-base-300 border">
+            <div className="collapse-title font-semibold">Як працює прогноз?</div>
+            <div className="collapse-content text-sm">
+              Прогноз розраховується на основі демографічних даних України та зовнішніх факторів, таких як війна, економічна ситуація, смертність, народжуваність, міграція тощо.
+              Налаштуйте параметри нижче, щоб симулювати різні сценарії.
+            </div>
+          </div>
+          <PredictionForm />
+        </div>
+      </main>
+    </div>
   );
 }
 

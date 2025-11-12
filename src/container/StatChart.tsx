@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import PopulationStackedChart from '@/components/PopulationStackedChart';
-import Footer from '@/components/Footer';
 import { RegionData } from '@/types/population';
-import Header from '@/components/Header';
 import { getPopulation } from '@/queries';
 import { useQuery } from '@tanstack/react-query';
 import { Spinner } from '@/components';
@@ -55,22 +53,6 @@ const StatChart = () => {
   return (
     <>
       <div className="flex-1 flex flex-col items-center justify-between p-5 sm:p-8 bg-base-100 text-base-content relative min-h-screen">
-        <Header title={`Статистика населення України за ${yearsRange[0]}-${yearsRange[1]}`}>
-          <div className="relative">
-            <button
-              onClick={() => setChartType(chartType === 'stacked' ? 'radial' : 'stacked')}
-              className="btn btn-neutral text-sm px-4 py-2 gap-2"
-            >
-              {chartType === 'stacked' ? 'Radial' : 'Stacked'}
-              {chartType === 'stacked' && (
-                <div className="badge badge-accent text-xs">
-                  Beta
-                </div>
-              )}
-            </button>
-          </div>
-        </Header>
-
         {chartType === 'stacked' ? (
           <div className="w-full pb-4" style={{ overflow: 'scroll' }}>
             <div className="min-w-[1200px]">
@@ -91,7 +73,6 @@ const StatChart = () => {
             />
           </div>
         )}
-        <Footer />
       </div>
     </>
   );
