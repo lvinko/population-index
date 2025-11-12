@@ -2,10 +2,12 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import ky, { HTTPError } from 'ky';
+import { LineChart, MapPin, FileText } from 'lucide-react';
 
 import { PredictionInput, PredictionResult } from '@/lib/utils/types';
 import PredictionChart from './PredictionChart';
 import SummaryBox from './SummaryBox';
+import RegionalDistribution from './RegionalDistribution';
 import './styles.css';
 
 const DEFAULT_INPUT: PredictionInput = {
@@ -33,6 +35,7 @@ export default function PredictionForm() {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [latestYearData, setLatestYearData] = useState<LatestYearData | null>(null);
   const [loadingLatestYear, setLoadingLatestYear] = useState(true);
+  const [activeTab, setActiveTab] = useState<'chart' | 'regions' | 'summary'>('chart');
 
   // Fetch latest available year on mount
   useEffect(() => {
@@ -429,17 +432,152 @@ export default function PredictionForm() {
               <div className="skeleton h-80 w-full rounded-lg"></div>
             </div>
           </div>
+
+          {/* Regional Distribution Skeleton */}
+          <div className="card bg-base-100 shadow-xl border border-base-300">
+            <div className="card-body p-6 sm:p-8">
+              <div className="mb-4">
+                <div className="skeleton h-8 w-64 mb-2"></div>
+                <div className="skeleton h-4 w-96 max-w-full"></div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="stats stats-vertical shadow bg-base-200 border border-base-300">
+                    <div className="stat">
+                      <div className="skeleton h-4 w-20 mb-2"></div>
+                      <div className="skeleton h-8 w-24 mb-2"></div>
+                      <div className="skeleton h-3 w-16"></div>
+                    </div>
+                    <div className="stat">
+                      <div className="skeleton h-4 w-16 mb-2"></div>
+                      <div className="skeleton h-6 w-20"></div>
+                    </div>
+                    <div className="stat">
+                      <div className="skeleton h-4 w-16 mb-2"></div>
+                      <div className="skeleton h-6 w-20"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
       {result && (
-        <div className={`space-y-6 bg-base-100 p-6 sm:p-8 rounded-lg shadow-xl border border-base-300 transition-opacity duration-300 ${loading && !isInitialLoad ? 'opacity-75' : ''}`}>
-          <div className="mb-4">
-            <h3 className="text-2xl font-bold text-base-content mb-2">Результати прогнозу</h3>
-            <p className="text-sm text-base-content/70">Візуалізація та аналіз прогнозованих даних</p>
+        <div className={`bg-base-100 rounded-lg shadow-xl border border-base-300 transition-opacity duration-300 ${loading && !isInitialLoad ? 'opacity-75' : ''}`}>
+          <div className="p-6 sm:p-8 pb-0">
+            <div className="mb-4">
+              <h3 className="text-2xl font-bold text-base-content mb-2">Результати прогнозу</h3>
+              <p className="text-sm text-base-content/70">Візуалізація та аналіз прогнозованих даних</p>
+            </div>
           </div>
-          <PredictionChart data={result.data} />
-          <SummaryBox result={result} />
+
+          {/* Tabs Navigation */}
+          <div className="tabs abs-lift w-full px-6 sm:px-8 pt-4">
+            <input
+              type="radio"
+              name="prediction-tabs"
+              role="tab"
+              className="tab hidden"
+              aria-label="Графік"
+              id="tab-chart"
+              checked={activeTab === 'chart'}
+              onChange={() => setActiveTab('chart')}
+            />
+            <label
+              role="tab"
+              htmlFor="tab-chart"
+              className={`tab flex items-center gap-2 ${activeTab === 'chart' ? 'tab-active' : ''}`}
+            >
+              <LineChart className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">Графік</span>
+            </label>
+            <div
+              role="tabpanel"
+              className={`tab-content bg-base-100 border-base-300 rounded-box p-6 ${
+                activeTab === 'chart' ? '' : 'hidden'
+              }`}
+            >
+              <PredictionChart data={result.data} />
+            </div>
+
+            <input
+              type="radio"
+              name="prediction-tabs"
+              role="tab"
+              className="tab hidden"
+              aria-label="Регіони"
+              id="tab-regions"
+              checked={activeTab === 'regions'}
+              onChange={() => setActiveTab('regions')}
+            />
+            <label
+              role="tab"
+              htmlFor="tab-regions"
+              className={`tab flex items-center gap-2 ${activeTab === 'regions' ? 'tab-active' : ''}`}
+            >
+              <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">Регіони</span>
+            </label>
+            <div
+              role="tabpanel"
+              className={`tab-content bg-base-100 border-base-300 rounded-box p-6 ${
+                activeTab === 'regions' ? '' : 'hidden'
+              }`}
+            >
+              {result.regions && result.regions.length > 0 ? (
+                <RegionalDistribution
+                  regions={result.regions}
+                  totalPopulation={result.predictedPopulation}
+                />
+              ) : (
+                <div className="alert alert-info">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    className="stroke-current shrink-0 w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                  <span>Регіональні дані недоступні</span>
+                </div>
+              )}
+            </div>
+
+            <input
+              type="radio"
+              name="prediction-tabs"
+              role="tab"
+              className="tab hidden"
+              aria-label="Підсумок"
+              id="tab-summary"
+              checked={activeTab === 'summary'}
+              onChange={() => setActiveTab('summary')}
+            />
+            <label
+              role="tab"
+              htmlFor="tab-summary"
+              className={`tab flex items-center gap-2 ${activeTab === 'summary' ? 'tab-active' : ''}`}
+            >
+              <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">Підсумок</span>
+            </label>
+            <div
+              role="tabpanel"
+              className={`tab-content bg-base-100 border-base-300 rounded-box p-6 ${
+                activeTab === 'summary' ? '' : 'hidden'
+              }`}
+            >
+              <SummaryBox result={result} />
+            </div>
+          </div>
         </div>
       )}
     </div>

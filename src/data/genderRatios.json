@@ -1,0 +1,15 @@
+{
+  "default": {
+    "male": 0.46,
+    "female": 0.54
+  },
+  "Kyiv": {
+    "male": 0.47,
+    "female": 0.53
+  },
+  "Lviv": {
+    "male": 0.45,
+    "female": 0.55
+  }
+}
+
