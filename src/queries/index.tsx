@@ -1,4 +1,5 @@
 import ky from 'ky';
+import type { PopulationData } from '@/types/population';
 
 type PopulationQueryParams = {
   country?: string;
@@ -50,11 +51,13 @@ const getPopulationByYear = async (
   return internalApi.get(`populationByYear?${queryString}`).json();
 };
 
-const getPopulation = async (params: Pick<PopulationQueryParams, 'country' | 'iso3'> = {}) => {
+const getPopulation = async (
+  params: Pick<PopulationQueryParams, 'country' | 'iso3'> = {}
+): Promise<PopulationData> => {
   const endpointParams = withDefaultIso3(params);
   const queryString = buildQueryString(endpointParams);
   const endpoint = queryString ? `population?${queryString}` : 'population';
-  return internalApi.get(endpoint).json();
+  return internalApi.get(endpoint).json<PopulationData>();
 };
 
 export { getPopulationByYear, getPopulation };
