@@ -65,12 +65,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="uk" className="bg-background">
+    <html lang="uk" data-theme="light" className="bg-base-100">
       <head>
         <link rel="canonical" href={siteConfig.url} />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-base-100 text-base-content min-h-screen`}
       >
         {children}
       </body>

@@ -54,16 +54,16 @@ const StatChart = () => {
 
   return (
     <>
-      <div className="flex-1 flex flex-col items-center justify-between p-5 sm:p-8 bg-background text-foreground relative min-h-screen">
+      <div className="flex-1 flex flex-col items-center justify-between p-5 sm:p-8 bg-base-100 text-base-content relative min-h-screen">
         <Header title={`Статистика населення України за ${yearsRange[0]}-${yearsRange[1]}`}>
           <div className="relative">
             <button
               onClick={() => setChartType(chartType === 'stacked' ? 'radial' : 'stacked')}
-              className="flex items-center bg-black rounded-md text-sm px-4 py-2 gap-2"
+              className="btn btn-neutral text-sm px-4 py-2 gap-2"
             >
               {chartType === 'stacked' ? 'Radial' : 'Stacked'}
               {chartType === 'stacked' && (
-                <div className="bg-background text-accent p-1 text-xs rounded">
+                <div className="badge badge-accent text-xs">
                   Beta
                 </div>
               )}
