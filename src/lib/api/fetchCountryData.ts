@@ -44,6 +44,7 @@ export async function fetchUkrainePopulation(): Promise<PopulationDataPoint[]> {
           populationCounts: Array<{
             year: string;
             value: number;
+            sex?: string;
           }>;
         };
       }>();
@@ -52,10 +53,15 @@ export async function fetchUkrainePopulation(): Promise<PopulationDataPoint[]> {
       return FALLBACK_POPULATION;
     }
 
-    return data.data.populationCounts.map((entry) => ({
-      year: Number(entry.year),
-      value: Number(entry.value),
-    }));
+    // Filter for total population only (exclude sex-separated data)
+    // This ensures we use all available historical data from 1960 for better calculations
+    return data.data.populationCounts
+      .filter((entry) => !entry.sex) // Only total population, not separated by sex
+      .map((entry) => ({
+        year: Number(entry.year),
+        value: Number(entry.value),
+      }))
+      .sort((a, b) => a.year - b.year); // Ensure data is sorted by year
   } catch (error) {
     console.error('Failed to fetch Ukraine population data. Falling back to local dataset.', error);
     return FALLBACK_POPULATION;

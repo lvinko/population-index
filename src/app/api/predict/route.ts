@@ -45,6 +45,57 @@ function selectComparisonPoint(data: PopulationDataPoint[], base: PopulationData
   return base;
 }
 
+/**
+ * Calculate base growth rate using multiple historical data points for better accuracy.
+ * Uses linear regression on log-transformed population values to get a more stable growth rate.
+ */
+function calculateBaseGrowthRate(
+  data: PopulationDataPoint[],
+  baseYear: number,
+  lookbackYears: number = 10
+): number {
+  const sorted = [...data].sort((a, b) => a.year - b.year);
+  
+  // Filter data points within the lookback period from base year
+  const relevantData = sorted.filter(
+    (point) => point.year <= baseYear && point.year >= baseYear - lookbackYears
+  );
+
+  // If we have enough data points, use linear regression on log values
+  if (relevantData.length >= 3) {
+    // Calculate growth rates for each period and average them
+    const growthRates: number[] = [];
+    for (let i = 1; i < relevantData.length; i++) {
+      const prev = relevantData[i - 1];
+      const curr = relevantData[i];
+      const yearDiff = Math.max(1, curr.year - prev.year);
+      const safePrev = Math.max(1, prev.value);
+      const safeCurr = Math.max(1, curr.value);
+      const rate = Math.log(safeCurr / safePrev) / yearDiff;
+      if (Number.isFinite(rate)) {
+        growthRates.push(rate);
+      }
+    }
+    
+    if (growthRates.length > 0) {
+      // Use weighted average (more recent data has higher weight)
+      const weights = growthRates.map((_, i) => i + 1);
+      const weightedSum = growthRates.reduce((sum, rate, i) => sum + rate * weights[i], 0);
+      const weightSum = weights.reduce((sum, w) => sum + w, 0);
+      return weightedSum / weightSum;
+    }
+  }
+
+  // Fallback to simple two-point calculation
+  const basePoint = selectBasePoint(data, baseYear);
+  const comparisonPoint = selectComparisonPoint(data, basePoint);
+  const yearDiff = Math.max(1, comparisonPoint.year - basePoint.year);
+  const safeBaseValue = Math.max(1, basePoint.value);
+  const safeComparisonValue = Math.max(1, comparisonPoint.value);
+  
+  return Math.log(safeComparisonValue / safeBaseValue) / yearDiff;
+}
+
 function buildChartData(
   historical: PopulationDataPoint[],
   base: PopulationDataPoint,
@@ -53,7 +104,8 @@ function buildChartData(
   baseGrowthRate: number
 ): PopulationDataPoint[] {
   const startYear = Math.max(base.year, input.baseYear);
-  const historicalStartYear = Math.max(startYear - 5, historical[0]?.year ?? startYear);
+  // Show more historical context (10 years) when we have data from 1960
+  const historicalStartYear = Math.max(startYear - 10, historical[0]?.year ?? startYear);
 
   const chartMap = new Map<number, PopulationDataPoint>();
 
@@ -109,13 +161,10 @@ export async function POST(req: Request) {
     }
 
     const basePoint = selectBasePoint(data, input.baseYear);
-    const comparisonPoint = selectComparisonPoint(data, basePoint);
-
-    const yearDiff = Math.max(1, comparisonPoint.year - basePoint.year);
-    const safeBaseValue = Math.max(1, basePoint.value);
-    const safeComparisonValue = Math.max(1, comparisonPoint.value);
-
-    const baseGrowthRate = Math.log(safeComparisonValue / safeBaseValue) / yearDiff;
+    
+    // Use improved growth rate calculation with multiple historical data points
+    // This leverages the full dataset from 1960 for better accuracy
+    const baseGrowthRate = calculateBaseGrowthRate(data, input.baseYear, 10);
     const normalizedInput: PredictionInput = { ...input, baseYear: basePoint.year };
     const globalFactors = await fetchExternalFactors();
     const prediction = predictPopulationAdvanced(

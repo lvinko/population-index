@@ -1,5 +1,5 @@
 'use client'
-import React from 'react';
+
 import { BarStack } from '@visx/shape';
 import { Group } from '@visx/group';
 import { Grid } from '@visx/grid';
@@ -7,7 +7,6 @@ import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { useTooltip, Tooltip, defaultStyles } from '@visx/tooltip';
 import { RegionData } from '@/types/population';
-import { LegendOrdinal } from '@visx/legend';
 
 const tooltipStyles = {
   ...defaultStyles,
@@ -178,20 +177,6 @@ const PopulationStackedChart = ({
           />
         </Group>
       </svg>
-      <div
-        style={{
-          position: 'absolute',
-          top: margin.top / 2 - 10,
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          fontSize: '10px',
-        }}
-      >
-        <div className='overflow-x-auto'>
-          <LegendOrdinal scale={colorScale} direction="row" labelMargin="0 15px 0 0" />
-        </div>
-      </div>
       {tooltipOpen && tooltipData && (
         <Tooltip
           top={tooltipTop ? tooltipTop - 100 : 0}

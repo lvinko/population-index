@@ -2,39 +2,20 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import PopulationStackedChart from '@/components/PopulationStackedChart';
-import { RegionData } from '@/types/population';
-import { 
-  fetchCountryPopulation, 
-  fetchCountryCitiesPopulation,
-  fetchCountryStates,
-  fetchStateCities 
-} from '@/queries/countriesNow';
-import { useQuery, useQueries } from '@tanstack/react-query';
-import { PopulationData } from '@/types/population';
+import { RegionData, PopulationData } from '@/types/population';
+import { fetchCountryPopulation } from '@/queries/countriesNow';
+import { useQuery } from '@tanstack/react-query';
 
 const StatChart = () => {
   // Initialize state
   const [dimensions, setDimensions] = useState({ width: 1200, height: 800 });
-  const [yearsRange,] = useState([2003, 2022]);
+  // Use all available historical data (from 1960) for better visualization
+  const [yearsRange,] = useState([1960, new Date().getFullYear()]);
 
-  // Fetch country population data from countriesNow
+  // Fetch country population data from countriesNow (data from 1960)
   const { data: countryData, isLoading: isLoadingCountry } = useQuery({
     queryKey: ["country-population", "UKR"],
     queryFn: () => fetchCountryPopulation("UKR"),
-    staleTime: 1000 * 60 * 60 * 24,
-  });
-
-  // Fetch states/oblasts for Ukraine
-  const { data: statesData, isLoading: isLoadingStates } = useQuery({
-    queryKey: ["ukraine-states"],
-    queryFn: () => fetchCountryStates("Ukraine"),
-    staleTime: 1000 * 60 * 60 * 24 * 7, // States don't change often
-  });
-
-  // Fetch cities population data from countriesNow for regional visualization
-  const { data: citiesData, isLoading: isLoadingCities } = useQuery({
-    queryKey: ["cities-population", "Ukraine"],
-    queryFn: () => fetchCountryCitiesPopulation({ country: "Ukraine", limit: 1000 }),
     staleTime: 1000 * 60 * 60 * 24,
   });
 
@@ -54,135 +35,8 @@ const StatChart = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Fetch cities for each state to create proper city-to-state mapping
-  const stateCitiesQueries = useQueries({
-    queries: statesData?.data?.states?.map(state => ({
-      queryKey: ["state-cities", "Ukraine", state.name],
-      queryFn: () => fetchStateCities("Ukraine", state.name),
-      enabled: Boolean(statesData?.data?.states),
-      staleTime: 1000 * 60 * 60 * 24 * 7, // State cities don't change often
-    })) || [],
-  });
-
-  // Create a comprehensive city-to-state mapping from fetched state cities
-  const cityToStateMap = useMemo(() => {
-    const map = new Map<string, string>();
-    
-    if (!statesData?.data?.states) return map;
-
-    // Build mapping from state cities queries
-    stateCitiesQueries.forEach((query, index) => {
-      const state = statesData.data.states[index];
-      if (state && query.data?.data) {
-        // Map each city in this state to the state name
-        query.data.data.forEach(cityName => {
-          if (cityName) {
-            map.set(cityName.toLowerCase().trim(), state.name);
-          }
-        });
-      }
-    });
-
-    // Add fallback static mappings for major cities (in case API doesn't return them)
-    const cityToOblastMap: Record<string, string> = {
-      'kyiv': 'Kyiv',
-      'kiev': 'Kyiv',
-      'kharkiv': 'Kharkiv Oblast',
-      'odessa': 'Odessa Oblast',
-      'odesa': 'Odessa Oblast',
-      'dnipro': 'Dnipropetrovsk Oblast',
-      'dnipropetrovsk': 'Dnipropetrovsk Oblast',
-      'donetsk': 'Donetsk Oblast',
-      'lviv': 'Lviv Oblast',
-      'zaporizhzhia': 'Zaporizhzhya Oblast',
-      'zaporizhzhya': 'Zaporizhzhya Oblast',
-      'mykolaiv': 'Mykolaiv Oblast',
-      'mykolayiv': 'Mykolaiv Oblast',
-      'vinnytsia': 'Vinnytsia Oblast',
-      'vinnytsya': 'Vinnytsia Oblast',
-      'kryvyi rih': 'Dnipropetrovsk Oblast',
-      'kryvyi rig': 'Dnipropetrovsk Oblast',
-      'mariupol': 'Donetsk Oblast',
-      'luhansk': 'Luhansk Oblast',
-      'lugansk': 'Luhansk Oblast',
-      'sevastopol': 'Autonomous Republic of Crimea',
-      'simferopol': 'Autonomous Republic of Crimea',
-      'kherson': 'Kherson Oblast',
-      'poltava': 'Poltava Oblast',
-      'chernihiv': 'Chernihiv Oblast',
-      'chernigiv': 'Chernihiv Oblast',
-      'cherkasy': 'Cherkasy Oblast',
-      'sumy': 'Sumy Oblast',
-      'zhytomyr': 'Zhytomyr Oblast',
-      'khmelnytskyi': 'Khmelnytsky Oblast',
-      'khmelnytsky': 'Khmelnytsky Oblast',
-      'rivne': 'Rivne Oblast',
-      'ternopil': 'Ternopil Oblast',
-      'ivano-frankivsk': 'Ivano-Frankivsk Oblast',
-      'lutsk': 'Volyn Oblast',
-      'uzhhorod': 'Zakarpattia Oblast',
-      'chernivtsi': 'Chernivtsi Oblast',
-      'kropyvnytskyi': 'Kirovohrad Oblast',
-      'kirovohrad': 'Kirovohrad Oblast',
-    };
-
-    // Add static mappings as fallback (only if not already in map)
-    Object.entries(cityToOblastMap).forEach(([city, oblast]) => {
-      const cityKey = city.toLowerCase().trim();
-      if (!map.has(cityKey)) {
-        map.set(cityKey, oblast);
-      }
-    });
-
-    return map;
-  }, [statesData, stateCitiesQueries]);
-
-  // Aggregate cities by state/oblast using the mapping
-  const regionsByState = useMemo(() => {
-    if (!citiesData || !statesData?.data?.states) return new Map<string, Map<number, number>>();
-    
-    const statePopulations = new Map<string, Map<number, number>>();
-    
-    // Initialize all states
-    statesData.data.states.forEach(state => {
-      statePopulations.set(state.name, new Map<number, number>());
-    });
-
-    // Aggregate city populations by state using the mapping
-    citiesData.forEach(city => {
-      const cityKey = city.city.toLowerCase().trim();
-      const matchedState = cityToStateMap.get(cityKey);
-      
-      // If no direct match, try partial matching with state names
-      let stateMatch = matchedState;
-      if (!stateMatch) {
-        for (const state of statesData.data.states) {
-          const stateNameLower = state.name.toLowerCase();
-          // Check if city name contains state name (for cases like "Kyiv" matching "Kyiv")
-          if (cityKey.includes(stateNameLower) || stateNameLower.includes(cityKey)) {
-            stateMatch = state.name;
-            break;
-          }
-        }
-      }
-
-      if (stateMatch && statePopulations.has(stateMatch)) {
-        // Aggregate population by year for this state
-        city.populationCounts.forEach(count => {
-          const year = Number(count.year);
-          if (!isNaN(year) && year >= yearsRange[0] && year <= yearsRange[1]) {
-            const yearMap = statePopulations.get(stateMatch)!;
-            const currentValue = yearMap.get(year) || 0;
-            yearMap.set(year, currentValue + Number(count.value));
-          }
-        });
-      }
-    });
-
-    return statePopulations;
-  }, [citiesData, statesData, cityToStateMap, yearsRange]);
-
   // Transform countriesNow data to match the expected PopulationData format
+  // Simplified to show only country-level data (no regional breakdown)
   const transformedData: PopulationData = useMemo(() => {
     if (!countryData?.data?.populationCounts) return [];
 
@@ -195,7 +49,7 @@ const StatChart = () => {
       }
     });
 
-    // Convert to PopulationData format with regional data
+    // Convert to PopulationData format with country-level data only
     return Array.from(years)
       .sort((a, b) => a - b)
       .map(year => {
@@ -203,34 +57,12 @@ const StatChart = () => {
           c => Number(c.year) === year && !c.sex
         );
         const totalValue = countryYearData?.value || 0;
-        
-        // Build regions from aggregated state data
-        const regions = Array.from(regionsByState.entries())
-          .map(([stateName, yearMap]) => {
-            const statePopulation = yearMap.get(year) || 0;
-            return {
-              name: stateName,
-              label: stateName,
-              code: stateName,
-              dataset: {
-                population: [
-                  {
-                    year,
-                    value: statePopulation,
-                    type: 'total',
-                  },
-                ],
-              },
-            };
-          })
-          .filter(region => region.dataset.population[0].value > 0)
-          .sort((a, b) => b.dataset.population[0].value - a.dataset.population[0].value);
 
         return {
           name: countryData.data.country,
           code: countryData.data.iso3,
           year,
-          regions: regions.length > 0 ? regions : [{
+          regions: [{
             name: countryData.data.country,
             label: countryData.data.country,
             code: countryData.data.iso3,
@@ -246,7 +78,7 @@ const StatChart = () => {
           }],
         };
       });
-  }, [countryData, regionsByState, yearsRange]);
+  }, [countryData, yearsRange]);
 
   // Process the data for the stacked chart
   const processedData = useMemo(() => {
@@ -259,8 +91,7 @@ const StatChart = () => {
     ).filter(d => d.total > 0);
   }, [transformedData]);
 
-  const isLoadingStateCities = stateCitiesQueries.some(query => query.isLoading);
-  const isLoading = isLoadingCountry || isLoadingStates || isLoadingCities || isLoadingStateCities;
+  const isLoading = isLoadingCountry;
 
   if (isLoading) {
     return (
