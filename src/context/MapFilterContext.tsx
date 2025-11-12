@@ -1,8 +1,37 @@
+'use client';
+
 import { createContext, useContext, useState, ReactNode } from 'react';
 
+export type SelectedCity = {
+  name: string;
+  canonicalName?: string;
+  summary?: string | null;
+  wikipediaUrl?: string | null;
+  coordinates?: {
+    lat: number | null;
+    lon: number | null;
+  } | null;
+  language?: string | null;
+  wikidataId?: string | null;
+  wikidataEntity?: unknown | null;
+  error?: string;
+  status?: 'idle' | 'loading' | 'success' | 'error';
+};
+
+export const normalizeCityKey = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/['’`]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
 export type Filters = {
-  year: number;
-  type: string;
+  country: string;
+  countryIso3: string;
+  state: string;
+  selectedCity: SelectedCity | null;
 };
 
 type MapFilterContextType = {
@@ -17,10 +46,11 @@ type MapFilterProviderProps = {
 };
 
 export function MapFilterProvider({ children }: MapFilterProviderProps) {
-  // NOTE: default values
   const [filters, setFilters] = useState<Filters>({
-    year: 2022,
-    type: 'total',
+    country: 'Ukraine',
+    countryIso3: 'UKR',
+    state: '',
+    selectedCity: null,
   });
 
   return (

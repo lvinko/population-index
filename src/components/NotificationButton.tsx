@@ -60,7 +60,8 @@ const NotificationButton = () => {
   return (
     <button
       onClick={handleClick}
-      className="ml-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="btn btn-primary btn-sm ml-2"
+      disabled={!isSupported}
     >
       {permission === 'granted' ? <Bell className="w-4 h-4" /> : <BellOff className="w-4 h-4" />}
     </button>

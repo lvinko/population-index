@@ -1,37 +1,41 @@
 import Image from "next/image";
 import Link from "next/link";
+import { navigationLinks } from "@/config/navigation";
 
 const Footer = () => {
   return (
-    <div className="h-13 mt-5 flex items-center justify-center px-4 gap-2 text-sm">
-      <Link href="/" className="mr-5 text-foreground hover:text-primary">Головна</Link>
-      <Link href="/stat" className="mr-5 text-foreground hover:text-primary">Статистика</Link>
-
-      <div className="w-0.5 h-full bg-gray-600 rounded-full"></div>
-
-      <div className="flex flex-col items-center">
-        <div className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 p-1 rounded">
-          <Link href="https://stat.gov.ua/uk" target="_blank">
-            <Image src="/logo-data-bank.png" alt="Держстат" width={60} height={20} />
+    <footer className="footer footer-center bg-base-200 text-base-content p-4 gap-2 text-sm">
+      <nav className="flex flex-wrap gap-4 justify-self-start">
+        {navigationLinks.map((link) => (
+          <Link key={link.href} href={link.href} className="link link-hover">
+            {link.label}
           </Link>
-          <Link href="https://dia.gov.ua/" target="_blank"> 
-            <Image src="/logo-dia.png" alt="Дія" width={30} height={30} />
-          </Link>
+        ))}
+        
+        <div className="divider divider-horizontal mx-2 h-6"></div>
+        
+        <div className="flex flex-col items-center">
+          <div className="flex items-center gap-2 bg-gradient-to-r from-primary to-secondary p-1 rounded">
+            <Link href="https://stat.gov.ua/uk" target="_blank" className="hover:opacity-80 transition-opacity">
+              <Image src="/logo-data-bank.png" alt="Держстат" width={60} height={20} />
+            </Link>
+            <Link href="https://dia.gov.ua/" target="_blank" className="hover:opacity-80 transition-opacity"> 
+              <Image src="/logo-dia.png" alt="Дія" width={30} height={30} />
+            </Link>
+          </div>
         </div>
-
-        <small className="text-xs text-foreground">
-          Ресурси
-        </small>
-      </div>
-
-      <div className="w-0.5 h-full bg-gray-600 rounded-full"></div>
-
-      <Link href="/about" className="ml-5 text-foreground hover:text-primary">Про проект</Link>
-
-      <small className="text-xs text-foreground">
-        © {new Date().getFullYear()}
-      </small>
-    </div>
+        
+        <div className="divider divider-horizontal mx-2 h-6"></div>
+        
+        <Link href="/about" className="link link-hover">Про проект</Link>
+      </nav>
+      
+      <aside className="mt-2 justify-self-end">
+        <p className="text-xs">
+          © {new Date().getFullYear()}
+        </p>
+      </aside>
+    </footer>
   );
 };
 

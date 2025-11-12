@@ -16,6 +16,7 @@ An interactive web application for visualizing and analyzing population data acr
 - 🌓 Dark/Light mode support
 - 🔄 Real-time data updates
 - 🌐 Multilingual support (Ukrainian)
+- 🔮 Population prediction workspace with hybrid exponential/logistic modeling, confidence bands, and adjustable scenario inputs for Ukraine
 
 ## Tech Stack
 
