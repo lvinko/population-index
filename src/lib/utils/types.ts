@@ -16,6 +16,17 @@ export interface PredictionInput {
   familySupport: 'low' | 'medium' | 'strong';
 }
 
+export interface RegionForecast {
+  region: string;
+  population: number;
+  male: number;
+  female: number;
+  percent: number;
+  year: number;
+  lowerBound: number;
+  upperBound: number;
+}
+
 export interface PredictionResult {
   predictedPopulation: number;
   growthRate: number;
@@ -25,5 +36,6 @@ export interface PredictionResult {
   lowerBound: number;
   upperBound: number;
   data: PopulationDataPoint[];
+  regions?: RegionForecast[];
 }
 

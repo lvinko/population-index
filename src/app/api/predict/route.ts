@@ -5,6 +5,7 @@ import { fetchExternalFactors } from '@/lib/api/fetchExternalFactors';
 import { fetchUkrainePopulation } from '@/lib/api/fetchCountryData';
 import { predictPopulationAdvanced, projectHybridSeries } from '@/lib/utils/formula';
 import { PopulationDataPoint, PredictionInput, PredictionResult } from '@/lib/utils/types';
+import { calculateRegionalForecast } from '@/lib/forecast/regionalDistribution';
 
 const predictionSchema = z.object({
   baseYear: z.number().int().min(1900).max(2100),
@@ -231,6 +232,14 @@ export async function POST(req: Request) {
       });
     }
 
+    // Calculate regional forecast distribution
+    const regionalForecast = calculateRegionalForecast(
+      prediction.predicted,
+      input.targetYear,
+      prediction.lower,
+      prediction.upper
+    );
+
     const response: PredictionResult = {
       predictedPopulation: prediction.predicted,
       growthRate: baseGrowthRate,
@@ -240,6 +249,7 @@ export async function POST(req: Request) {
       lowerBound: prediction.lower,
       upperBound: prediction.upper,
       data: chartData.sort((a, b) => a.year - b.year),
+      regions: regionalForecast,
     };
 
     return NextResponse.json(response);
