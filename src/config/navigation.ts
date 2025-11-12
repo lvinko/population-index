@@ -4,7 +4,7 @@ export const navigationLinks = [
     label: "Головна",
   },
   {
-    href: "/stat",
+    href: "/statistics",
     label: "Статистика",
   },
   {

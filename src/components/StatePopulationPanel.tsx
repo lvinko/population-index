@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useMapFilter } from '@/context/MapFilterContext';
 import { getUkraineOblastLabelByName } from '@/config/map';
-import { Spinner } from '@/components';
 import { fetchCountryPopulation } from '@/queries';
 
 const formatPopulation = (value?: number | null) => {
@@ -88,8 +87,8 @@ const StatePopulationPanel = () => {
     if (!selectedCity) {
       return (
         <>
-          <h3 className="text-xs uppercase tracking-wide text-zinc-500">Місто не обрано</h3>
-          <p className="text-xs text-zinc-500 mt-1">
+          <h3 className="text-xs uppercase tracking-wide text-base-content/60">Місто не обрано</h3>
+          <p className="text-xs text-base-content/60 mt-1">
             Оберіть місто на карті, щоб переглянути короткий опис.
           </p>
         </>
@@ -97,7 +96,7 @@ const StatePopulationPanel = () => {
     }
 
     const nameLine = (
-      <p className="text-sm text-zinc-600 mt-1">
+      <p className="text-sm text-base-content mt-1">
         {selectedCity.canonicalName && selectedCity.canonicalName !== selectedCity.name
           ? `${selectedCity.name} (${selectedCity.canonicalName})`
           : selectedCity.name}
@@ -107,11 +106,11 @@ const StatePopulationPanel = () => {
     if (isCityLoading) {
       return (
         <>
-          <h3 className="text-xs uppercase tracking-wide text-zinc-500">Інформація про місто</h3>
+          <h3 className="text-xs uppercase tracking-wide text-base-content/60">Інформація про місто</h3>
           {nameLine}
-          <div className="flex items-center gap-2 text-xs text-zinc-500">
-            <Spinner size="sm" />
-            <span>Завантаження опису міста…</span>
+          <div className="space-y-2">
+            <div className="skeleton h-3 w-full"></div>
+            <div className="skeleton h-3 w-3/4"></div>
           </div>
         </>
       );
@@ -120,9 +119,9 @@ const StatePopulationPanel = () => {
     if (isCityError) {
       return (
         <>
-          <h3 className="text-xs uppercase tracking-wide text-zinc-500">Інформація про місто</h3>
+          <h3 className="text-xs uppercase tracking-wide text-base-content/60">Інформація про місто</h3>
           {nameLine}
-          <span className="text-xs text-red-500">
+          <span className="text-xs text-error">
             Не вдалося отримати інформацію про це місто
           </span>
         </>
@@ -130,14 +129,14 @@ const StatePopulationPanel = () => {
     }
 
     const description = selectedCity.summary ? (
-      <p className="text-xs text-zinc-600 leading-snug">{selectedCity.summary}</p>
+      <p className="text-xs text-base-content leading-snug">{selectedCity.summary}</p>
     ) : (
-      <span className="text-xs text-zinc-500">Опис для цього міста відсутній.</span>
+      <span className="text-xs text-base-content/60">Опис для цього міста відсутній.</span>
     );
 
     return (
       <>
-        <h3 className="text-xs uppercase tracking-wide text-zinc-500">Інформація про місто</h3>
+        <h3 className="text-xs uppercase tracking-wide text-base-content/60">Інформація про місто</h3>
         {nameLine}
         {description}
         {selectedCity.wikipediaUrl && (
@@ -145,7 +144,7 @@ const StatePopulationPanel = () => {
             href={selectedCity.wikipediaUrl}
             target="_blank"
             rel="noreferrer"
-            className="text-xs text-emerald-600 underline"
+            className="text-xs text-primary link link-hover"
           >
             Переглянути у Вікіпедії
           </a>
@@ -156,21 +155,21 @@ const StatePopulationPanel = () => {
 
   return (
     <div className="absolute top-24 right-5 sm:right-10 z-10 pointer-events-none">
-      <div className="w-64 max-w-[85vw] bg-white/90 px-4 py-3 rounded-md shadow pointer-events-auto">
-        <h2 className="text-xs uppercase tracking-wide text-zinc-500">
+      <div className="w-64 max-w-[85vw] bg-base-100/90 backdrop-blur-sm px-4 py-3 rounded-md shadow-lg border border-base-300 pointer-events-auto">
+        <h2 className="text-xs uppercase tracking-wide text-base-content/60">
           Населення країни
         </h2>
-        <p className="text-sm text-zinc-600 mt-1">{filters.country}</p>
-        <p className="text-xs text-zinc-500 mt-2">
+        <p className="text-sm text-base-content mt-1">{filters.country}</p>
+        <p className="text-xs text-base-content/60 mt-2">
           {isStateSelected ? `Обрана область: ${selectedStateLabel}` : 'Область не обрана'}
         </p>
         {!isLoading && !isError && availableYears.length > 0 && (
-          <label className="mt-3 flex flex-col gap-1 text-xs text-zinc-500">
+          <label className="mt-3 flex flex-col gap-1 text-xs text-base-content/60">
             <span className="uppercase tracking-wide">Рік</span>
             <select
               value={selectedYear ?? availableYears[0]}
               onChange={(event) => setSelectedYear(Number(event.target.value))}
-              className="text-sm text-zinc-700 px-3 py-1.5 border border-zinc-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="select select-bordered select-sm text-sm text-base-content bg-base-100 border-base-300 focus:outline-none focus:ring-2 focus:ring-primary"
             >
               {availableYears.map((year) => (
                 <option key={year} value={year}>
@@ -182,25 +181,25 @@ const StatePopulationPanel = () => {
         )}
         <div className="mt-3 min-h-[32px] flex items-center">
           {isLoading ? (
-            <div className="flex items-center gap-2 text-xs text-zinc-500">
-              <Spinner size="sm" />
-              <span>Завантаження статистики населення…</span>
+            <div className="w-full space-y-2">
+              <div className="skeleton h-4 w-3/4"></div>
+              <div className="skeleton h-6 w-1/2"></div>
             </div>
           ) : isError ? (
-            <span className="text-xs text-red-500">
+            <span className="text-xs text-error">
               Не вдалося завантажити дані про населення
             </span>
           ) : formattedPopulation ? (
-            <span className="text-lg font-semibold text-zinc-900">
+            <span className="text-lg font-semibold text-base-content">
               {formattedPopulation}
             </span>
           ) : (
-            <span className="text-xs text-zinc-500">
+            <span className="text-xs text-base-content/60">
               Немає даних про населення
             </span>
           )}
         </div>
-        <div className="mt-4 border-t border-zinc-200 pt-3 flex flex-col gap-2">
+        <div className="mt-4 border-t border-base-300 pt-3 flex flex-col gap-2">
           {renderCitySection()}
         </div>
       </div>

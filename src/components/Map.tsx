@@ -484,9 +484,9 @@ const Map = () => {
       <div id="map" ref={mapContainerRef} className="flex-1" />
       {showLoadingOverlay && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="flex items-center gap-3 bg-white/80 px-5 py-3 rounded-md shadow">
+          <div className="flex items-center gap-3 bg-base-100/90 backdrop-blur-sm px-5 py-3 rounded-md shadow-lg border border-base-300">
             {showSpinner && <Spinner size={spinnerSize} />}
-            <span className="text-sm font-medium text-zinc-700">{loadingMessage}</span>
+            <span className="text-sm font-medium text-base-content">{loadingMessage}</span>
           </div>
         </div>
       )}

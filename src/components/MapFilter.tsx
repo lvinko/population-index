@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useMapFilter } from '@/context/MapFilterContext';
 import { getUkraineOblastLabelByName } from '@/config/map';
 import { fetchCountryStates } from '@/queries';
-import { Spinner } from '@/components';
 
 type SelectOption<TValue> = {
   value: TValue;
@@ -76,10 +75,10 @@ const MapFilter = () => {
   };
 
   return (
-    <div className="flex flex-wrap gap-4 items-center absolute bottom-32 sm:right-10 right-5 z-10 text-zinc-900 bg-white p-3 rounded-md shadow">
+    <div className="flex flex-wrap gap-4 items-center absolute bottom-32 sm:right-10 right-5 z-10 text-base-content bg-base-100/90 backdrop-blur-sm p-3 rounded-md shadow-lg border border-base-300">
       <div className="flex flex-col text-sm font-medium">
-        <span className="text-xs uppercase text-zinc-500">Країна</span>
-        <span className="mt-1 px-4 py-2 border rounded-md bg-zinc-100 text-zinc-600">
+        <span className="text-xs uppercase text-base-content/60">Країна</span>
+        <span className="mt-1 px-4 py-2 border border-base-300 rounded-md bg-base-200 text-base-content">
           {COUNTRY}
         </span>
       </div>
@@ -89,7 +88,7 @@ const MapFilter = () => {
         <select
           value={filters.state}
           onChange={handleStateChange}
-          className="mt-1 px-4 py-2 border rounded-md"
+          className="select select-bordered select-sm mt-1 bg-base-100 text-base-content border-base-300"
           disabled={isLoading || stateOptions.length === 0}
         >
           <option value="">{stateOptions.length > 0 ? 'Оберіть область' : 'Завантаження…'}</option>
@@ -101,9 +100,8 @@ const MapFilter = () => {
         </select>
       </label>
       {(isLoading || isFetching) && (
-        <div className="flex items-center gap-2 text-xs text-zinc-500">
-          <Spinner size="sm" />
-          <span>Оновлення списку областей…</span>
+        <div className="flex items-center gap-2">
+          <div className="skeleton h-8 w-32"></div>
         </div>
       )}
     </div>
