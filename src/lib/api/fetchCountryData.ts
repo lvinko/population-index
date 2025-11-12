@@ -1,4 +1,4 @@
-import axios from 'axios';
+import ky from 'ky';
 import { PopulationDataPoint } from '../utils/types';
 
 const FALLBACK_POPULATION: PopulationDataPoint[] = [
@@ -18,16 +18,44 @@ const FALLBACK_POPULATION: PopulationDataPoint[] = [
   { year: 2023, value: 40800000 },
 ];
 
+const countriesNowClient = ky.create({
+  prefixUrl: 'https://countriesnow.space/api/v0.1',
+  headers: {
+    Accept: 'application/json',
+  },
+  timeout: 10000,
+  retry: {
+    limit: 2,
+  },
+});
+
 export async function fetchUkrainePopulation(): Promise<PopulationDataPoint[]> {
   try {
-    const res = await axios.get('https://country.space/api/v0.1/population/ukraine', {
-      timeout: 5000,
-    });
-    const data = res.data?.data?.populationCounts;
-    if (!Array.isArray(data) || data.length === 0) {
+    const data = await countriesNowClient
+      .get('countries/population/q', {
+        searchParams: {
+          iso3: 'UKR',
+        },
+      })
+      .json<{
+        error: boolean;
+        msg: string;
+        data: {
+          populationCounts: Array<{
+            year: string;
+            value: number;
+          }>;
+        };
+      }>();
+
+    if (data.error || !Array.isArray(data.data?.populationCounts) || data.data.populationCounts.length === 0) {
       return FALLBACK_POPULATION;
     }
-    return data;
+
+    return data.data.populationCounts.map((entry) => ({
+      year: Number(entry.year),
+      value: Number(entry.value),
+    }));
   } catch (error) {
     console.error('Failed to fetch Ukraine population data. Falling back to local dataset.', error);
     return FALLBACK_POPULATION;

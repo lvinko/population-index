@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import axios, { AxiosError } from 'axios';
+import ky, { HTTPError } from 'ky';
 
 import { PredictionInput, PredictionResult } from '@/lib/utils/types';
 import PredictionChart from './PredictionChart';
@@ -38,16 +38,21 @@ export default function PredictionForm() {
     setError(null);
 
     try {
-      const { data } = await axios.post<PredictionResult>('/api/predict', input);
+      const data = await ky.post('/api/predict', { json: input }).json<PredictionResult>();
       setResult(data);
     } catch (err) {
       console.error(err);
-      if (err instanceof AxiosError) {
-        const message =
-          err.response?.data?.error ??
-          err.response?.statusText ??
-          'Unable to generate prediction. Please try again.';
-        setError(message);
+      if (err instanceof HTTPError) {
+        try {
+          const errorData = await err.response.json() as { error?: string };
+          const message =
+            errorData?.error ??
+            err.response.statusText ??
+            'Unable to generate prediction. Please try again.';
+          setError(message);
+        } catch {
+          setError(err.response.statusText || 'Unable to generate prediction. Please try again.');
+        }
       } else {
         setError('Unable to generate prediction. Please try again.');
       }
