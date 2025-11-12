@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import ky, { HTTPError } from 'ky';
 
 import { PredictionInput, PredictionResult } from '@/lib/utils/types';
@@ -9,8 +9,8 @@ import SummaryBox from './SummaryBox';
 import './styles.css';
 
 const DEFAULT_INPUT: PredictionInput = {
-  baseYear: 2018,
-  targetYear: 2030,
+  baseYear: new Date().getFullYear() - 1, // Temporary default, will be updated from API
+  targetYear: new Date().getFullYear() + 5, // Default to 5 years ahead
   birthRateChange: 0,
   deathRateChange: 0,
   migrationChange: 0,
@@ -19,12 +19,43 @@ const DEFAULT_INPUT: PredictionInput = {
   familySupport: 'medium',
 };
 
+interface LatestYearData {
+  latestYear: number;
+  latestPopulation: number | null;
+  availableYears: number[];
+}
+
 export default function PredictionForm() {
   const [input, setInput] = useState<PredictionInput>(DEFAULT_INPUT);
   const [result, setResult] = useState<PredictionResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [latestYearData, setLatestYearData] = useState<LatestYearData | null>(null);
+  const [loadingLatestYear, setLoadingLatestYear] = useState(true);
+
+  // Fetch latest available year on mount
+  useEffect(() => {
+    const fetchLatestYear = async () => {
+      try {
+        const data = await ky.get('/api/predict').json<LatestYearData>();
+        setLatestYearData(data);
+        // Update input with latest year and set target year to 5 years ahead
+        setInput((prev) => ({
+          ...prev,
+          baseYear: data.latestYear,
+          targetYear: Math.max(data.latestYear + 1, prev.targetYear),
+        }));
+      } catch (err) {
+        console.error('Failed to fetch latest year', err);
+        // Keep default values if fetch fails
+      } finally {
+        setLoadingLatestYear(false);
+      }
+    };
+
+    fetchLatestYear();
+  }, []);
 
   const handleChange = <Field extends keyof PredictionInput>(
     field: Field,
@@ -73,20 +104,79 @@ export default function PredictionForm() {
           </div>
           
           <form className="space-y-8" onSubmit={handleSubmit}>
-            {/* Target Year Section */}
-            <div className="space-y-3">
-              <label className="label p-0" htmlFor="targetYear">
-                <span className="label-text text-base font-semibold">Цільовий рік прогнозу</span>
-              </label>
-              <input
-                id="targetYear"
-                type="number"
-                min={input.baseYear + 1}
-                value={input.targetYear}
-                onChange={(event) => handleChange('targetYear', Number(event.target.value))}
-                className="input input-bordered w-full max-w-xs focus:input-primary transition-colors"
-                disabled={loading}
-              />
+            {/* Year Selection Section */}
+            <div className="space-y-6">
+              <div className="divider">
+                <span className="text-sm font-semibold text-base-content/70">Роки прогнозу</span>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {/* Base Year */}
+                <div className="form-control space-y-3">
+                  <label className="label p-0" htmlFor="baseYear">
+                    <span className="label-text text-base font-semibold">Базовий рік</span>
+                    {latestYearData && (
+                      <span className="label-text-alt text-xs text-base-content/60">
+                        (Останній доступний: {latestYearData.latestYear})
+                      </span>
+                    )}
+                  </label>
+                  <input
+                    id="baseYear"
+                    type="number"
+                    min={1900}
+                    max={2100}
+                    value={input.baseYear}
+                    onChange={(event) => {
+                      const newBaseYear = Number(event.target.value);
+                      handleChange('baseYear', newBaseYear);
+                      // Ensure target year is always greater than base year
+                      if (input.targetYear <= newBaseYear) {
+                        handleChange('targetYear', newBaseYear + 1);
+                      }
+                    }}
+                    className="input input-bordered w-full focus:input-primary transition-colors"
+                    disabled={loading || loadingLatestYear}
+                  />
+                  {latestYearData && (
+                    <div className="text-xs text-base-content/60">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleChange('baseYear', latestYearData.latestYear);
+                          if (input.targetYear <= latestYearData.latestYear) {
+                            handleChange('targetYear', latestYearData.latestYear + 1);
+                          }
+                        }}
+                        className="link link-primary link-hover"
+                        disabled={loading || loadingLatestYear}
+                      >
+                        Використати останній доступний рік ({latestYearData.latestYear})
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Target Year */}
+                <div className="form-control space-y-3">
+                  <label className="label p-0" htmlFor="targetYear">
+                    <span className="label-text text-base font-semibold">Цільовий рік прогнозу</span>
+                  </label>
+                  <input
+                    id="targetYear"
+                    type="number"
+                    min={input.baseYear + 1}
+                    max={2200}
+                    value={input.targetYear}
+                    onChange={(event) => handleChange('targetYear', Number(event.target.value))}
+                    className="input input-bordered w-full focus:input-primary transition-colors"
+                    disabled={loading || loadingLatestYear}
+                  />
+                  <div className="text-xs text-base-content/60">
+                    Прогноз на {input.targetYear - input.baseYear} {input.targetYear - input.baseYear === 1 ? 'рік' : input.targetYear - input.baseYear < 5 ? 'роки' : 'років'}
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Demographic Rates Section */}

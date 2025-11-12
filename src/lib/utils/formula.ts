@@ -85,6 +85,8 @@ export function effectiveRate(baseRate: number, input: PredictionInput): number 
 
 /**
  * Main hybrid population prediction
+ * Uses a proper logistic growth model that smoothly transitions
+ * from exponential growth to carrying capacity limit
  */
 export function predictPopulationAdvanced(
   basePopulation: number,
@@ -102,16 +104,46 @@ export function predictPopulationAdvanced(
   // compute carrying capacity
   const K = computeCarryingCapacity(basePopulation, gdpGrowth, conflictIdx, sentiment);
 
-  // logistic + exponential hybrid model
-  const gamma = 0.3; // shape parameter
+  // Standard logistic growth model: P(t) = K / (1 + ((K - P0) / P0) * exp(-r*t))
+  // This ensures smooth, realistic growth that approaches K asymptotically
+  const P0 = Math.max(1, basePopulation);
+  const safeK = Math.max(P0 * 1.01, K); // Ensure K is always > P0
+  
+  // Handle case where population is near or above carrying capacity
+  if (P0 >= safeK * 0.99) {
+    // Population is at or near capacity - apply decay if rEff is negative, or minimal growth
+    const decayFactor = rEff < 0 ? Math.exp(rEff * years) : 1 + rEff * years * 0.1;
+    const predicted = P0 * decayFactor;
+    
+    // apply sentiment influence (global effect ±2%)
+    const worldInfluence = 1 + sentiment * 0.02;
+    const finalPredicted = predicted * worldInfluence;
+    const uncertainty = finalPredicted * 0.03;
+
+    return {
+      predicted: Math.max(0, Math.round(finalPredicted)),
+      lower: Math.max(0, Math.round(finalPredicted - uncertainty)),
+      upper: Math.max(0, Math.round(finalPredicted + uncertainty)),
+      adjustedRate: rEff,
+      carryingCapacity: Math.round(safeK),
+    };
+  }
+
+  // Standard logistic growth: P(t) = K / (1 + A * exp(-r*t))
+  // where A = (K - P0) / P0
+  const A = (safeK - P0) / P0;
+  const denominator = 1 + A * Math.exp(-rEff * years);
+  const predictedLogistic = safeK / denominator;
+
+  // For short-term predictions (1-5 years), blend with exponential for more responsiveness
+  // For long-term, use pure logistic to respect carrying capacity
+  const blendFactor = years <= 5 ? Math.exp(-years / 10) : 0; // Exponential decay of exponential component
   const P_exp = basePopulation * Math.exp(rEff * years);
-  const logisticTerm = 1 - basePopulation / K;
-  const safeLogistic = sigmoid(logisticTerm); // avoid negative/zero
-  const P_log = P_exp * Math.pow(safeLogistic, -gamma);
+  const blended = predictedLogistic * (1 - blendFactor) + P_exp * blendFactor;
 
   // apply sentiment influence (global effect ±2%)
   const worldInfluence = 1 + sentiment * 0.02;
-  const predicted = P_log * worldInfluence;
+  const predicted = blended * worldInfluence;
 
   // add uncertainty band (±3%)
   const uncertainty = predicted * 0.03;
@@ -121,7 +153,7 @@ export function predictPopulationAdvanced(
     lower: Math.max(0, Math.round(predicted - uncertainty)),
     upper: Math.max(0, Math.round(predicted + uncertainty)),
     adjustedRate: rEff,
-    carryingCapacity: Math.round(K),
+    carryingCapacity: Math.round(safeK),
   };
 }
 
@@ -132,10 +164,18 @@ export function projectHybridSeries(
   globalFactors?: { gdpGrowth?: number; conflictIndex?: number; sentiment?: number }
 ): PopulationDataPoint[] {
   const series: PopulationDataPoint[] = [];
+  
+  // Use iterative approach: each year's prediction is based on the previous year's population
+  // This ensures smooth transitions and realistic growth patterns
+  let currentPopulation = basePopulation;
 
   for (let year = input.baseYear + 1; year <= input.targetYear; year += 1) {
-    const stepInput: PredictionInput = { ...input, targetYear: year };
-    const prediction = predictPopulationAdvanced(basePopulation, baseRate, stepInput, globalFactors);
+    const stepInput: PredictionInput = { ...input, targetYear: year, baseYear: year - 1 };
+    const prediction = predictPopulationAdvanced(currentPopulation, baseRate, stepInput, globalFactors);
+    
+    // Update current population for next iteration
+    currentPopulation = prediction.predicted;
+    
     series.push({
       year,
       value: prediction.predicted,

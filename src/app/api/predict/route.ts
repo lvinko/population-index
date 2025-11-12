@@ -135,6 +135,39 @@ function buildChartData(
   return Array.from(chartMap.values()).sort((a, b) => a.year - b.year);
 }
 
+/**
+ * GET endpoint to retrieve the latest available year from population data
+ * This helps the frontend determine the default base year for predictions
+ */
+export async function GET() {
+  try {
+    const data = await fetchUkrainePopulation();
+
+    if (!data.length) {
+      return NextResponse.json(
+        { error: 'Population data unavailable for Ukraine.' },
+        { status: 503 }
+      );
+    }
+
+    // Find the latest available year
+    const latestYear = Math.max(...data.map((point) => point.year));
+    const latestPoint = data.find((point) => point.year === latestYear);
+
+    return NextResponse.json({
+      latestYear,
+      latestPopulation: latestPoint?.value ?? null,
+      availableYears: data.map((point) => point.year).sort((a, b) => b - a), // Descending order
+    });
+  } catch (error) {
+    console.error('Failed to fetch latest year', error);
+    return NextResponse.json(
+      { error: 'Unexpected error while fetching latest year.' },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const rawBody = await req.json();
