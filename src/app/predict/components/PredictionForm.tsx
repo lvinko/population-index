@@ -466,10 +466,12 @@ export default function PredictionForm() {
 
       {result && (
         <div className={`bg-base-100 rounded-lg shadow-xl border border-base-300 transition-opacity duration-300 ${loading && !isInitialLoad ? 'opacity-75' : ''}`}>
-          <div className="p-6 sm:p-8 pb-0">
-            <div className="mb-4">
-              <h3 className="text-2xl font-bold text-base-content mb-2">Результати прогнозу</h3>
-              <p className="text-sm text-base-content/70">Візуалізація та аналіз прогнозованих даних</p>
+          <div className="px-4 pt-4 sm:px-6 sm:pt-6 pb-0">
+            <div className="flex items-center gap-2 mb-2">
+              <h3 className="text-lg font-bold text-base-content">Результати прогнозу</h3>
+              <div className="tooltip tooltip-bottom" data-tip="Візуалізація та аналіз прогнозованих даних">
+                <p className="text-base-content/60 text-xs cursor-pointer">ⓘ</p>
+              </div>
             </div>
           </div>
 

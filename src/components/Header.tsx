@@ -52,7 +52,7 @@ const Header = ({
           </ul>
         </div>
         <Link href="/" className="btn btn-ghost">
-          <Image src="/logo.png" alt="Map" width={80} height={30} />
+          <Image src="/logo.png" alt="Map" width={80} height={30} className="h-full w-auto" />
         </Link>
         <div className="hidden lg:flex">
           <ul className="menu menu-horizontal px-1 gap-1">
