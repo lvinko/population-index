@@ -4,8 +4,36 @@ import { z } from 'zod';
 import { fetchExternalFactors } from '@/lib/api/fetchExternalFactors';
 import { fetchUkrainePopulation } from '@/lib/api/fetchCountryData';
 import { predictPopulationAdvanced, projectHybridSeries } from '@/lib/utils/formula';
-import { PopulationDataPoint, PredictionInput, PredictionResult } from '@/lib/utils/types';
+import { projectPopulationWithDynamics } from '@/lib/prediction/formula';
+import {
+  PopulationDataPoint,
+  PredictionInput,
+  PredictionResult,
+  SwingInputs,
+} from '@/lib/utils/types';
 import { calculateRegionalForecast } from '@/lib/forecast/regionalDistribution';
+
+const DEFAULT_SWING_INPUTS: SwingInputs = {
+  geopoliticalIndex: 0.1,
+  economicCyclePosition: 0.4,
+  internationalSupport: 0.5,
+  volatility: 0.3,
+  shockEvents: [],
+};
+
+const shockEventSchema = z.object({
+  year: z.number().int().min(1900).max(2300),
+  severity: z.number().min(-1).max(1),
+  recoveryYears: z.number().int().min(1).max(30),
+});
+
+const swingInputsSchema = z.object({
+  geopoliticalIndex: z.number().min(-1).max(1),
+  economicCyclePosition: z.number().min(0).max(1),
+  internationalSupport: z.number().min(0).max(1),
+  volatility: z.number().min(0).max(1),
+  shockEvents: z.array(shockEventSchema).optional(),
+});
 
 const predictionSchema = z.object({
   baseYear: z.number().int().min(1900).max(2100),
@@ -16,6 +44,7 @@ const predictionSchema = z.object({
   economicSituation: z.enum(['weak', 'stable', 'growing']),
   conflictIntensity: z.enum(['peace', 'tension', 'war']),
   familySupport: z.enum(['low', 'medium', 'strong']),
+  swingInputs: swingInputsSchema.optional(),
 });
 
 function selectBasePoint(data: PopulationDataPoint[], baseYear: number): PopulationDataPoint {
@@ -44,6 +73,21 @@ function selectComparisonPoint(data: PopulationDataPoint[], base: PopulationData
   }
 
   return base;
+}
+
+function resolveSwingInputs(inputs?: SwingInputs): SwingInputs {
+  if (!inputs) {
+    return { ...DEFAULT_SWING_INPUTS };
+  }
+
+  return {
+    geopoliticalIndex: inputs.geopoliticalIndex ?? DEFAULT_SWING_INPUTS.geopoliticalIndex,
+    economicCyclePosition:
+      inputs.economicCyclePosition ?? DEFAULT_SWING_INPUTS.economicCyclePosition,
+    internationalSupport: inputs.internationalSupport ?? DEFAULT_SWING_INPUTS.internationalSupport,
+    volatility: inputs.volatility ?? DEFAULT_SWING_INPUTS.volatility,
+    shockEvents: inputs.shockEvents ?? DEFAULT_SWING_INPUTS.shockEvents,
+  };
 }
 
 /**
@@ -136,6 +180,147 @@ function buildChartData(
   return Array.from(chartMap.values()).sort((a, b) => a.year - b.year);
 }
 
+function mergeWithDynamicSeries(
+  baseline: PopulationDataPoint[],
+  dynamicSeries: PopulationDataPoint[]
+): PopulationDataPoint[] {
+  const dynamicMap = new Map(dynamicSeries.map((point) => [point.year, point]));
+  const merged = baseline.map((point) => {
+    const swingPoint = dynamicMap.get(point.year);
+    if (!swingPoint) {
+      return {
+        ...point,
+        baselineValue: point.baselineValue ?? point.value,
+      };
+    }
+
+    return {
+      ...point,
+      value: swingPoint.value,
+      swingValue: swingPoint.value,
+      baselineValue: point.baselineValue ?? point.value,
+      growthRate: swingPoint.growthRate,
+      shockImpact: swingPoint.shockImpact,
+      cyclePhase: swingPoint.cyclePhase,
+      swingComponents: swingPoint.swingComponents,
+      policyModifier: swingPoint.policyModifier,
+    };
+  });
+
+  dynamicSeries.forEach((point) => {
+    if (!merged.some((entry) => entry.year === point.year)) {
+      merged.push({
+        ...point,
+        baselineValue: point.baselineValue ?? point.value,
+      });
+    }
+  });
+
+  return merged.sort((a, b) => a.year - b.year);
+}
+
+const clampValue = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+interface SensitivityVariant {
+  id: string;
+  label: string;
+  deltaLabel: string;
+  apply: (inputs: SwingInputs) => SwingInputs;
+}
+
+const SENSITIVITY_VARIANTS: SensitivityVariant[] = [
+  {
+    id: 'geo_plus',
+    label: 'Геополітичний індекс',
+    deltaLabel: '+0.1',
+    apply: (inputs) => ({
+      ...inputs,
+      geopoliticalIndex: clampValue(inputs.geopoliticalIndex + 0.1, -1, 1),
+    }),
+  },
+  {
+    id: 'geo_minus',
+    label: 'Геополітичний індекс',
+    deltaLabel: '-0.1',
+    apply: (inputs) => ({
+      ...inputs,
+      geopoliticalIndex: clampValue(inputs.geopoliticalIndex - 0.1, -1, 1),
+    }),
+  },
+  {
+    id: 'support_plus',
+    label: 'Міжнародна підтримка',
+    deltaLabel: '+0.1',
+    apply: (inputs) => ({
+      ...inputs,
+      internationalSupport: clampValue(inputs.internationalSupport + 0.1, 0, 1),
+    }),
+  },
+  {
+    id: 'support_minus',
+    label: 'Міжнародна підтримка',
+    deltaLabel: '-0.1',
+    apply: (inputs) => ({
+      ...inputs,
+      internationalSupport: clampValue(inputs.internationalSupport - 0.1, 0, 1),
+    }),
+  },
+  {
+    id: 'volatility_plus',
+    label: 'Волатильність',
+    deltaLabel: '+0.1',
+    apply: (inputs) => ({
+      ...inputs,
+      volatility: clampValue(inputs.volatility + 0.1, 0, 1),
+    }),
+  },
+  {
+    id: 'volatility_minus',
+    label: 'Волатильність',
+    deltaLabel: '-0.1',
+    apply: (inputs) => ({
+      ...inputs,
+      volatility: clampValue(inputs.volatility - 0.1, 0, 1),
+    }),
+  },
+  {
+    id: 'cycle_shift',
+    label: 'Фаза економічного циклу',
+    deltaLabel: '+0.1 (зсув)',
+    apply: (inputs) => ({
+      ...inputs,
+      economicCyclePosition: clampValue(inputs.economicCyclePosition + 0.1, 0, 1),
+    }),
+  },
+];
+
+function computeSensitivityResult(
+  swingInputs: SwingInputs,
+  runProjection: (inputs: SwingInputs) => ReturnType<typeof projectPopulationWithDynamics>,
+  baselinePopulation: number,
+  baselineVolatility: number
+) {
+  const variations = SENSITIVITY_VARIANTS.map((variant) => {
+    const variantInputs = variant.apply({ ...swingInputs });
+    const projection = runProjection(variantInputs);
+    const latestPoint = projection.series[projection.series.length - 1];
+
+    return {
+      id: variant.id,
+      label: variant.label,
+      deltaLabel: variant.deltaLabel,
+      predictedPopulation: latestPoint?.value ?? baselinePopulation,
+      volatilityRange: projection.metadata.volatilityRange,
+    };
+  });
+
+  return {
+    baselinePopulation,
+    baselineVolatility,
+    variations,
+  };
+}
+
 /**
  * GET endpoint to retrieve the latest available year from population data
  * This helps the frontend determine the default base year for predictions
@@ -221,35 +406,89 @@ export async function POST(req: Request) {
       );
     }
 
-    const chartData = buildChartData(data, basePoint, normalizedInput, globalFactors, baseGrowthRate);
+    const resolvedSwingInputs = resolveSwingInputs(input.swingInputs);
+    const baselineChart = buildChartData(
+      data,
+      basePoint,
+      normalizedInput,
+      globalFactors,
+      baseGrowthRate
+    );
+    const dynamicProjection = projectPopulationWithDynamics(
+      basePoint.value,
+      baseGrowthRate,
+      prediction.carryingCapacity,
+      basePoint.year,
+      input.targetYear,
+      resolvedSwingInputs,
+      globalFactors
+    );
+
+    let chartData = mergeWithDynamicSeries(baselineChart, dynamicProjection.series);
 
     if (!chartData.some((point) => point.year === input.targetYear)) {
-      chartData.push({
-        year: input.targetYear,
-        value: prediction.predicted,
-        lowerBound: prediction.lower,
-        upperBound: prediction.upper,
-      });
+      const fallbackPoint =
+        dynamicProjection.series.find((point) => point.year === input.targetYear) ??
+        dynamicProjection.series[dynamicProjection.series.length - 1];
+      if (fallbackPoint) {
+        chartData.push({
+          ...fallbackPoint,
+          baselineValue: fallbackPoint.baselineValue ?? fallbackPoint.value,
+        });
+      }
     }
 
-    // Calculate regional forecast distribution
+    const swingFinalPoint =
+      dynamicProjection.series[dynamicProjection.series.length - 1];
+    const finalPredicted = swingFinalPoint?.value ?? prediction.predicted;
+    const finalAdjustedRate = swingFinalPoint?.growthRate ?? prediction.adjustedRate;
+    const finalLowerBound = Math.max(0, Math.round(finalPredicted * 0.97));
+    const finalUpperBound = Math.max(0, Math.round(finalPredicted * 1.03));
+
+    const targetPoint = chartData.find((point) => point.year === input.targetYear);
+    if (targetPoint) {
+      targetPoint.lowerBound = finalLowerBound;
+      targetPoint.upperBound = finalUpperBound;
+    }
+
     const regionalForecast = calculateRegionalForecast(
-      prediction.predicted,
+      finalPredicted,
       input.targetYear,
-      prediction.lower,
-      prediction.upper
+      finalLowerBound,
+      finalUpperBound
+    );
+
+    const runProjectionVariant = (variantInputs: SwingInputs) =>
+      projectPopulationWithDynamics(
+        basePoint.value,
+        baseGrowthRate,
+        prediction.carryingCapacity,
+        basePoint.year,
+        input.targetYear,
+        variantInputs,
+        globalFactors
+      );
+
+    const sensitivity = computeSensitivityResult(
+      resolvedSwingInputs,
+      runProjectionVariant,
+      finalPredicted,
+      dynamicProjection.metadata.volatilityRange
     );
 
     const response: PredictionResult = {
-      predictedPopulation: prediction.predicted,
+      predictedPopulation: finalPredicted,
       growthRate: baseGrowthRate,
-      adjustedRate: prediction.adjustedRate,
-      message: `Predicted population for ${input.targetYear}: ${prediction.predicted.toLocaleString()} (±3%)`,
+      adjustedRate: finalAdjustedRate,
+      message: `Swing-adjusted population for ${input.targetYear}: ${finalPredicted.toLocaleString()} (±3%)`,
       carryingCapacity: prediction.carryingCapacity,
-      lowerBound: prediction.lower,
-      upperBound: prediction.upper,
+      lowerBound: finalLowerBound,
+      upperBound: finalUpperBound,
       data: chartData.sort((a, b) => a.year - b.year),
       regions: regionalForecast,
+      swingInputs: resolvedSwingInputs,
+      swingMetadata: dynamicProjection.metadata,
+      sensitivity,
     };
 
     return NextResponse.json(response);
