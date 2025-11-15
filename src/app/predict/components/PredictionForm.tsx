@@ -1,8 +1,31 @@
 'use client';
 
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import ky, { HTTPError } from 'ky';
-import { LineChart, MapPin, FileText, Info, Activity } from 'lucide-react';
+import {
+  Activity,
+  Baby,
+  CalendarDays,
+  CalendarRange,
+  FileText,
+  Globe,
+  Info,
+  LineChart,
+  MapPin,
+  Plane,
+  Play,
+  Save,
+  Shield,
+  Target,
+  Trash2,
+  LifeBuoy,
+  TrendingUp,
+  TrendingDown,
+  Users,
+  Waves,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 import { PredictionInput, PredictionResult, SwingInputs } from '@/lib/utils/types';
 import {
@@ -37,11 +60,49 @@ const DEFAULT_INPUT: PredictionInput = {
   swingInputs: { ...DEFAULT_SWING_INPUTS },
 };
 
+const normalizeInput = (values: PredictionInput): PredictionInput => ({
+  ...DEFAULT_INPUT,
+  ...values,
+  swingInputs: {
+    ...DEFAULT_SWING_INPUTS,
+    ...values.swingInputs,
+  },
+});
+
 function InfoHint({ text }: { text: string }) {
   return (
     <div className="tooltip tooltip-right" data-tip={text}>
       <Info className="w-4 h-4 text-base-content/60" aria-hidden="true" />
       <span className="sr-only">{text}</span>
+    </div>
+  );
+}
+
+function SectionDivider({ icon: Icon, text }: { icon: LucideIcon; text: string }) {
+  return (
+    <div className="divider">
+      <span className="text-sm font-semibold text-base-content/70 inline-flex items-center gap-2">
+        <Icon className="w-4 h-4 text-primary" aria-hidden="true" />
+        {text}
+      </span>
+    </div>
+  );
+}
+
+function FieldLabel({
+  icon: Icon,
+  text,
+  hint,
+}: {
+  icon: LucideIcon;
+  text: string;
+  hint?: string;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <Icon className="w-4 h-4 text-primary" aria-hidden="true" />
+      <span className="label-text text-base font-semibold">{text}</span>
+      {hint && <InfoHint text={hint} />}
     </div>
   );
 }
@@ -53,7 +114,6 @@ interface LatestYearData {
 }
 
 export default function PredictionForm() {
-  const [input, setInput] = useState<PredictionInput>(DEFAULT_INPUT);
   const [result, setResult] = useState<PredictionResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,6 +125,18 @@ export default function PredictionForm() {
   const [scenarioName, setScenarioName] = useState('');
   const [selectedScenarioId, setSelectedScenarioId] = useState('');
   const [scenarioError, setScenarioError] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit: submitForm,
+    watch,
+    setValue,
+    reset,
+    getValues,
+  } = useForm<PredictionInput>({
+    defaultValues: DEFAULT_INPUT,
+  });
+  const formValues = watch();
+  const swingInputs = formValues.swingInputs ?? DEFAULT_SWING_INPUTS;
 
   // Fetch latest available year on mount
   useEffect(() => {
@@ -72,12 +144,12 @@ export default function PredictionForm() {
       try {
         const data = await ky.get('/api/predict').json<LatestYearData>();
         setLatestYearData(data);
-        // Update input with latest year and set target year to 5 years ahead
-        setInput((prev) => ({
-          ...prev,
-          baseYear: data.latestYear,
-          targetYear: Math.max(data.latestYear + 1, prev.targetYear),
-        }));
+        // Update input with latest year and ensure target year stays ahead
+        setValue('baseYear', data.latestYear);
+        const currentTargetYear = getValues('targetYear');
+        if (currentTargetYear <= data.latestYear) {
+          setValue('targetYear', data.latestYear + 1);
+        }
       } catch (err) {
         console.error('Failed to fetch latest year', err);
         // Keep default values if fetch fails
@@ -87,31 +159,11 @@ export default function PredictionForm() {
     };
 
     fetchLatestYear();
-  }, []);
+  }, [getValues, setValue]);
 
   useEffect(() => {
     setScenarios(loadScenarios());
   }, []);
-
-  const handleChange = <Field extends keyof PredictionInput>(
-    field: Field,
-    value: PredictionInput[Field]
-  ) => {
-    setInput((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSwingInputChange = <Field extends keyof SwingInputs>(
-    field: Field,
-    value: SwingInputs[Field]
-  ) => {
-    setInput((prev) => ({
-      ...prev,
-      swingInputs: {
-        ...(prev.swingInputs ?? DEFAULT_SWING_INPUTS),
-        [field]: value,
-      },
-    }));
-  };
 
   const handleSaveScenario = () => {
     const trimmedName =
@@ -124,7 +176,8 @@ export default function PredictionForm() {
       return;
     }
 
-    const updated = saveScenarioConfig(trimmedName, input, selectedScenarioId || undefined);
+    const currentInput = normalizeInput(getValues());
+    const updated = saveScenarioConfig(trimmedName, currentInput, selectedScenarioId || undefined);
     setScenarios(updated);
     const saved = updated.find(
       (scenario) => scenario.name.toLowerCase() === trimmedName.toLowerCase()
@@ -146,7 +199,7 @@ export default function PredictionForm() {
       setScenarioError('Не вдалося знайти обраний сценарій.');
       return;
     }
-    setInput(scenario.input);
+    reset(normalizeInput(scenario.input));
     setScenarioError(null);
   };
 
@@ -161,13 +214,13 @@ export default function PredictionForm() {
     setScenarioError(null);
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const onSubmit = async (formData: PredictionInput) => {
     setLoading(true);
     setError(null);
 
     try {
-      const data = await ky.post('/api/predict', { json: input }).json<PredictionResult>();
+      const payload = normalizeInput(formData);
+      const data = await ky.post('/api/predict', { json: payload }).json<PredictionResult>();
       setResult(data);
       setIsInitialLoad(false);
     } catch (err) {
@@ -200,21 +253,16 @@ export default function PredictionForm() {
             <p className="text-sm text-base-content/70">Налаштуйте параметри для створення прогнозу населення</p>
           </div>
           
-          <form className="space-y-8" onSubmit={handleSubmit}>
+          <form className="space-y-8" onSubmit={submitForm(onSubmit)}>
             {/* Year Selection Section */}
             <div className="space-y-6">
-              <div className="divider">
-                <span className="text-sm font-semibold text-base-content/70">Роки прогнозу</span>
-              </div>
-              
+              <SectionDivider icon={CalendarRange} text="Роки прогнозу" />
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* Base Year */}
                 <div className="form-control space-y-3">
                   <label className="label p-0 flex items-start justify-between gap-2" htmlFor="baseYear">
-                    <div className="flex items-center gap-2">
-                      <span className="label-text text-base font-semibold">Базовий рік</span>
-                      <InfoHint text="Вихідна точка, від якої починається прогноз." />
-                    </div>
+                    <FieldLabel icon={CalendarDays} text="Базовий рік" hint="Вихідна точка, від якої починається прогноз." />
                     {latestYearData && (
                       <span className="label-text-alt text-xs text-base-content/60">
                         (Останній доступний: {latestYearData.latestYear})
@@ -226,15 +274,16 @@ export default function PredictionForm() {
                     type="number"
                     min={1900}
                     max={2100}
-                    value={input.baseYear}
-                    onChange={(event) => {
-                      const newBaseYear = Number(event.target.value);
-                      handleChange('baseYear', newBaseYear);
-                      // Ensure target year is always greater than base year
-                      if (input.targetYear <= newBaseYear) {
-                        handleChange('targetYear', newBaseYear + 1);
-                      }
-                    }}
+                    {...register('baseYear', {
+                      valueAsNumber: true,
+                      onChange: (event) => {
+                        const newBaseYear = Number(event.target.value);
+                        const currentTarget = getValues('targetYear');
+                        if (currentTarget <= newBaseYear) {
+                          setValue('targetYear', newBaseYear + 1);
+                        }
+                      },
+                    })}
                     className="input input-bordered w-full focus:input-primary transition-colors"
                     disabled={loading || loadingLatestYear}
                   />
@@ -243,9 +292,10 @@ export default function PredictionForm() {
                       <button
                         type="button"
                         onClick={() => {
-                          handleChange('baseYear', latestYearData.latestYear);
-                          if (input.targetYear <= latestYearData.latestYear) {
-                            handleChange('targetYear', latestYearData.latestYear + 1);
+                          setValue('baseYear', latestYearData.latestYear);
+                          const currentTarget = getValues('targetYear');
+                          if (currentTarget <= latestYearData.latestYear) {
+                            setValue('targetYear', latestYearData.latestYear + 1);
                           }
                         }}
                         className="link link-primary link-hover"
@@ -260,21 +310,24 @@ export default function PredictionForm() {
                 {/* Target Year */}
                 <div className="form-control space-y-3">
                   <label className="label p-0 flex items-center justify-between" htmlFor="targetYear">
-                    <span className="label-text text-base font-semibold">Цільовий рік прогнозу</span>
-                    <InfoHint text="Рік, для якого розраховується основний результат." />
+                    <FieldLabel icon={Target} text="Цільовий рік прогнозу" hint="Рік, для якого розраховується основний результат." />
                   </label>
                   <input
                     id="targetYear"
                     type="number"
-                    min={input.baseYear + 1}
+                    min={formValues.baseYear + 1}
                     max={2200}
-                    value={input.targetYear}
-                    onChange={(event) => handleChange('targetYear', Number(event.target.value))}
+                    {...register('targetYear', { valueAsNumber: true })}
                     className="input input-bordered w-full focus:input-primary transition-colors"
                     disabled={loading || loadingLatestYear}
                   />
                   <div className="text-xs text-base-content/60">
-                    Прогноз на {input.targetYear - input.baseYear} {input.targetYear - input.baseYear === 1 ? 'рік' : input.targetYear - input.baseYear < 5 ? 'роки' : 'років'}
+                    Прогноз на {formValues.targetYear - formValues.baseYear}{' '}
+                    {formValues.targetYear - formValues.baseYear === 1
+                      ? 'рік'
+                      : formValues.targetYear - formValues.baseYear < 5
+                      ? 'роки'
+                      : 'років'}
                   </div>
                 </div>
               </div>
@@ -282,20 +335,16 @@ export default function PredictionForm() {
 
             {/* Demographic Rates Section */}
             <div className="space-y-6">
-              <div className="divider">
-                <span className="text-sm font-semibold text-base-content/70">Демографічні показники</span>
-              </div>
-              
+              <SectionDivider icon={Activity} text="Демографічні показники" />
+
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Birth Rate */}
                 <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="birthRateChange">
-                    <div className="flex items-center gap-2">
-                      <span className="label-text text-base font-semibold">Народжуваність</span>
-                      <InfoHint text="Очікувана зміна народжуваності у відсотках." />
-                    </div>
+                    <FieldLabel icon={Baby} text="Народжуваність" hint="Очікувана зміна народжуваності у відсотках." />
                     <span className="label-text-alt font-bold text-primary text-lg">
-                      {input.birthRateChange > 0 ? '+' : ''}{input.birthRateChange}%
+                      {formValues.birthRateChange > 0 ? '+' : ''}
+                      {formValues.birthRateChange}%
                     </span>
                   </label>
                   <div className="space-y-2">
@@ -305,8 +354,7 @@ export default function PredictionForm() {
                       min={-10}
                       max={10}
                       step={0.5}
-                      value={input.birthRateChange}
-                      onChange={(event) => handleChange('birthRateChange', Number(event.target.value))}
+                      {...register('birthRateChange', { valueAsNumber: true })}
                       className="range range-primary range-lg w-full"
                       disabled={loading}
                     />
@@ -321,12 +369,10 @@ export default function PredictionForm() {
                 {/* Death Rate */}
                 <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="deathRateChange">
-                    <div className="flex items-center gap-2">
-                      <span className="label-text text-base font-semibold">Смертність</span>
-                      <InfoHint text="Очікувана зміна смертності у відсотках." />
-                    </div>
+                    <FieldLabel icon={TrendingDown} text="Смертність" hint="Очікувана зміна смертності у відсотках." />
                     <span className="label-text-alt font-bold text-secondary text-lg">
-                      {input.deathRateChange > 0 ? '+' : ''}{input.deathRateChange}%
+                      {formValues.deathRateChange > 0 ? '+' : ''}
+                      {formValues.deathRateChange}%
                     </span>
                   </label>
                   <div className="space-y-2">
@@ -336,8 +382,7 @@ export default function PredictionForm() {
                       min={-10}
                       max={10}
                       step={0.5}
-                      value={input.deathRateChange}
-                      onChange={(event) => handleChange('deathRateChange', Number(event.target.value))}
+                      {...register('deathRateChange', { valueAsNumber: true })}
                       className="range range-secondary range-lg w-full"
                       disabled={loading}
                     />
@@ -352,12 +397,10 @@ export default function PredictionForm() {
                 {/* Migration */}
                 <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="migrationChange">
-                    <div className="flex items-center gap-2">
-                      <span className="label-text text-base font-semibold">Міграція</span>
-                      <InfoHint text="Баланс міграції: приплив або відтік населення у %." />
-                    </div>
+                    <FieldLabel icon={Plane} text="Міграція" hint="Баланс міграції: приплив або відтік населення у %." />
                     <span className="label-text-alt font-bold text-accent text-lg">
-                      {input.migrationChange > 0 ? '+' : ''}{input.migrationChange}%
+                      {formValues.migrationChange > 0 ? '+' : ''}
+                      {formValues.migrationChange}%
                     </span>
                   </label>
                   <div className="space-y-2">
@@ -367,8 +410,7 @@ export default function PredictionForm() {
                       min={-10}
                       max={10}
                       step={0.5}
-                      value={input.migrationChange}
-                      onChange={(event) => handleChange('migrationChange', Number(event.target.value))}
+                      {...register('migrationChange', { valueAsNumber: true })}
                       className="range range-accent range-lg w-full"
                       disabled={loading}
                     />
@@ -384,25 +426,17 @@ export default function PredictionForm() {
 
             {/* Social Factors Section */}
             <div className="space-y-6">
-              <div className="divider">
-                <span className="text-sm font-semibold text-base-content/70">Соціальні фактори</span>
-              </div>
-              
+              <SectionDivider icon={Users} text="Соціальні фактори" />
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="economicSituation">
-                    <div className="flex items-center gap-2">
-                      <span className="label-text text-base font-semibold">Економічна ситуація</span>
-                      <InfoHint text="Визначає загальний економічний фон для моделі." />
-                    </div>
+                    <FieldLabel icon={TrendingUp} text="Економічна ситуація" hint="Визначає загальний економічний фон для моделі." />
                   </label>
                   <select
                     id="economicSituation"
                     className="select select-bordered w-full focus:select-primary transition-colors"
-                    value={input.economicSituation}
-                    onChange={(event) =>
-                      handleChange('economicSituation', event.target.value as PredictionInput['economicSituation'])
-                    }
+                    {...register('economicSituation')}
                     disabled={loading}
                   >
                     <option value="weak">Слабка</option>
@@ -413,18 +447,12 @@ export default function PredictionForm() {
 
                 <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="conflictIntensity">
-                    <div className="flex items-center gap-2">
-                      <span className="label-text text-base font-semibold">Рівень конфлікту</span>
-                      <InfoHint text="Показує силу воєнних чи безпекових ризиків." />
-                    </div>
+                    <FieldLabel icon={Shield} text="Рівень конфлікту" hint="Показує силу воєнних чи безпекових ризиків." />
                   </label>
                   <select
                     id="conflictIntensity"
                     className="select select-bordered w-full focus:select-primary transition-colors"
-                    value={input.conflictIntensity}
-                    onChange={(event) =>
-                      handleChange('conflictIntensity', event.target.value as PredictionInput['conflictIntensity'])
-                    }
+                    {...register('conflictIntensity')}
                     disabled={loading}
                   >
                     <option value="peace">Мир</option>
@@ -435,18 +463,12 @@ export default function PredictionForm() {
 
                 <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="familySupport">
-                    <div className="flex items-center gap-2">
-                      <span className="label-text text-base font-semibold">Підтримка сім&apos;ї</span>
-                      <InfoHint text="Рівень внутрішньої соціальної підтримки родин." />
-                    </div>
+                    <FieldLabel icon={Users} text="Підтримка сім&apos;ї" hint="Рівень внутрішньої соціальної підтримки родин." />
                   </label>
                   <select
                     id="familySupport"
                     className="select select-bordered w-full focus:select-primary transition-colors"
-                    value={input.familySupport}
-                    onChange={(event) =>
-                      handleChange('familySupport', event.target.value as PredictionInput['familySupport'])
-                    }
+                    {...register('familySupport')}
                     disabled={loading}
                   >
                     <option value="low">Низька</option>
@@ -459,21 +481,14 @@ export default function PredictionForm() {
 
             {/* Dynamic Swing Factors */}
             <div className="space-y-6">
-              <div className="divider">
-                <span className="text-sm font-semibold text-base-content/70">
-                  Динамічні фактори нестабільності
-                </span>
-              </div>
+              <SectionDivider icon={Globe} text="Динамічні фактори нестабільності" />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="geopoliticalIndex">
-                    <div className="flex items-center gap-2">
-                      <span className="label-text text-base font-semibold">Геополітичний індекс</span>
-                      <InfoHint text="Стабільність або загрози ззовні: -1 війна, +1 спокій." />
-                    </div>
+                    <FieldLabel icon={Globe} text="Геополітичний індекс" hint="Стабільність або загрози ззовні: -1 війна, +1 спокій." />
                     <span className="label-text-alt font-bold text-primary text-lg">
-                      {input.swingInputs?.geopoliticalIndex?.toFixed(2)}
+                      {swingInputs.geopoliticalIndex?.toFixed(2)}
                     </span>
                   </label>
                   <input
@@ -482,10 +497,7 @@ export default function PredictionForm() {
                     min={-1}
                     max={1}
                     step={0.1}
-                    value={input.swingInputs?.geopoliticalIndex ?? DEFAULT_SWING_INPUTS.geopoliticalIndex}
-                    onChange={(event) =>
-                      handleSwingInputChange('geopoliticalIndex', Number(event.target.value))
-                    }
+                    {...register('swingInputs.geopoliticalIndex', { valueAsNumber: true })}
                     className="range range-primary"
                     disabled={loading}
                   />
@@ -497,14 +509,9 @@ export default function PredictionForm() {
 
                 <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="economicCyclePosition">
-                    <div className="flex items-center gap-2">
-                      <span className="label-text text-base font-semibold">
-                        Фаза економічного циклу
-                      </span>
-                      <InfoHint text="Положення у циклі: 0 — спад, 1 — пік зростання." />
-                    </div>
+                    <FieldLabel icon={TrendingUp} text="Фаза економічного циклу" hint="Положення у циклі: 0 — спад, 1 — пік зростання." />
                     <span className="label-text-alt font-bold text-secondary text-lg">
-                      {(input.swingInputs?.economicCyclePosition ?? 0).toFixed(2)}
+                      {swingInputs.economicCyclePosition?.toFixed(2)}
                     </span>
                   </label>
                   <input
@@ -513,10 +520,7 @@ export default function PredictionForm() {
                     min={0}
                     max={1}
                     step={0.05}
-                    value={input.swingInputs?.economicCyclePosition ?? DEFAULT_SWING_INPUTS.economicCyclePosition}
-                    onChange={(event) =>
-                      handleSwingInputChange('economicCyclePosition', Number(event.target.value))
-                    }
+                    {...register('swingInputs.economicCyclePosition', { valueAsNumber: true })}
                     className="range range-secondary"
                     disabled={loading}
                   />
@@ -528,14 +532,9 @@ export default function PredictionForm() {
 
                 <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="internationalSupport">
-                    <div className="flex items-center gap-2">
-                      <span className="label-text text-base font-semibold">
-                        Міжнародна підтримка
-                      </span>
-                      <InfoHint text="Наскільки сильна зовнішня допомога та ресурси." />
-                    </div>
+                    <FieldLabel icon={LifeBuoy} text="Міжнародна підтримка" hint="Наскільки сильна зовнішня допомога та ресурси." />
                     <span className="label-text-alt font-bold text-accent text-lg">
-                      {(input.swingInputs?.internationalSupport ?? 0).toFixed(2)}
+                      {swingInputs.internationalSupport?.toFixed(2)}
                     </span>
                   </label>
                   <input
@@ -544,10 +543,7 @@ export default function PredictionForm() {
                     min={0}
                     max={1}
                     step={0.05}
-                    value={input.swingInputs?.internationalSupport ?? DEFAULT_SWING_INPUTS.internationalSupport}
-                    onChange={(event) =>
-                      handleSwingInputChange('internationalSupport', Number(event.target.value))
-                    }
+                    {...register('swingInputs.internationalSupport', { valueAsNumber: true })}
                     className="range range-accent"
                     disabled={loading}
                   />
@@ -559,12 +555,9 @@ export default function PredictionForm() {
 
                 <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="volatility">
-                    <div className="flex items-center gap-2">
-                      <span className="label-text text-base font-semibold">Волатильність</span>
-                      <InfoHint text="Ступінь випадкових коливань навколо тренду." />
-                    </div>
+                    <FieldLabel icon={Waves} text="Волатильність" hint="Ступінь випадкових коливань навколо тренду." />
                     <span className="label-text-alt font-bold text-warning text-lg">
-                      {(input.swingInputs?.volatility ?? 0).toFixed(2)}
+                      {swingInputs.volatility?.toFixed(2)}
                     </span>
                   </label>
                   <input
@@ -573,10 +566,7 @@ export default function PredictionForm() {
                     min={0}
                     max={1}
                     step={0.05}
-                    value={input.swingInputs?.volatility ?? DEFAULT_SWING_INPUTS.volatility}
-                    onChange={(event) =>
-                      handleSwingInputChange('volatility', Number(event.target.value))
-                    }
+                    {...register('swingInputs.volatility', { valueAsNumber: true })}
                     className="range range-warning"
                     disabled={loading}
                   />
@@ -590,16 +580,12 @@ export default function PredictionForm() {
 
             {/* Scenario Management */}
             <div className="space-y-6">
-              <div className="divider">
-                <span className="text-sm font-semibold text-base-content/70">
-                  Сценарії прогнозів
-                </span>
-              </div>
+              <SectionDivider icon={Save} text="Сценарії прогнозів" />
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="scenarioName">
-                    <span className="label-text text-base font-semibold">Назва сценарію</span>
+                    <FieldLabel icon={Save} text="Назва сценарію" />
                   </label>
                   <input
                     id="scenarioName"
@@ -611,16 +597,17 @@ export default function PredictionForm() {
                   />
                   <button
                     type="button"
-                    className="btn btn-outline btn-primary"
+                    className="btn btn-outline btn-primary gap-2"
                     onClick={handleSaveScenario}
                   >
-                    Зберегти сценарій
+                    <Save className="w-4 h-4" aria-hidden="true" />
+                    <span>Зберегти сценарій</span>
                   </button>
                 </div>
 
                 <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="scenarioSelect">
-                    <span className="label-text text-base font-semibold">Збережені сценарії</span>
+                    <FieldLabel icon={FileText} text="Збережені сценарії" />
                   </label>
                   <select
                     id="scenarioSelect"
@@ -638,19 +625,21 @@ export default function PredictionForm() {
                   <div className="flex flex-wrap gap-2">
                     <button
                       type="button"
-                      className="btn btn-outline btn-secondary flex-1"
+                      className="btn btn-outline btn-secondary flex-1 gap-2"
                       onClick={handleApplyScenario}
                       disabled={!selectedScenarioId}
                     >
-                      Застосувати
+                      <Play className="w-4 h-4" aria-hidden="true" />
+                      <span>Застосувати</span>
                     </button>
                     <button
                       type="button"
-                      className="btn btn-outline btn-error flex-1"
+                      className="btn btn-outline btn-error flex-1 gap-2"
                       onClick={handleDeleteScenario}
                       disabled={!selectedScenarioId}
                     >
-                      Видалити
+                      <Trash2 className="w-4 h-4" aria-hidden="true" />
+                      <span>Видалити</span>
                     </button>
                   </div>
                 </div>
