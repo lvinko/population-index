@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ky, { HTTPError } from 'ky';
 import {
@@ -14,7 +14,6 @@ import {
   LineChart,
   MapPin,
   Plane,
-  Play,
   Save,
   Shield,
   Target,
@@ -125,6 +124,8 @@ export default function PredictionForm() {
   const [scenarioName, setScenarioName] = useState('');
   const [selectedScenarioId, setSelectedScenarioId] = useState('');
   const [scenarioError, setScenarioError] = useState<string | null>(null);
+  const [scenariosLoading, setScenariosLoading] = useState(true);
+  const [scenarioSyncing, setScenarioSyncing] = useState(false);
   const {
     register,
     handleSubmit: submitForm,
@@ -162,10 +163,56 @@ export default function PredictionForm() {
   }, [getValues, setValue]);
 
   useEffect(() => {
-    setScenarios(loadScenarios());
+    let ignore = false;
+
+    const hydrateScenarios = async () => {
+      try {
+        const data = await loadScenarios();
+        if (!ignore) {
+          setScenarios(data);
+        }
+      } catch (err) {
+        console.error('Failed to load scenarios', err);
+        if (!ignore) {
+          setScenarioError('Не вдалося завантажити сценарії. Спробуйте пізніше.');
+        }
+      } finally {
+        if (!ignore) {
+          setScenariosLoading(false);
+        }
+      }
+    };
+
+    hydrateScenarios();
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
-  const handleSaveScenario = () => {
+  const applyScenarioById = (scenarioId: string) => {
+    if (!scenarioId) {
+      return;
+    }
+    const scenario = scenarios.find((item) => item.id === scenarioId);
+    if (!scenario) {
+      setScenarioError('Не вдалося знайти обраний сценарій.');
+      return;
+    }
+    reset(normalizeInput(scenario.input));
+    setScenarioError(null);
+  };
+
+  const handleScenarioSelect = (event: ChangeEvent<HTMLSelectElement>) => {
+    const newScenarioId = event.target.value;
+    setSelectedScenarioId(newScenarioId);
+    if (!newScenarioId) {
+      return;
+    }
+    applyScenarioById(newScenarioId);
+  };
+
+  const handleSaveScenario = async () => {
     const trimmedName =
       scenarioName.trim() ||
       scenarios.find((scenario) => scenario.id === selectedScenarioId)?.name ||
@@ -176,42 +223,45 @@ export default function PredictionForm() {
       return;
     }
 
-    const currentInput = normalizeInput(getValues());
-    const updated = saveScenarioConfig(trimmedName, currentInput, selectedScenarioId || undefined);
-    setScenarios(updated);
-    const saved = updated.find(
-      (scenario) => scenario.name.toLowerCase() === trimmedName.toLowerCase()
-    );
-    if (saved) {
-      setSelectedScenarioId(saved.id);
+    setScenarioSyncing(true);
+    try {
+      const currentInput = normalizeInput(getValues());
+      const updated = await saveScenarioConfig(trimmedName, currentInput, selectedScenarioId || undefined);
+      setScenarios(updated);
+      const saved = updated.find(
+        (scenario) => scenario.name.toLowerCase() === trimmedName.toLowerCase()
+      );
+      if (saved) {
+        setSelectedScenarioId(saved.id);
+      }
+      setScenarioName('');
+      setScenarioError(null);
+    } catch (err) {
+      console.error('Failed to save scenario', err);
+      setScenarioError('Не вдалося зберегти сценарій. Спробуйте пізніше.');
+    } finally {
+      setScenarioSyncing(false);
     }
-    setScenarioName('');
-    setScenarioError(null);
   };
 
-  const handleApplyScenario = () => {
-    if (!selectedScenarioId) {
-      setScenarioError('Оберіть сценарій для застосування.');
-      return;
-    }
-    const scenario = scenarios.find((item) => item.id === selectedScenarioId);
-    if (!scenario) {
-      setScenarioError('Не вдалося знайти обраний сценарій.');
-      return;
-    }
-    reset(normalizeInput(scenario.input));
-    setScenarioError(null);
-  };
-
-  const handleDeleteScenario = () => {
+  const handleDeleteScenario = async () => {
     if (!selectedScenarioId) {
       setScenarioError('Немає сценарію для видалення.');
       return;
     }
-    const updated = deleteScenarioConfig(selectedScenarioId);
-    setScenarios(updated);
-    setSelectedScenarioId('');
-    setScenarioError(null);
+
+    setScenarioSyncing(true);
+    try {
+      const updated = await deleteScenarioConfig(selectedScenarioId);
+      setScenarios(updated);
+      setSelectedScenarioId('');
+      setScenarioError(null);
+    } catch (err) {
+      console.error('Failed to delete scenario', err);
+      setScenarioError('Не вдалося видалити сценарій. Спробуйте пізніше.');
+    } finally {
+      setScenarioSyncing(false);
+    }
   };
 
   const onSubmit = async (formData: PredictionInput) => {
@@ -587,61 +637,64 @@ export default function PredictionForm() {
                   <label className="label p-0" htmlFor="scenarioName">
                     <FieldLabel icon={Save} text="Назва сценарію" />
                   </label>
-                  <input
-                    id="scenarioName"
-                    type="text"
-                    value={scenarioName}
-                    onChange={(event) => setScenarioName(event.target.value)}
-                    className="input input-bordered w-full focus:input-primary transition-colors"
-                    placeholder="Наприклад, Оптимістичне відновлення"
-                  />
-                  <button
-                    type="button"
-                    className="btn btn-outline btn-primary gap-2"
-                    onClick={handleSaveScenario}
-                  >
-                    <Save className="w-4 h-4" aria-hidden="true" />
-                    <span>Зберегти сценарій</span>
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <input
+                      id="scenarioName"
+                      type="text"
+                      value={scenarioName}
+                      onChange={(event) => setScenarioName(event.target.value)}
+                      className="input input-bordered w-full focus:input-primary transition-colors"
+                      placeholder="Наприклад, Оптимістичне відновлення"
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-outline btn-primary btn-square btn-sm"
+                      onClick={handleSaveScenario}
+                      disabled={scenarioSyncing}
+                    >
+                      <Save className="w-4 h-4" aria-hidden="true" />
+                      <span className="sr-only">Зберегти сценарій</span>
+                    </button>
+                  </div>
+                  <span className="text-xs text-base-content/60">
+                    Збереження виконує невелику іконку вище.
+                  </span>
                 </div>
 
                 <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="scenarioSelect">
                     <FieldLabel icon={FileText} text="Збережені сценарії" />
                   </label>
-                  <select
-                    id="scenarioSelect"
-                    className="select select-bordered w-full focus:select-primary transition-colors"
-                    value={selectedScenarioId}
-                    onChange={(event) => setSelectedScenarioId(event.target.value)}
-                  >
-                    <option value="">Оберіть сценарій</option>
-                    {scenarios.map((scenario) => (
-                      <option key={scenario.id} value={scenario.id}>
-                        {scenario.name}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      className="btn btn-outline btn-secondary flex-1 gap-2"
-                      onClick={handleApplyScenario}
-                      disabled={!selectedScenarioId}
+                  <div className="flex items-center gap-3">
+                    <select
+                      id="scenarioSelect"
+                      className="select select-bordered w-full focus:select-primary transition-colors"
+                      value={selectedScenarioId}
+                      onChange={handleScenarioSelect}
+                      disabled={scenariosLoading || scenarioSyncing}
                     >
-                      <Play className="w-4 h-4" aria-hidden="true" />
-                      <span>Застосувати</span>
-                    </button>
+                      <option value="">
+                        {scenariosLoading ? 'Завантаження сценаріїв...' : 'Оберіть сценарій'}
+                      </option>
+                      {scenarios.map((scenario) => (
+                        <option key={scenario.id} value={scenario.id}>
+                          {scenario.name}
+                        </option>
+                      ))}
+                    </select>
                     <button
                       type="button"
-                      className="btn btn-outline btn-error flex-1 gap-2"
+                      className="btn btn-outline btn-error btn-square btn-sm"
                       onClick={handleDeleteScenario}
-                      disabled={!selectedScenarioId}
+                      disabled={!selectedScenarioId || scenarioSyncing}
                     >
                       <Trash2 className="w-4 h-4" aria-hidden="true" />
-                      <span>Видалити</span>
+                      <span className="sr-only">Видалити сценарій</span>
                     </button>
                   </div>
+                  <span className="text-xs text-base-content/60">
+                    Сценарій застосовується автоматично після вибору.
+                  </span>
                 </div>
               </div>
 

@@ -1,3 +1,4 @@
+import ky from 'ky';
 import type { PredictionInput } from '@/lib/utils/types';
 
 const STORAGE_KEY = 'population-index:scenarios';
@@ -11,6 +12,16 @@ export interface SavedScenario {
 }
 
 type ScenarioPayload = SavedScenario[];
+
+type ScenarioApiResponse = {
+  data: ScenarioPayload;
+};
+
+const scenarioApi = ky.create({
+  prefixUrl: '/api/scenarios',
+  timeout: 10_000,
+  retry: 0,
+});
 
 function getStorage(): Storage | null {
   if (typeof window === 'undefined') {
@@ -49,63 +60,103 @@ function writeRaw(payload: ScenarioPayload) {
   storage.setItem(STORAGE_KEY, JSON.stringify(payload));
 }
 
-function generateId() {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return crypto.randomUUID();
+const persistAndReturn = (payload: ScenarioPayload) => {
+  writeRaw(payload);
+  return payload;
+};
+
+export async function loadScenarios(): Promise<ScenarioPayload> {
+  try {
+    const response = await scenarioApi.get('').json<ScenarioApiResponse>();
+    return persistAndReturn(response.data);
+  } catch (error) {
+    console.warn('Falling back to local scenarios cache.', error);
+    return readRaw();
   }
-  return `scenario-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-export function loadScenarios(): ScenarioPayload {
-  return readRaw();
-}
-
-export function saveScenarioConfig(name: string, input: PredictionInput, scenarioId?: string): ScenarioPayload {
-  const now = new Date().toISOString();
-  const current = readRaw();
+export async function saveScenarioConfig(
+  name: string,
+  input: PredictionInput,
+  scenarioId?: string
+): Promise<ScenarioPayload> {
   const trimmedName = name.trim();
   if (!trimmedName) {
-    return current;
+    return readRaw();
   }
 
-  if (scenarioId) {
-    const updated = current.map((scenario) =>
-      scenario.id === scenarioId
-        ? { ...scenario, name: trimmedName, input, updatedAt: now }
-        : scenario
+  try {
+    const response = await scenarioApi
+      .post('', {
+        json: {
+          id: scenarioId,
+          name: trimmedName,
+          input,
+        },
+      })
+      .json<ScenarioApiResponse>();
+
+    return persistAndReturn(response.data);
+  } catch (error) {
+    console.error('Failed to persist scenario remotely. Falling back to local storage.', error);
+    const now = new Date().toISOString();
+    const current = readRaw();
+
+    if (scenarioId) {
+      const updated = current.map((scenario) =>
+        scenario.id === scenarioId
+          ? { ...scenario, name: trimmedName, input, updatedAt: now }
+          : scenario
+      );
+      return persistAndReturn(updated);
+    }
+
+    const existing = current.find(
+      (scenario) => scenario.name.toLowerCase() === trimmedName.toLowerCase()
     );
-    writeRaw(updated);
-    return updated;
+    if (existing) {
+      const updated = current.map((scenario) =>
+        scenario.id === existing.id
+          ? { ...scenario, name: trimmedName, input, updatedAt: now }
+          : scenario
+      );
+      return persistAndReturn(updated);
+    }
+
+    const payload: SavedScenario = {
+      id:
+        typeof crypto !== 'undefined' && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `scenario-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      name: trimmedName,
+      input,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    const updated = [...current, payload];
+    return persistAndReturn(updated);
   }
-
-  const existing = current.find((scenario) => scenario.name.toLowerCase() === trimmedName.toLowerCase());
-  if (existing) {
-    const updated = current.map((scenario) =>
-      scenario.id === existing.id
-        ? { ...scenario, name: trimmedName, input, updatedAt: now }
-        : scenario
-    );
-    writeRaw(updated);
-    return updated;
-  }
-
-  const payload: SavedScenario = {
-    id: generateId(),
-    name: trimmedName,
-    input,
-    createdAt: now,
-    updatedAt: now,
-  };
-
-  const updated = [...current, payload];
-  writeRaw(updated);
-  return updated;
 }
 
-export function deleteScenarioConfig(id: string): ScenarioPayload {
-  const current = readRaw();
-  const filtered = current.filter((scenario) => scenario.id !== id);
-  writeRaw(filtered);
-  return filtered;
+export async function deleteScenarioConfig(id: string): Promise<ScenarioPayload> {
+  if (!id) {
+    return readRaw();
+  }
+
+  try {
+    const response = await scenarioApi
+      .delete('', {
+        json: { id },
+      })
+      .json<ScenarioApiResponse>();
+
+    return persistAndReturn(response.data);
+  } catch (error) {
+    console.error('Failed to delete scenario remotely. Falling back to local storage.', error);
+    const current = readRaw();
+    const filtered = current.filter((scenario) => scenario.id !== id);
+    return persistAndReturn(filtered);
+  }
 }
 
