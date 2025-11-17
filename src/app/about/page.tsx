@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { siteConfig } from '@/config/metadata';
 
 export const metadata: Metadata = {
   title: "Про проект",
@@ -16,6 +17,24 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Про проект | Population Index",
     description: "Детальна інформація про проект аналізу населення України, джерела даних та принципи роботи",
+    images: [
+      {
+        url: siteConfig.images.logo.url,
+        width: siteConfig.images.logo.width,
+        height: siteConfig.images.logo.height,
+        alt: "Population Index - Про проект аналізу населення України",
+        type: siteConfig.images.logo.type,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    images: [
+      {
+        url: siteConfig.images.logo.url,
+        alt: "Population Index - Про проект аналізу населення України",
+      },
+    ],
   },
 };
 

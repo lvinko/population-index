@@ -4,6 +4,29 @@ export const siteConfig = {
   shortDescription: "Інтерактивна платформа для аналізу демографічних даних України",
   url: "https://population-index.vercel.app/",
   ogImage: "/thumbnail.webp",
+  images: {
+    og: {
+      url: "/thumbnail.webp",
+      width: 1200,
+      height: 630,
+      alt: "Аналіз населення України - інтерактивна платформа для демографічного аналізу та прогнозування",
+      type: "image/webp",
+    },
+    logo: {
+      url: "/logo.png",
+      width: 512,
+      height: 512,
+      alt: "Population Index - Логотип платформи аналізу населення України",
+      type: "image/png",
+    },
+    logoWhite: {
+      url: "/logo-bg-white.webp",
+      width: 512,
+      height: 512,
+      alt: "Population Index - Логотип на білому фоні",
+      type: "image/webp",
+    },
+  },
   links: {
     github: "https://github.com/lvinko/population-index",
   },

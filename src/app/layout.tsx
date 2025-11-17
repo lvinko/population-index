@@ -30,6 +30,16 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteConfig.url,
   },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logo.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [
+      { url: "/logo.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+  },
   openGraph: {
     type: "website",
     locale: siteConfig.locale,
@@ -39,11 +49,18 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     images: [
       {
-        url: siteConfig.ogImage,
-        width: 1200,
-        height: 630,
-        alt: "Аналіз населення України - інтерактивна платформа для демографічного аналізу",
-        type: "image/webp",
+        url: siteConfig.images.og.url,
+        width: siteConfig.images.og.width,
+        height: siteConfig.images.og.height,
+        alt: siteConfig.images.og.alt,
+        type: siteConfig.images.og.type,
+      },
+      {
+        url: siteConfig.images.logo.url,
+        width: siteConfig.images.logo.width,
+        height: siteConfig.images.logo.height,
+        alt: siteConfig.images.logo.alt,
+        type: siteConfig.images.logo.type,
       },
     ],
   },
@@ -51,7 +68,12 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [siteConfig.ogImage],
+    images: [
+      {
+        url: siteConfig.images.og.url,
+        alt: siteConfig.images.og.alt,
+      },
+    ],
     creator: "@populationindex",
   },
   robots: {
@@ -94,6 +116,16 @@ export default function RootLayout({
               url: siteConfig.url,
               applicationCategory: "DataVisualizationApplication",
               operatingSystem: "Web",
+              image: [
+                `${siteConfig.url}${siteConfig.images.og.url}`,
+                `${siteConfig.url}${siteConfig.images.logo.url}`,
+              ],
+              logo: {
+                "@type": "ImageObject",
+                url: `${siteConfig.url}${siteConfig.images.logo.url}`,
+                width: siteConfig.images.logo.width,
+                height: siteConfig.images.logo.height,
+              },
               offers: {
                 "@type": "Offer",
                 price: "0",
@@ -102,10 +134,18 @@ export default function RootLayout({
               author: {
                 "@type": "Organization",
                 name: siteConfig.author,
+                logo: {
+                  "@type": "ImageObject",
+                  url: `${siteConfig.url}${siteConfig.images.logo.url}`,
+                },
               },
               publisher: {
                 "@type": "Organization",
                 name: siteConfig.author,
+                logo: {
+                  "@type": "ImageObject",
+                  url: `${siteConfig.url}${siteConfig.images.logo.url}`,
+                },
               },
               inLanguage: "uk-UA",
               featureList: [
@@ -128,16 +168,25 @@ export default function RootLayout({
               name: "Демографічні дані населення України",
               description: "Статистичні дані про населення України по регіонах з 2003 року",
               url: siteConfig.url,
+              image: `${siteConfig.url}${siteConfig.images.og.url}`,
               keywords: siteConfig.keywords.join(", "),
               license: "https://creativecommons.org/licenses/by/4.0/",
               creator: {
                 "@type": "Organization",
                 name: "Державна служба статистики України",
                 url: "https://www.ukrstat.gov.ua/",
+                logo: {
+                  "@type": "ImageObject",
+                  url: `${siteConfig.url}/logo-data-bank.png`,
+                },
               },
               publisher: {
                 "@type": "Organization",
                 name: siteConfig.author,
+                logo: {
+                  "@type": "ImageObject",
+                  url: `${siteConfig.url}${siteConfig.images.logo.url}`,
+                },
               },
               temporalCoverage: "2003/2024",
               spatialCoverage: {

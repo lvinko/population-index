@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import PredictionForm from './components/PredictionForm';
+import { siteConfig } from '@/config/metadata';
 
 export const metadata: Metadata = {
   title: "Прогноз населення України",
@@ -19,6 +20,24 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Прогноз населення України | Population Index",
     description: "Інтерактивний інструмент для прогнозування населення України з урахуванням демографічних факторів та зовнішніх впливів",
+    images: [
+      {
+        url: siteConfig.images.og.url,
+        width: siteConfig.images.og.width,
+        height: siteConfig.images.og.height,
+        alt: "Прогноз населення України - інтерактивний інструмент для демографічного прогнозування",
+        type: siteConfig.images.og.type,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [
+      {
+        url: siteConfig.images.og.url,
+        alt: "Прогноз населення України - інтерактивний інструмент для демографічного прогнозування",
+      },
+    ],
   },
 };
 

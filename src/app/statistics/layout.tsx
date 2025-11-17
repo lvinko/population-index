@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { siteConfig } from '@/config/metadata';
 
 export const metadata: Metadata = {
   title: "Статистика населення України",
@@ -18,6 +19,24 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Статистика населення України | Population Index",
     description: "Інтерактивна статистика та візуалізація демографічних даних України по регіонах",
+    images: [
+      {
+        url: siteConfig.images.og.url,
+        width: siteConfig.images.og.width,
+        height: siteConfig.images.og.height,
+        alt: "Статистика населення України - інтерактивна візуалізація демографічних даних",
+        type: siteConfig.images.og.type,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [
+      {
+        url: siteConfig.images.og.url,
+        alt: "Статистика населення України - інтерактивна візуалізація демографічних даних",
+      },
+    ],
   },
 };
 
