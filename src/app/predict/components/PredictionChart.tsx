@@ -24,11 +24,23 @@ function formatPercent(value?: number) {
   return `${(value * 100).toFixed(2)}%`;
 }
 
-const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
-  if (!active || !payload?.length) {
+function formatPopulation(value: number): string {
+  if (value >= 1000000) {
+    const millions = value / 1000000;
+    return millions % 1 === 0 ? `${millions}M` : `${millions.toFixed(1)}M`;
+  }
+  if (value >= 1000) {
+    const thousands = value / 1000;
+    return thousands % 1 === 0 ? `${thousands}K` : `${thousands.toFixed(1)}K`;
+  }
+  return value.toString();
+}
+
+const CustomTooltip = (props: TooltipProps<number, string> & { payload: Array<{ payload: PopulationDataPoint }>; label: string | number }) => {
+  const { active, payload, label } = props;
+  if (!active || !payload.length) {
     return null;
   }
-
   const point: PopulationDataPoint = payload[0].payload;
 
   return (
@@ -45,17 +57,17 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
       )}
       {typeof point.growthRate === 'number' && (
         <p className="text-base-content/80">
-          Growth after modifiers: <span className="font-semibold">{formatPercent(point.growthRate)}</span>
+          Зростання з урахуванням модифікаторів: <span className="font-semibold">{formatPercent(point.growthRate)}</span>
         </p>
       )}
       {typeof point.shockImpact === 'number' && point.shockImpact !== 0 && (
         <p className="text-error">
-          Shock influence: <span className="font-semibold">{formatPercent(point.shockImpact)}</span>
+          Вплив шоку: <span className="font-semibold">{formatPercent(point.shockImpact)}</span>
         </p>
       )}
       {typeof point.cyclePhase === 'number' && (
         <p className="text-base-content/80">
-          Economic cycle phase:{' '}
+          Фаза економічного циклу:{' '}
           <span className="font-semibold">{formatPercent(point.cyclePhase)}</span>
         </p>
       )}
@@ -106,8 +118,8 @@ export default function PredictionChart({ data }: PredictionChartProps) {
       <ResponsiveContainer>
         <LineChart data={data}>
           <XAxis dataKey="year" />
-          <YAxis />
-          <Tooltip content={<CustomTooltip />} />
+          <YAxis tickFormatter={formatPopulation} />
+          <Tooltip content={<CustomTooltip payload={[]} label={''} /> as unknown as React.ReactElement} />
           <Legend />
           <Line
             type="monotone"

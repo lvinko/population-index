@@ -81,9 +81,9 @@ function InfoHint({ text }: { text: string }) {
 
 function SectionDivider({ icon: Icon, text }: { icon: LucideIcon; text: string }) {
   return (
-    <div className="divider">
-      <span className="text-sm font-semibold text-base-content/70 inline-flex items-center gap-2">
-        <Icon className="w-4 h-4 text-primary" aria-hidden="true" />
+    <div className="divider my-2">
+      <span className="text-xs font-semibold text-base-content/70 inline-flex items-center gap-2">
+        <Icon className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
         {text}
       </span>
     </div>
@@ -101,8 +101,8 @@ function FieldLabel({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <Icon className="w-4 h-4 text-primary" aria-hidden="true" />
-      <span className="label-text text-base font-semibold">{text}</span>
+      <Icon className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
+      <span className="label-text text-sm font-semibold">{text}</span>
       {hint && <InfoHint text={hint} />}
     </div>
   );
@@ -345,20 +345,20 @@ export default function PredictionForm() {
   return (
     <div className="space-y-6">
       <div className="card bg-base-100 shadow-xl border border-base-300">
-        <div className="card-body p-6 sm:p-8">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-base-content mb-2">Параметри прогнозу</h2>
-            <p className="text-sm text-base-content/70">Налаштуйте параметри для створення прогнозу населення</p>
+        <div className="card-body p-4 sm:p-6">
+          <div className="mb-4">
+            <h2 className="text-xl font-bold text-base-content mb-1">Параметри прогнозу</h2>
+            <p className="text-xs text-base-content/70">Налаштуйте параметри для створення прогнозу населення</p>
           </div>
           
-          <form className="space-y-8" onSubmit={submitForm(onSubmit)}>
+          <form className="space-y-5" onSubmit={submitForm(onSubmit)}>
             {/* Year Selection Section */}
-            <div className="space-y-6">
+            <div className="space-y-4">
               <SectionDivider icon={CalendarRange} text="Роки прогнозу" />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Base Year */}
-                <div className="form-control space-y-3">
+                <div className="form-control space-y-2">
                   <label className="label p-0 flex items-start justify-between gap-2" htmlFor="baseYear">
                     <FieldLabel icon={CalendarDays} text="Базовий рік" hint="Вихідна точка, від якої починається прогноз." />
                     {latestYearData && (
@@ -406,7 +406,7 @@ export default function PredictionForm() {
                 </div>
 
                 {/* Target Year */}
-                <div className="form-control space-y-3">
+                <div className="form-control space-y-2">
                   <label className="label p-0 flex items-center justify-between" htmlFor="targetYear">
                     <FieldLabel icon={Target} text="Цільовий рік прогнозу" hint="Рік, для якого розраховується основний результат." />
                   </label>
@@ -432,12 +432,12 @@ export default function PredictionForm() {
             </div>
 
             {/* Demographic Rates Section */}
-            <div className="space-y-6">
+            <div className="space-y-4">
               <SectionDivider icon={Activity} text="Демографічні показники" />
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 {/* Birth Rate */}
-                <div className="form-control space-y-3">
+                <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="birthRateChange">
                     <FieldLabel icon={Baby} text="Народжуваність" hint="Очікувана зміна народжуваності у відсотках." />
                     <span className="label-text-alt font-bold text-primary text-lg">
@@ -465,7 +465,7 @@ export default function PredictionForm() {
                 </div>
 
                 {/* Death Rate */}
-                <div className="form-control space-y-3">
+                <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="deathRateChange">
                     <FieldLabel icon={TrendingDown} text="Смертність" hint="Очікувана зміна смертності у відсотках." />
                     <span className="label-text-alt font-bold text-secondary text-lg">
@@ -493,7 +493,7 @@ export default function PredictionForm() {
                 </div>
 
                 {/* Migration */}
-                <div className="form-control space-y-3">
+                <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="migrationChange">
                     <FieldLabel icon={Plane} text="Міграція" hint="Баланс міграції: приплив або відтік населення у %." />
                     <span className="label-text-alt font-bold text-accent text-lg">
@@ -523,11 +523,11 @@ export default function PredictionForm() {
             </div>
 
             {/* Social Factors Section */}
-            <div className="space-y-6">
+            <div className="space-y-4">
               <SectionDivider icon={Users} text="Соціальні фактори" />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="form-control space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="economicSituation">
                     <FieldLabel icon={TrendingUp} text="Економічна ситуація" hint="Визначає загальний економічний фон для моделі." />
                   </label>
@@ -543,7 +543,7 @@ export default function PredictionForm() {
                   </select>
                 </div>
 
-                <div className="form-control space-y-3">
+                <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="conflictIntensity">
                     <FieldLabel icon={Shield} text="Рівень конфлікту" hint="Показує силу воєнних чи безпекових ризиків." />
                   </label>
@@ -559,7 +559,7 @@ export default function PredictionForm() {
                   </select>
                 </div>
 
-                <div className="form-control space-y-3">
+                <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="familySupport">
                     <FieldLabel icon={Users} text="Підтримка сім&apos;ї" hint="Рівень внутрішньої соціальної підтримки родин." />
                   </label>
@@ -578,11 +578,11 @@ export default function PredictionForm() {
             </div>
 
             {/* Dynamic Swing Factors */}
-            <div className="space-y-6">
+            <div className="space-y-4">
               <SectionDivider icon={Globe} text="Динамічні фактори нестабільності" />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="form-control space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="geopoliticalIndex">
                     <FieldLabel icon={Globe} text="Геополітичний індекс" hint="Стабільність або загрози ззовні: -1 війна, +1 спокій." />
                     <span className="label-text-alt font-bold text-primary text-lg">
@@ -605,7 +605,7 @@ export default function PredictionForm() {
                   </div>
                 </div>
 
-                <div className="form-control space-y-3">
+                <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="economicCyclePosition">
                     <FieldLabel icon={TrendingUp} text="Фаза економічного циклу" hint="Положення у циклі: 0 — спад, 1 — пік зростання." />
                     <span className="label-text-alt font-bold text-secondary text-lg">
@@ -628,7 +628,7 @@ export default function PredictionForm() {
                   </div>
                 </div>
 
-                <div className="form-control space-y-3">
+                <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="internationalSupport">
                     <FieldLabel icon={LifeBuoy} text="Міжнародна підтримка" hint="Наскільки сильна зовнішня допомога та ресурси." />
                     <span className="label-text-alt font-bold text-accent text-lg">
@@ -651,7 +651,7 @@ export default function PredictionForm() {
                   </div>
                 </div>
 
-                <div className="form-control space-y-3">
+                <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="volatility">
                     <FieldLabel icon={Waves} text="Волатильність" hint="Ступінь випадкових коливань навколо тренду." />
                     <span className="label-text-alt font-bold text-warning text-lg">
@@ -677,11 +677,11 @@ export default function PredictionForm() {
             </div>
 
             {/* Scenario Management */}
-            <div className="space-y-6">
+            <div className="space-y-4">
               <SectionDivider icon={Save} text="Сценарії прогнозів" />
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="form-control space-y-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="scenarioSelect">
                     <FieldLabel icon={FileText} text="Сценарії" />
                   </label>
@@ -759,10 +759,10 @@ export default function PredictionForm() {
             </div>
 
             {/* Submit Button */}
-            <div className="flex justify-end pt-4 border-t border-base-300">
+            <div className="flex justify-end pt-3 border-t border-base-300">
               <button
                 type="submit"
-                className="btn btn-primary btn-lg min-w-[180px]"
+                className="btn btn-primary min-w-[180px]"
                 disabled={loading}
               >
                 {loading ? (
