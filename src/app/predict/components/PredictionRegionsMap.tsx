@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import mapboxgl from 'mapbox-gl';
+import mapboxgl, { type ExpressionSpecification } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { Spinner } from '@/components';
@@ -33,6 +33,7 @@ type PredictionRegionsMapProps = {
 
 const PREDICTION_OBLAST_FILL_LAYER_ID = 'prediction-oblast-fill';
 const PREDICTION_OBLAST_LABEL_LAYER_ID = 'prediction-oblast-labels';
+const PREDICTION_OBLAST_LABEL_SOURCE_ID = 'prediction-oblast-label-source';
 
 const isoToMapCode = (code?: string | null) => {
   if (!code) {
@@ -67,11 +68,51 @@ const formatCompactPopulation = (value: number) => {
   return value.toString();
 };
 
+const flattenCoordinates = (coordinates: unknown): number[][] => {
+  if (!Array.isArray(coordinates)) {
+    return [];
+  }
+
+  if (typeof coordinates[0] === 'number' && typeof coordinates[1] === 'number') {
+    return [[coordinates[0], coordinates[1]]];
+  }
+
+  return (coordinates as unknown[]).flatMap((entry) => flattenCoordinates(entry));
+};
+
+const computeFeatureCenter = (feature?: mapboxgl.MapboxGeoJSONFeature) => {
+  if (!feature || !feature.geometry) {
+    return null;
+  }
+
+  const coords = flattenCoordinates(
+    (feature.geometry as GeoJSON.Polygon | GeoJSON.MultiPolygon).coordinates
+  );
+  if (coords.length === 0) {
+    return null;
+  }
+
+  const bounds = coords.reduce<mapboxgl.LngLatBounds | null>((acc, [lng, lat]) => {
+    if (!acc) {
+      return new mapboxgl.LngLatBounds([lng, lat], [lng, lat]);
+    }
+    acc.extend([lng, lat]);
+    return acc;
+  }, null);
+
+  if (!bounds) {
+    return null;
+  }
+
+  const center = bounds.getCenter();
+  return [center.lng, center.lat] as [number, number];
+};
+
 const PredictionRegionsMap = ({ regions }: PredictionRegionsMapProps) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const oblastCleanupRef = useRef<CleanupCallback | null>(null);
-  const selectedFeatureIdRef = useRef<number | string | null>(null);
+  const selectedFeatureIdRef = useRef<string | null>(null);
   const selectedCodeRef = useRef<string | null>(null);
   const [mapReady, setMapReady] = useState(false);
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
@@ -118,7 +159,7 @@ const PredictionRegionsMap = ({ regions }: PredictionRegionsMapProps) => {
     };
   }, [regions]);
 
-  const fillColorExpression = useMemo(() => {
+  const fillColorExpression = useMemo<ExpressionSpecification>(() => {
     if (!populationRange) {
       return [
         'case',
@@ -148,21 +189,6 @@ const PredictionRegionsMap = ({ regions }: PredictionRegionsMapProps) => {
       '#1e3a8a',
     ];
   }, [populationRange]);
-
-  const labelExpression = useMemo(
-    () => [
-      'case',
-      ['==', ['coalesce', ['feature-state', 'populationLabel'], ''], ''],
-      '',
-      [
-        'concat',
-        ['coalesce', ['feature-state', 'labelShort'], ''],
-        '\n',
-        ['coalesce', ['feature-state', 'populationCompact'], ''],
-      ],
-    ],
-    []
-  );
 
   const ensurePredictionLayers = useCallback(
     (mapInstance: mapboxgl.Map) => {
@@ -196,14 +222,31 @@ const PredictionRegionsMap = ({ regions }: PredictionRegionsMapProps) => {
         mapInstance.setPaintProperty(PREDICTION_OBLAST_FILL_LAYER_ID, 'fill-color', fillColorExpression);
       }
 
+      if (!mapInstance.getSource(PREDICTION_OBLAST_LABEL_SOURCE_ID)) {
+        mapInstance.addSource(PREDICTION_OBLAST_LABEL_SOURCE_ID, {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [],
+          },
+        });
+      }
+
+      const labelTextFieldExpression: ExpressionSpecification = [
+        'concat',
+        ['coalesce', ['get', 'label'], ''],
+        '\n',
+        ['coalesce', ['get', 'populationCompact'], ''],
+      ];
+
       if (!mapInstance.getLayer(PREDICTION_OBLAST_LABEL_LAYER_ID)) {
         mapInstance.addLayer({
           id: PREDICTION_OBLAST_LABEL_LAYER_ID,
           type: 'symbol',
-          source: UKRAINE_OBLAST_SOURCE_ID,
+          source: PREDICTION_OBLAST_LABEL_SOURCE_ID,
           layout: {
             'symbol-placement': 'point',
-            'text-field': labelExpression,
+            'text-field': labelTextFieldExpression,
             'text-font': ['DIN Pro Medium', 'Arial Unicode MS Bold'],
             'text-size': ['interpolate', ['linear'], ['zoom'], 4, 10, 6, 12, 8, 14],
             'text-allow-overlap': false,
@@ -214,11 +257,9 @@ const PredictionRegionsMap = ({ regions }: PredictionRegionsMapProps) => {
             'text-halo-width': 1.5,
           },
         });
-      } else {
-        mapInstance.setLayoutProperty(PREDICTION_OBLAST_LABEL_LAYER_ID, 'text-field', labelExpression);
       }
     },
-    [fillColorExpression, labelExpression]
+    [fillColorExpression]
   );
 
   const syncRegionFeatureStates = useCallback(() => {
@@ -231,18 +272,10 @@ const PredictionRegionsMap = ({ regions }: PredictionRegionsMapProps) => {
 
     regionsByCode.forEach((region, code) => {
       const normalizedCode = code.toUpperCase();
-      const features = mapInstance.querySourceFeatures(UKRAINE_OBLAST_SOURCE_ID, {
-        filter: ['==', ['get', 'id'], normalizedCode],
-      });
-      if (!features.length) {
-        return;
-      }
-      const target = features[0];
-      const featureId = target.id ?? normalizedCode;
       mapInstance.setFeatureState(
         {
           source: UKRAINE_OBLAST_SOURCE_ID,
-          id: featureId,
+          id: normalizedCode,
         },
         {
           populationValue: region.population,
@@ -259,21 +292,60 @@ const PredictionRegionsMap = ({ regions }: PredictionRegionsMapProps) => {
       if (nextApplied.has(code)) {
         return;
       }
-      const features = mapInstance.querySourceFeatures(UKRAINE_OBLAST_SOURCE_ID, {
-        filter: ['==', ['get', 'id'], code],
-      });
-      if (!features.length) {
-        return;
-      }
-      const target = features[0];
-      const featureId = target.id ?? code;
       mapInstance.removeFeatureState({
         source: UKRAINE_OBLAST_SOURCE_ID,
-        id: featureId,
+        id: code,
       });
     });
 
     appliedFeatureStatesRef.current = nextApplied;
+  }, [mapReady, regionsByCode]);
+
+  const syncLabelFeatures = useCallback(() => {
+    const mapInstance = mapRef.current;
+    if (!mapInstance || !mapReady) {
+      return;
+    }
+
+    const labelSource = mapInstance.getSource(
+      PREDICTION_OBLAST_LABEL_SOURCE_ID
+    ) as mapboxgl.GeoJSONSource | undefined;
+    if (!labelSource) {
+      return;
+    }
+
+    const features: GeoJSON.Feature<GeoJSON.Point>[] = [];
+
+    regionsByCode.forEach((region, code) => {
+      const normalizedCode = code.toUpperCase();
+      const polygonFeatures = mapInstance.querySourceFeatures(UKRAINE_OBLAST_SOURCE_ID, {
+        filter: ['==', ['get', 'id'], normalizedCode],
+      });
+      const polygon = polygonFeatures[0];
+      const center = computeFeatureCenter(polygon);
+      if (!center) {
+        return;
+      }
+
+      features.push({
+        type: 'Feature',
+        id: `label-${normalizedCode}`,
+        geometry: {
+          type: 'Point',
+          coordinates: center,
+        },
+        properties: {
+          code: region.code ?? mapCodeToIso(normalizedCode) ?? normalizedCode,
+          label: region.label ?? getUkraineOblastLabelByCode(normalizedCode) ?? region.region,
+          populationCompact: formatCompactPopulation(region.population),
+        },
+      });
+    });
+
+    labelSource.setData({
+      type: 'FeatureCollection',
+      features,
+    });
   }, [mapReady, regionsByCode]);
 
   const clearSelectedOblast = useCallback(() => {
@@ -320,23 +392,14 @@ const PredictionRegionsMap = ({ regions }: PredictionRegionsMapProps) => {
 
     clearSelectedOblast();
 
-    const features = mapInstance.querySourceFeatures(UKRAINE_OBLAST_SOURCE_ID, {
-      filter: ['==', ['get', 'id'], normalizedCode],
-    });
-    const target = features[0];
-    if (!target || target.id == null) {
-      selectedCodeRef.current = null;
-      return;
-    }
-
     mapInstance.setFeatureState(
       {
         source: UKRAINE_OBLAST_SOURCE_ID,
-        id: target.id,
+        id: normalizedCode,
       },
       { selected: true }
     );
-    selectedFeatureIdRef.current = target.id;
+    selectedFeatureIdRef.current = normalizedCode;
     selectedCodeRef.current = normalizedCode;
   }, [clearSelectedOblast, mapReady, selectedCode]);
 
@@ -429,7 +492,8 @@ const PredictionRegionsMap = ({ regions }: PredictionRegionsMapProps) => {
     }
     ensurePredictionLayers(mapRef.current!);
     syncRegionFeatureStates();
-  }, [ensurePredictionLayers, mapReady, syncRegionFeatureStates]);
+    syncLabelFeatures();
+  }, [ensurePredictionLayers, mapReady, syncLabelFeatures, syncRegionFeatureStates]);
 
   useEffect(() => {
     const mapInstance = mapRef.current;
@@ -457,6 +521,7 @@ const PredictionRegionsMap = ({ regions }: PredictionRegionsMapProps) => {
             });
             applySelectedOblast();
             syncRegionFeatureStates();
+            syncLabelFeatures();
           });
         }
       }
@@ -470,7 +535,34 @@ const PredictionRegionsMap = ({ regions }: PredictionRegionsMapProps) => {
     return () => {
       observer.disconnect();
     };
-  }, [applySelectedOblast, currentTheme, ensurePredictionLayers, handleStateSelected, mapReady, syncRegionFeatureStates]);
+  }, [
+    applySelectedOblast,
+    currentTheme,
+    ensurePredictionLayers,
+    handleStateSelected,
+    mapReady,
+    syncLabelFeatures,
+    syncRegionFeatureStates,
+  ]);
+
+  useEffect(() => {
+    const mapInstance = mapRef.current;
+    const container = mapContainerRef.current;
+    if (!mapInstance || !mapReady || !container) {
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      mapInstance.resize();
+    });
+
+    resizeObserver.observe(container);
+    mapInstance.resize();
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [mapReady]);
 
   const overlayState = useMemo(() => {
     if (mapError) {
@@ -541,7 +633,7 @@ const PredictionRegionsMap = ({ regions }: PredictionRegionsMapProps) => {
 
   return (
     <div className="card bg-base-100 shadow-xl border border-base-300">
-      <div className="card-body p-6 sm:p-8 space-y-4">
+      <div className="card-body p-6 sm:p-8 space-y-4 flex flex-col">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h3 className="text-xl sm:text-2xl font-bold text-base-content">Карта регіонів</h3>
@@ -552,10 +644,11 @@ const PredictionRegionsMap = ({ regions }: PredictionRegionsMapProps) => {
           <div className="badge badge-primary badge-outline text-xs sm:text-sm">
             Mapbox • Beta
           </div>
+          </div>
         </div>
 
-        <div className="relative rounded-xl overflow-hidden border border-base-300 bg-base-200">
-          <div ref={mapContainerRef} className="h-[420px] w-full" />
+        <div className="relative rounded-xl overflow-hidden border border-base-300 bg-base-200 flex-1 flex flex-col">
+          <div ref={mapContainerRef} className="flex-1 w-full min-h-[420px]" />
           {overlayState.show && (
             <div className="absolute inset-0 flex items-center justify-center bg-base-100/90 backdrop-blur-sm text-center px-4">
               <div className="flex items-center gap-3">
@@ -596,7 +689,6 @@ const PredictionRegionsMap = ({ regions }: PredictionRegionsMapProps) => {
           {renderRegionStats()}
         </div>
       </div>
-    </div>
   );
 };
 

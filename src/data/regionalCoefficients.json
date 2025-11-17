@@ -6,6 +6,7 @@
   { "code": "UA-12", "name": "Dnipropetrovsk Oblast", "label": "Дніпропетровська", "coefficient": 7.4 },
   { "code": "UA-14", "name": "Donetsk Oblast", "label": "Донецька", "coefficient": 8.6 },
   { "code": "UA-26", "name": "Ivano-Frankivsk Oblast", "label": "Івано-Франківська", "coefficient": 3.6 },
+  { "code": "UA-53", "name": "Poltava Oblast", "label": "Полтавська", "coefficient": 3.0 },
   { "code": "UA-63", "name": "Kharkiv Oblast", "label": "Харківська", "coefficient": 6.6 },
   { "code": "UA-65", "name": "Kherson Oblast", "label": "Херсонська", "coefficient": 2.6 },
   { "code": "UA-68", "name": "Khmelnytskyi Oblast", "label": "Хмельницька", "coefficient": 3.4 },
@@ -25,5 +26,3 @@
   { "code": "UA-23", "name": "Zaporizhzhia Oblast", "label": "Запорізька", "coefficient": 3.8 },
   { "code": "UA-18", "name": "Zhytomyr Oblast", "label": "Житомирська", "coefficient": 2.9 }
 ]
-
-

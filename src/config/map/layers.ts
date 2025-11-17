@@ -15,6 +15,7 @@ export const ensureOblastLayers = (map: mapboxgl.Map) => {
     map.addSource(UKRAINE_OBLAST_SOURCE_ID, {
       type: 'geojson',
       data: UkraineRegions as unknown as GeoJSON.FeatureCollection,
+      promoteId: 'id',
     });
   }
 

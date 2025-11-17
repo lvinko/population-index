@@ -112,7 +112,7 @@ export default function RegionalDistribution({ regions, totalPopulation }: Regio
 
         {/* Pie Chart */}
         <div className="w-full mb-6">
-          <ResponsiveContainer width="100%" height={400}>
+          <ResponsiveContainer width="100%" height={500}>
             <PieChart>
               <Pie
                 data={pieData}
@@ -134,13 +134,12 @@ export default function RegionalDistribution({ regions, totalPopulation }: Regio
               <Tooltip content={<CustomTooltip />} />
               <Legend
                 verticalAlign="bottom"
-                height={36}
-                formatter={(value, entry: any) => (
+                formatter={(_value, entry: any) => (
                   <span className="text-sm text-base-content">
                     {entry.payload.displayName} ({entry.payload.percent.toFixed(1)}%)
                   </span>
                 )}
-                wrapperStyle={{ paddingTop: '20px' }}
+                wrapperStyle={{ paddingTop: '20px', overflow: 'scroll', maxHeight: '200px' }}
               />
             </PieChart>
           </ResponsiveContainer>

@@ -596,7 +596,7 @@ export default function PredictionForm() {
                     max={1}
                     step={0.1}
                     {...register('swingInputs.geopoliticalIndex', { valueAsNumber: true })}
-                    className="range range-primary"
+                    className="range range-primary w-full"
                     disabled={loading}
                   />
                   <div className="w-full flex justify-between text-xs text-base-content/60 px-2">
@@ -619,7 +619,7 @@ export default function PredictionForm() {
                     max={1}
                     step={0.05}
                     {...register('swingInputs.economicCyclePosition', { valueAsNumber: true })}
-                    className="range range-secondary"
+                    className="range range-secondary w-full"
                     disabled={loading}
                   />
                   <div className="w-full flex justify-between text-xs text-base-content/60 px-2">
@@ -642,7 +642,7 @@ export default function PredictionForm() {
                     max={1}
                     step={0.05}
                     {...register('swingInputs.internationalSupport', { valueAsNumber: true })}
-                    className="range range-accent"
+                    className="range range-accent w-full"
                     disabled={loading}
                   />
                   <div className="w-full flex justify-between text-xs text-base-content/60 px-2">
@@ -665,7 +665,7 @@ export default function PredictionForm() {
                     max={1}
                     step={0.05}
                     {...register('swingInputs.volatility', { valueAsNumber: true })}
-                    className="range range-warning"
+                    className="range range-warning w-full"
                     disabled={loading}
                   />
                   <div className="w-full flex justify-between text-xs text-base-content/60 px-2">
@@ -978,33 +978,6 @@ export default function PredictionForm() {
               name="prediction-tabs"
               role="tab"
               className="tab hidden"
-              aria-label="Підсумок"
-              id="tab-summary"
-              checked={activeTab === 'summary'}
-              onChange={() => setActiveTab('summary')}
-            />
-            <label
-              role="tab"
-              htmlFor="tab-summary"
-              className={`tab flex items-center gap-2 ${activeTab === 'summary' ? 'tab-active' : ''}`}
-            >
-              <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="hidden sm:inline">Підсумок</span>
-            </label>
-            <div
-              role="tabpanel"
-              className={`tab-content bg-base-100 border-base-300 rounded-box p-6 ${
-                activeTab === 'summary' ? '' : 'hidden'
-              }`}
-            >
-              <SummaryBox result={result} />
-            </div>
-
-            <input
-              type="radio"
-              name="prediction-tabs"
-              role="tab"
-              className="tab hidden"
               aria-label="Чутливість"
               id="tab-sensitivity"
               checked={activeTab === 'sensitivity'}
@@ -1025,6 +998,34 @@ export default function PredictionForm() {
               }`}
             >
               <SensitivityPanel sensitivity={result.sensitivity} />
+            </div>
+
+
+            <input
+              type="radio"
+              name="prediction-tabs"
+              role="tab"
+              className="tab hidden"
+              aria-label="Підсумок"
+              id="tab-summary"
+              checked={activeTab === 'summary'}
+              onChange={() => setActiveTab('summary')}
+            />
+            <label
+              role="tab"
+              htmlFor="tab-summary"
+              className={`tab flex items-center gap-2 ${activeTab === 'summary' ? 'tab-active' : ''}`}
+            >
+              <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">Підсумок</span>
+            </label>
+            <div
+              role="tabpanel"
+              className={`tab-content bg-base-100 border-base-300 rounded-box p-6 ${
+                activeTab === 'summary' ? '' : 'hidden'
+              }`}
+            >
+              <SummaryBox result={result} />
             </div>
           </div>
         </div>
