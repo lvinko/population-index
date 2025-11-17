@@ -1,7 +1,5 @@
-import coefficients from '@/data/regionalCoefficients.json';
+import { getRegionalCoefficient, totalRegionalCoefficient } from '@/data/regionalCoefficients';
 import type { ShockEvent } from '@/lib/types/prediction';
-
-const totalCoeff = Object.values(coefficients).reduce((sum, value) => sum + value, 0);
 
 export interface RegionalFeedback {
   migrationDrift: number;
@@ -13,16 +11,13 @@ function calculateRegionalWeight(regionsAffected?: string[]): number {
     return 1;
   }
 
-  const total = regionsAffected.reduce((sum, region) => {
-    const key = region as keyof typeof coefficients;
-    return sum + (coefficients[key] ?? 0);
-  }, 0);
+  const total = regionsAffected.reduce((sum, region) => sum + getRegionalCoefficient(region), 0);
 
   if (total === 0) {
     return 0.2;
   }
 
-  return total / totalCoeff;
+  return total / totalRegionalCoefficient;
 }
 
 export function computeRegionalFeedback(shocks: ShockEvent[] | undefined, year: number): RegionalFeedback {

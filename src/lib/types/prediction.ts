@@ -56,7 +56,9 @@ export interface PredictionInput {
 }
 
 export interface RegionForecast {
+  code: string;
   region: string;
+  label?: string;
   population: number;
   male: number;
   female: number;

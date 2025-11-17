@@ -95,6 +95,7 @@ export default function RegionalDistribution({ regions, totalPopulation }: Regio
   const pieData = sortedRegions.map((region, index) => ({
     ...region,
     fill: REGION_COLORS[index % REGION_COLORS.length],
+    displayName: region.label ?? region.region,
   }));
 
   return (
@@ -127,7 +128,7 @@ export default function RegionalDistribution({ regions, totalPopulation }: Regio
                 animationDuration={800}
               >
                 {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.fill} />
+                  <Cell key={entry.code ?? `cell-${index}`} fill={entry.fill} />
                 ))}
               </Pie>
               <Tooltip content={<CustomTooltip />} />
@@ -136,7 +137,7 @@ export default function RegionalDistribution({ regions, totalPopulation }: Regio
                 height={36}
                 formatter={(value, entry: any) => (
                   <span className="text-sm text-base-content">
-                    {entry.payload.region} ({entry.payload.percent.toFixed(1)}%)
+                    {entry.payload.displayName} ({entry.payload.percent.toFixed(1)}%)
                   </span>
                 )}
                 wrapperStyle={{ paddingTop: '20px' }}
@@ -151,7 +152,7 @@ export default function RegionalDistribution({ regions, totalPopulation }: Regio
             const color = REGION_COLORS[index % REGION_COLORS.length];
             return (
               <div
-                key={region.region}
+                key={region.code ?? region.region}
                 className="bg-base-200 border border-base-300 rounded-lg p-4 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-center gap-2 mb-2">
@@ -159,7 +160,7 @@ export default function RegionalDistribution({ regions, totalPopulation }: Regio
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: color }}
                   />
-                  <h4 className="font-semibold text-base-content">{region.region}</h4>
+                  <h4 className="font-semibold text-base-content">{region.label ?? region.region}</h4>
                 </div>
                 <div className="text-2xl font-bold text-base-content mb-1">
                   {region.population.toLocaleString()}

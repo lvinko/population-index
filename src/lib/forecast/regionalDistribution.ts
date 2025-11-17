@@ -1,4 +1,4 @@
-import coefficients from '@/data/regionalCoefficients.json';
+import { regionalCoefficients, totalRegionalCoefficient } from '@/data/regionalCoefficients';
 import { applyGenderSplit } from './genderSplit';
 import { RegionForecast } from '../utils/types';
 
@@ -12,29 +12,26 @@ export function calculateRegionalForecast(
   lowerBound?: number,
   upperBound?: number
 ): RegionForecast[] {
-  // Calculate total coefficient to normalize percentages
-  const totalCoeff = Object.values(coefficients).reduce((a, b) => a + b, 0);
+  if (!regionalCoefficients.length || totalRegionalCoefficient === 0) {
+    return [];
+  }
 
-  return Object.entries(coefficients).map(([region, coeff]) => {
-    // Calculate region population based on coefficient
-    const regionPopulation = (totalPopulation * coeff) / totalCoeff;
-    
-    // Apply gender split
-    const genderSplit = applyGenderSplit(region, regionPopulation);
-    
-    // Calculate percent share
-    const percent = Number(((coeff / totalCoeff) * 100).toFixed(2));
-    
-    // Calculate bounds if provided (±3% of region population)
-    const regionLowerBound = lowerBound 
-      ? Math.round((lowerBound * coeff) / totalCoeff)
+  return regionalCoefficients.map(({ code, name, label, coefficient }) => {
+    const regionPopulation = (totalPopulation * coefficient) / totalRegionalCoefficient;
+    const genderSplit = applyGenderSplit(name, regionPopulation);
+    const percent = Number(((coefficient / totalRegionalCoefficient) * 100).toFixed(2));
+
+    const regionLowerBound = lowerBound
+      ? Math.round((lowerBound * coefficient) / totalRegionalCoefficient)
       : Math.round(regionPopulation * 0.97);
     const regionUpperBound = upperBound
-      ? Math.round((upperBound * coeff) / totalCoeff)
+      ? Math.round((upperBound * coefficient) / totalRegionalCoefficient)
       : Math.round(regionPopulation * 1.03);
 
     return {
-      region,
+      code,
+      region: name,
+      label,
       population: Math.round(regionPopulation),
       male: genderSplit.male,
       female: genderSplit.female,

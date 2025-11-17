@@ -1,14 +1,29 @@
-{
-  "Kyiv": 3.7,
-  "Lviv": 3.1,
-  "Odesa": 3.2,
-  "Kharkiv": 4.0,
-  "Dnipro": 3.6,
-  "Zaporizhzhia": 2.8,
-  "Poltava": 2.4,
-  "Vinnytsia": 2.5,
-  "Chernihiv": 2.0,
-  "Zhytomyr": 2.2,
-  "Other": 70.5
-}
+[
+  { "code": "UA-43", "name": "Autonomous Republic of Crimea", "label": "Автономна Республіка Крим", "coefficient": 3.8 },
+  { "code": "UA-71", "name": "Cherkasy Oblast", "label": "Черкаська", "coefficient": 3.4 },
+  { "code": "UA-74", "name": "Chernihiv Oblast", "label": "Чернігівська", "coefficient": 3.1 },
+  { "code": "UA-77", "name": "Chernivtsi Oblast", "label": "Чернівецька", "coefficient": 1.9 },
+  { "code": "UA-12", "name": "Dnipropetrovsk Oblast", "label": "Дніпропетровська", "coefficient": 7.4 },
+  { "code": "UA-14", "name": "Donetsk Oblast", "label": "Донецька", "coefficient": 8.6 },
+  { "code": "UA-26", "name": "Ivano-Frankivsk Oblast", "label": "Івано-Франківська", "coefficient": 3.6 },
+  { "code": "UA-63", "name": "Kharkiv Oblast", "label": "Харківська", "coefficient": 6.6 },
+  { "code": "UA-65", "name": "Kherson Oblast", "label": "Херсонська", "coefficient": 2.6 },
+  { "code": "UA-68", "name": "Khmelnytskyi Oblast", "label": "Хмельницька", "coefficient": 3.4 },
+  { "code": "UA-30", "name": "Kyiv (City)", "label": "Київ (місто)", "coefficient": 5.9 },
+  { "code": "UA-35", "name": "Kirovohrad Oblast", "label": "Кіровоградська", "coefficient": 2.4 },
+  { "code": "UA-32", "name": "Kyiv Oblast", "label": "Київська", "coefficient": 5.7 },
+  { "code": "UA-09", "name": "Luhansk Oblast", "label": "Луганська", "coefficient": 4.7 },
+  { "code": "UA-46", "name": "Lviv Oblast", "label": "Львівська", "coefficient": 5.4 },
+  { "code": "UA-48", "name": "Mykolaiv Oblast", "label": "Миколаївська", "coefficient": 3.1 },
+  { "code": "UA-51", "name": "Odessa Oblast", "label": "Одеська", "coefficient": 6.1 },
+  { "code": "UA-56", "name": "Rivne Oblast", "label": "Рівненська", "coefficient": 2.5 },
+  { "code": "UA-59", "name": "Sumy Oblast", "label": "Сумська", "coefficient": 2.4 },
+  { "code": "UA-61", "name": "Ternopil Oblast", "label": "Тернопільська", "coefficient": 2.3 },
+  { "code": "UA-05", "name": "Vinnytsia Oblast", "label": "Вінницька", "coefficient": 3.4 },
+  { "code": "UA-07", "name": "Volyn Oblast", "label": "Волинська", "coefficient": 2.4 },
+  { "code": "UA-21", "name": "Zakarpattia Oblast", "label": "Закарпатська", "coefficient": 2.6 },
+  { "code": "UA-23", "name": "Zaporizhzhia Oblast", "label": "Запорізька", "coefficient": 3.8 },
+  { "code": "UA-18", "name": "Zhytomyr Oblast", "label": "Житомирська", "coefficient": 2.9 }
+]
+
 
