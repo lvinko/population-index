@@ -893,7 +893,7 @@ export default function PredictionForm() {
           </div>
 
           {/* Tabs Navigation */}
-          <div className="tabs abs-lift w-full px-2 sm:px-4 md:px-6 lg:px-8 pt-2 sm:pt-3 md:pt-4 overflow-x-auto">
+          <div className="tabs abs-lift w-full p-4 px-2 sm:px-4 md:px-6 lg:px-8 pt-2 sm:pt-3 md:pt-4 overflow-x-auto">
             <input
               type="radio"
               name="prediction-tabs"
