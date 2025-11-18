@@ -343,7 +343,7 @@ export default function PredictionForm() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="card bg-base-100 shadow-xl border border-base-300">
         <div className="card-body p-4 sm:p-6">
           <div className="mb-4">
@@ -883,9 +883,9 @@ export default function PredictionForm() {
 
       {result && (
         <div className={`bg-base-100 rounded-lg shadow-xl border border-base-300 transition-opacity duration-300 ${loading && !isInitialLoad ? 'opacity-75' : ''}`}>
-          <div className="px-4 pt-4 sm:px-6 sm:pt-6 pb-0">
+          <div className="px-3 pt-3 sm:px-4 sm:pt-4 md:px-6 md:pt-6 pb-0">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-lg font-bold text-base-content">Результати прогнозу</h3>
+              <h3 className="text-base sm:text-lg font-bold text-base-content">Результати прогнозу</h3>
               <div className="tooltip tooltip-bottom" data-tip="Візуалізація та аналіз прогнозованих даних">
                 <p className="text-base-content/60 text-xs cursor-pointer">ⓘ</p>
               </div>
@@ -893,7 +893,7 @@ export default function PredictionForm() {
           </div>
 
           {/* Tabs Navigation */}
-          <div className="tabs abs-lift w-full px-6 sm:px-8 pt-4">
+          <div className="tabs abs-lift w-full px-2 sm:px-4 md:px-6 lg:px-8 pt-2 sm:pt-3 md:pt-4 overflow-x-auto">
             <input
               type="radio"
               name="prediction-tabs"
@@ -907,14 +907,14 @@ export default function PredictionForm() {
             <label
               role="tab"
               htmlFor="tab-chart"
-              className={`tab flex items-center gap-2 ${activeTab === 'chart' ? 'tab-active' : ''}`}
+              className={`tab flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 md:px-4 ${activeTab === 'chart' ? 'tab-active' : ''}`}
             >
-              <LineChart className="w-4 h-4 sm:w-5 sm:h-5" />
+              <LineChart className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
               <span className="hidden sm:inline">Графік</span>
             </label>
             <div
               role="tabpanel"
-              className={`tab-content bg-base-100 border-base-300 rounded-box p-6 ${
+              className={`tab-content bg-base-100 border-base-300 rounded-box p-3 sm:p-4 md:p-6 ${
                 activeTab === 'chart' ? '' : 'hidden'
               }`}
             >
@@ -934,18 +934,18 @@ export default function PredictionForm() {
             <label
               role="tab"
               htmlFor="tab-regions"
-              className={`tab flex items-center gap-2 ${activeTab === 'regions' ? 'tab-active' : ''}`}
+              className={`tab flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 md:px-4 ${activeTab === 'regions' ? 'tab-active' : ''}`}
             >
-              <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+              <MapPin className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
               <span className="hidden sm:inline">Регіони</span>
             </label>
             <div
               role="tabpanel"
-              className={`tab-content bg-base-100 border-base-300 rounded-box p-6 ${
+              className={`tab-content bg-base-100 border-base-300 rounded-box p-3 sm:p-4 md:p-6 ${
                 activeTab === 'regions' ? '' : 'hidden'
               }`}
             >
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <PredictionRegionsMap regions={result.regions} />
                 {result.regions && result.regions.length > 0 ? (
                   <RegionalDistribution
@@ -986,14 +986,14 @@ export default function PredictionForm() {
             <label
               role="tab"
               htmlFor="tab-sensitivity"
-              className={`tab flex items-center gap-2 ${activeTab === 'sensitivity' ? 'tab-active' : ''}`}
+              className={`tab flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 md:px-4 ${activeTab === 'sensitivity' ? 'tab-active' : ''}`}
             >
-              <Activity className="w-4 h-4 sm:w-5 sm:h-5" />
+              <Activity className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
               <span className="hidden sm:inline">Чутливість</span>
             </label>
             <div
               role="tabpanel"
-              className={`tab-content bg-base-100 border-base-300 rounded-box p-6 ${
+              className={`tab-content bg-base-100 border-base-300 rounded-box p-3 sm:p-4 md:p-6 ${
                 activeTab === 'sensitivity' ? '' : 'hidden'
               }`}
             >
@@ -1014,14 +1014,14 @@ export default function PredictionForm() {
             <label
               role="tab"
               htmlFor="tab-summary"
-              className={`tab flex items-center gap-2 ${activeTab === 'summary' ? 'tab-active' : ''}`}
+              className={`tab flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 md:px-4 ${activeTab === 'summary' ? 'tab-active' : ''}`}
             >
-              <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+              <FileText className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
               <span className="hidden sm:inline">Підсумок</span>
             </label>
             <div
               role="tabpanel"
-              className={`tab-content bg-base-100 border-base-300 rounded-box p-6 ${
+              className={`tab-content bg-base-100 border-base-300 rounded-box p-3 sm:p-4 md:p-6 ${
                 activeTab === 'summary' ? '' : 'hidden'
               }`}
             >
