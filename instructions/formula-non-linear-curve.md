@@ -67,7 +67,7 @@ export function applySwingFactors(
 
   // 1. Economic cycle: sinusoidal oscillator (7–12 year cycles)
   const ecoCycle =
-    Math.sin((2 * Math.PI * (yearOffset + economicCyclePosition * 100)) / 9.5) * 0.015;
+    Math.sin((2 * Math.PI * (yearOffset + economicCyclePosition * 100)) / 5.5) * 0.015;
 
   // 2. Geopolitical stability affects amplitude of cycle + base rate
   const geoEffect = geopoliticalIndex * 0.01; // -1 → -1%, +1 → +1%

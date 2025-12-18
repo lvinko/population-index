@@ -31,7 +31,7 @@ export function applySwingFactors(
 
   const normalizedGdp = clamp(gdpGrowth / 5, -2, 2);
   const amplitude = VOLATILITY_BASE + Math.abs(normalizedGdp) * 0.004;
-  const cyclePeriod = clamp(9.5 - sentiment * 2, 6.5, 11.5);
+  const cyclePeriod = clamp(5.5 - sentiment * 2, 6.5, 11.5);
   const ecoCycle =
     Math.sin((2 * Math.PI * (yearOffset + economicCyclePosition * 100)) / cyclePeriod) * amplitude;
 
