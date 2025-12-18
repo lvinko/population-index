@@ -58,13 +58,16 @@ const CustomTooltip = (props: TooltipProps<number, string> & { payload: Array<{ 
         </p>
       )}
       {typeof point.growthRate === 'number' && (
-        <p className="text-base-content/80">
-          Зростання з урахуванням модифікаторів: <span className="font-semibold">{formatPercent(point.growthRate)}</span>
+        <p className={point.growthRate < 0 ? 'text-error' : 'text-base-content/80'}>
+          Зростання з урахуванням модифікаторів:{' '}
+          <span className="font-semibold">{formatPercent(point.growthRate)}</span>
+          {point.growthRate < 0 && ' ⚠️'}
         </p>
       )}
       {typeof point.shockImpact === 'number' && point.shockImpact !== 0 && (
-        <p className="text-error">
+        <p className={point.shockImpact < 0 ? 'text-error font-semibold' : 'text-success'}>
           Вплив шоку: <span className="font-semibold">{formatPercent(point.shockImpact)}</span>
+          {point.shockImpact < -0.05 && ' 🔴 Критичний вплив'}
         </p>
       )}
       {typeof point.cyclePhase === 'number' && (
@@ -102,10 +105,23 @@ function ShockDot(props: any) {
     return <circle cx={cx} cy={cy} r={3} stroke="none" fill="#2563eb" />;
   }
 
+  // Enhanced visual feedback: larger dots for more severe impacts
+  const isSevere = Math.abs(impact) > 0.05;
+  const radius = isSevere ? 7 : 5;
+  const strokeWidth = isSevere ? 3 : 2;
   const color = impact > 0 ? '#16a34a' : '#dc2626';
+  
   return (
     <g>
-      <circle cx={cx} cy={cy} r={5} stroke={color} strokeWidth={2} fill="#fff" />
+      <circle 
+        cx={cx} 
+        cy={cy} 
+        r={radius} 
+        stroke={color} 
+        strokeWidth={strokeWidth} 
+        fill={isSevere ? color : '#fff'}
+        fillOpacity={isSevere ? 0.3 : 1}
+      />
     </g>
   );
 }

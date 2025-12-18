@@ -75,18 +75,35 @@ function selectComparisonPoint(data: PopulationDataPoint[], base: PopulationData
   return base;
 }
 
-function resolveSwingInputs(inputs?: SwingInputs): SwingInputs {
-  if (!inputs) {
-    return { ...DEFAULT_SWING_INPUTS };
+function resolveSwingInputs(
+  inputs?: SwingInputs,
+  conflictIntensity?: 'peace' | 'tension' | 'war'
+): SwingInputs {
+  const base = inputs ? { ...inputs } : { ...DEFAULT_SWING_INPUTS };
+
+  // Auto-map conflict intensity to geopolitical index if not explicitly set
+  // This ensures worst-case scenarios (war) have strong negative impact
+  if (conflictIntensity && inputs?.geopoliticalIndex === undefined) {
+    switch (conflictIntensity) {
+      case 'war':
+        base.geopoliticalIndex = -0.9; // Strong negative for war
+        break;
+      case 'tension':
+        base.geopoliticalIndex = -0.3; // Moderate negative for tension
+        break;
+      case 'peace':
+        base.geopoliticalIndex = 0.5; // Positive for peace
+        break;
+    }
   }
 
   return {
-    geopoliticalIndex: inputs.geopoliticalIndex ?? DEFAULT_SWING_INPUTS.geopoliticalIndex,
+    geopoliticalIndex: base.geopoliticalIndex ?? DEFAULT_SWING_INPUTS.geopoliticalIndex,
     economicCyclePosition:
-      inputs.economicCyclePosition ?? DEFAULT_SWING_INPUTS.economicCyclePosition,
-    internationalSupport: inputs.internationalSupport ?? DEFAULT_SWING_INPUTS.internationalSupport,
-    volatility: inputs.volatility ?? DEFAULT_SWING_INPUTS.volatility,
-    shockEvents: inputs.shockEvents ?? DEFAULT_SWING_INPUTS.shockEvents,
+      base.economicCyclePosition ?? DEFAULT_SWING_INPUTS.economicCyclePosition,
+    internationalSupport: base.internationalSupport ?? DEFAULT_SWING_INPUTS.internationalSupport,
+    volatility: base.volatility ?? DEFAULT_SWING_INPUTS.volatility,
+    shockEvents: base.shockEvents ?? DEFAULT_SWING_INPUTS.shockEvents,
   };
 }
 
@@ -406,7 +423,21 @@ export async function POST(req: Request) {
       );
     }
 
-    const resolvedSwingInputs = resolveSwingInputs(input.swingInputs);
+    const resolvedSwingInputs = resolveSwingInputs(input.swingInputs, input.conflictIntensity);
+    
+    // Auto-set high negative migration for war scenarios
+    // War causes immediate mass migration/refugee flows, especially in first year
+    let effectiveMigrationChange = input.migrationChange;
+    if (input.conflictIntensity === 'war' && input.migrationChange === 0) {
+      // Automatically set to -10% for war (massive outflow - worst case scenario)
+      // This represents mass evacuation, refugee flows, and displacement
+      // User can override by manually setting migration
+      effectiveMigrationChange = -10;
+    } else if (input.conflictIntensity === 'tension' && input.migrationChange === 0) {
+      // Moderate migration outflow for tension
+      effectiveMigrationChange = -3;
+    }
+    
     const baselineChart = buildChartData(
       data,
       basePoint,
@@ -421,7 +452,13 @@ export async function POST(req: Request) {
       basePoint.year,
       input.targetYear,
       resolvedSwingInputs,
-      globalFactors
+      globalFactors,
+      {
+        birthRateChange: input.birthRateChange,
+        deathRateChange: input.deathRateChange,
+        migrationChange: effectiveMigrationChange,
+        conflictIntensity: input.conflictIntensity, // Pass conflict intensity for time-decay logic
+      }
     );
 
     let chartData = mergeWithDynamicSeries(baselineChart, dynamicProjection.series);
@@ -455,7 +492,8 @@ export async function POST(req: Request) {
       finalPredicted,
       input.targetYear,
       finalLowerBound,
-      finalUpperBound
+      finalUpperBound,
+      input.conflictIntensity
     );
 
     const runProjectionVariant = (variantInputs: SwingInputs) =>
@@ -466,7 +504,13 @@ export async function POST(req: Request) {
         basePoint.year,
         input.targetYear,
         variantInputs,
-        globalFactors
+        globalFactors,
+        {
+          birthRateChange: input.birthRateChange,
+          deathRateChange: input.deathRateChange,
+          migrationChange: effectiveMigrationChange,
+          conflictIntensity: input.conflictIntensity,
+        }
       );
 
     const sensitivity = computeSensitivityResult(
@@ -480,7 +524,7 @@ export async function POST(req: Request) {
       predictedPopulation: finalPredicted,
       growthRate: baseGrowthRate,
       adjustedRate: finalAdjustedRate,
-      message: `Swing-adjusted population for ${input.targetYear}: ${finalPredicted.toLocaleString()} (±3%)`,
+      message: `Скориговане за свінгом населення для ${input.targetYear}: ${finalPredicted.toLocaleString()} (±3%)`,
       carryingCapacity: prediction.carryingCapacity,
       lowerBound: finalLowerBound,
       upperBound: finalUpperBound,

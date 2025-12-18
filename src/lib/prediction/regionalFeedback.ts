@@ -6,18 +6,19 @@ export interface RegionalFeedback {
   supportLift: number;
 }
 
+const RECOVERY_CURVE_RATE = 5;
+const MIGRATION_DRIFT_MULTIPLIER = 0.0035;
+const SUPPORT_LIFT_MULTIPLIER = 0.002;
+const DEFAULT_REGIONAL_WEIGHT = 1;
+const FALLBACK_REGIONAL_WEIGHT = 0.2;
+
 function calculateRegionalWeight(regionsAffected?: string[]): number {
-  if (!regionsAffected || regionsAffected.length === 0) {
-    return 1;
+  if (!regionsAffected?.length) {
+    return DEFAULT_REGIONAL_WEIGHT;
   }
 
   const total = regionsAffected.reduce((sum, region) => sum + getRegionalCoefficient(region), 0);
-
-  if (total === 0) {
-    return 0.2;
-  }
-
-  return total / totalRegionalCoefficient;
+  return total > 0 ? total / totalRegionalCoefficient : FALLBACK_REGIONAL_WEIGHT;
 }
 
 export function computeRegionalFeedback(shocks: ShockEvent[] | undefined, year: number): RegionalFeedback {
@@ -35,14 +36,14 @@ export function computeRegionalFeedback(shocks: ShockEvent[] | undefined, year: 
     }
 
     const phase = distance / Math.max(1, shock.recoveryYears);
-    const recoveryCurve = 1 - Math.exp(-5 * phase);
+    const recoveryCurve = 1 - Math.exp(-RECOVERY_CURVE_RATE * phase);
     const intensity = shock.severity * recoveryCurve;
     const regionalWeight = calculateRegionalWeight(shock.regionsAffected);
 
-    migrationDrift += intensity * regionalWeight * 0.0035;
+    migrationDrift += intensity * regionalWeight * MIGRATION_DRIFT_MULTIPLIER;
 
     if (intensity > 0) {
-      supportLift += intensity * regionalWeight * 0.002;
+      supportLift += intensity * regionalWeight * SUPPORT_LIFT_MULTIPLIER;
     }
   }
 

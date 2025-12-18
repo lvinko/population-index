@@ -70,12 +70,26 @@ const normalizeInput = (values: PredictionInput): PredictionInput => ({
   },
 });
 
-function InfoHint({ text }: { text: string }) {
+function InfoHint({ text, position = 'right' }: { text: string; position?: 'right' | 'left' | 'top' | 'bottom' }) {
   return (
-    <div className="tooltip tooltip-right" data-tip={text}>
-      <Info className="w-4 h-4 text-base-content/60" aria-hidden="true" />
+    <div className={`tooltip tooltip-${position}`} data-tip={text}>
+      <Info className="w-4 h-4 text-base-content/60 cursor-help" aria-hidden="true" />
       <span className="sr-only">{text}</span>
     </div>
+  );
+}
+
+function FieldHelper({ text, variant = 'default', show = true }: { text: string; variant?: 'default' | 'warning' | 'info'; show?: boolean }) {
+  if (!show) return null;
+  const variantClasses = {
+    default: 'text-base-content/60',
+    warning: 'text-warning',
+    info: 'text-info',
+  };
+  return (
+    <p className={`text-xs mt-1 ${variantClasses[variant]}`}>
+      {text}
+    </p>
   );
 }
 
@@ -94,15 +108,18 @@ function FieldLabel({
   icon: Icon,
   text,
   hint,
+  required,
 }: {
   icon: LucideIcon;
   text: string;
   hint?: string;
+  required?: boolean;
 }) {
   return (
     <div className="flex items-center gap-2">
       <Icon className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
       <span className="label-text text-sm font-semibold">{text}</span>
+      {required && <span className="text-error text-xs">*</span>}
       {hint && <InfoHint text={hint} />}
     </div>
   );
@@ -348,7 +365,6 @@ export default function PredictionForm() {
         <div className="card-body p-4 sm:p-6">
           <div className="mb-4">
             <h2 className="text-xl font-bold text-base-content mb-1">Параметри прогнозу</h2>
-            <p className="text-xs text-base-content/70">Налаштуйте параметри для створення прогнозу населення</p>
           </div>
           
           <form className="space-y-5" onSubmit={submitForm(onSubmit)}>
@@ -360,10 +376,14 @@ export default function PredictionForm() {
                 {/* Base Year */}
                 <div className="form-control space-y-2">
                   <label className="label p-0 flex items-start justify-between gap-2" htmlFor="baseYear">
-                    <FieldLabel icon={CalendarDays} text="Базовий рік" hint="Вихідна точка, від якої починається прогноз." />
+                    <FieldLabel 
+                      icon={CalendarDays} 
+                      text="Базовий рік" 
+                      hint="Вихідна точка прогнозу. Рекомендується використовувати останній рік з наявними даними." 
+                    />
                     {latestYearData && (
                       <span className="label-text-alt text-xs text-base-content/60">
-                        (Останній доступний: {latestYearData.latestYear})
+                        (Останній: {latestYearData.latestYear})
                       </span>
                     )}
                   </label>
@@ -408,7 +428,11 @@ export default function PredictionForm() {
                 {/* Target Year */}
                 <div className="form-control space-y-2">
                   <label className="label p-0 flex items-center justify-between" htmlFor="targetYear">
-                    <FieldLabel icon={Target} text="Цільовий рік прогнозу" hint="Рік, для якого розраховується основний результат." />
+                    <FieldLabel 
+                      icon={Target} 
+                      text="Цільовий рік прогнозу" 
+                      hint="Рік, для якого розраховується прогнозоване населення." 
+                    />
                   </label>
                   <input
                     id="targetYear"
@@ -420,7 +444,7 @@ export default function PredictionForm() {
                     disabled={loading || loadingLatestYear}
                   />
                   <div className="text-xs text-base-content/60">
-                    Прогноз на {formValues.targetYear - formValues.baseYear}{' '}
+                    Прогноз на <span className="font-semibold text-primary">{formValues.targetYear - formValues.baseYear}</span>{' '}
                     {formValues.targetYear - formValues.baseYear === 1
                       ? 'рік'
                       : formValues.targetYear - formValues.baseYear < 5
@@ -439,8 +463,16 @@ export default function PredictionForm() {
                 {/* Birth Rate */}
                 <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="birthRateChange">
-                    <FieldLabel icon={Baby} text="Народжуваність" hint="Очікувана зміна народжуваності у відсотках." />
-                    <span className="label-text-alt font-bold text-primary text-lg">
+                    <FieldLabel 
+                      icon={Baby} 
+                      text="Народжуваність" 
+                      hint="Зміна народжуваності у відсотках. Позитивні значення збільшують населення, негативні зменшують." 
+                    />
+                    <span className={`label-text-alt font-bold text-lg ${
+                      formValues.birthRateChange > 0 ? 'text-success' : 
+                      formValues.birthRateChange < 0 ? 'text-error' : 
+                      'text-primary'
+                    }`}>
                       {formValues.birthRateChange > 0 ? '+' : ''}
                       {formValues.birthRateChange}%
                     </span>
@@ -457,18 +489,31 @@ export default function PredictionForm() {
                       disabled={loading}
                     />
                     <div className="w-full flex justify-between text-xs text-base-content/60 px-2">
-                      <span>-10%</span>
-                      <span>0%</span>
-                      <span>+10%</span>
+                      <span className="text-error">-10% (різке зниження)</span>
+                      <span>0% (без змін)</span>
+                      <span className="text-success">+10% (різке зростання)</span>
                     </div>
                   </div>
+                  <FieldHelper 
+                    text={formValues.birthRateChange < -5 ? '⚠️ Значне зниження народжуваності' : ''}
+                    variant="warning"
+                    show={formValues.birthRateChange < -5}
+                  />
                 </div>
 
                 {/* Death Rate */}
                 <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="deathRateChange">
-                    <FieldLabel icon={TrendingDown} text="Смертність" hint="Очікувана зміна смертності у відсотках." />
-                    <span className="label-text-alt font-bold text-secondary text-lg">
+                    <FieldLabel 
+                      icon={TrendingDown} 
+                      text="Смертність" 
+                      hint="Зміна смертності у відсотках. Позитивні значення зменшують населення, негативні збільшують." 
+                    />
+                    <span className={`label-text-alt font-bold text-lg ${
+                      formValues.deathRateChange > 0 ? 'text-error' : 
+                      formValues.deathRateChange < 0 ? 'text-success' : 
+                      'text-secondary'
+                    }`}>
                       {formValues.deathRateChange > 0 ? '+' : ''}
                       {formValues.deathRateChange}%
                     </span>
@@ -485,21 +530,48 @@ export default function PredictionForm() {
                       disabled={loading}
                     />
                     <div className="w-full flex justify-between text-xs text-base-content/60 px-2">
-                      <span>-10%</span>
-                      <span>0%</span>
-                      <span>+10%</span>
+                      <span className="text-success">-10% (покращення)</span>
+                      <span>0% (без змін)</span>
+                      <span className="text-error">+10% (погіршення)</span>
                     </div>
                   </div>
+                  <FieldHelper 
+                    text={formValues.deathRateChange > 5 ? '⚠️ Значне збільшення смертності' : ''}
+                    variant="warning"
+                    show={formValues.deathRateChange > 5}
+                  />
                 </div>
 
                 {/* Migration */}
                 <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="migrationChange">
-                    <FieldLabel icon={Plane} text="Міграція" hint="Баланс міграції: приплив або відтік населення у %." />
-                    <span className="label-text-alt font-bold text-accent text-lg">
-                      {formValues.migrationChange > 0 ? '+' : ''}
-                      {formValues.migrationChange}%
-                    </span>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <FieldLabel 
+                        icon={Plane} 
+                        text="Міграція" 
+                        hint="Баланс міграції у відсотках. Війна автоматично встановлює -10% (масовий відтік), напруженість -3%." 
+                      />
+                      {(formValues.conflictIntensity === 'war' && formValues.migrationChange === 0) || 
+                       (formValues.conflictIntensity === 'tension' && formValues.migrationChange === 0) ? (
+                        <span className="badge badge-sm badge-warning badge-outline">
+                          Авто
+                        </span>
+                      ) : null}
+                    </div>
+                    {(() => {
+                      const effectiveValue = formValues.conflictIntensity === 'war' && formValues.migrationChange === 0 ? -10 : 
+                                            formValues.conflictIntensity === 'tension' && formValues.migrationChange === 0 ? -3 :
+                                            formValues.migrationChange;
+                      return (
+                        <span className={`label-text-alt font-bold text-lg ${
+                          effectiveValue > 0 ? 'text-success' : 
+                          effectiveValue < 0 ? 'text-error' : 
+                          'text-accent'
+                        }`}>
+                          {effectiveValue > 0 ? '+' : ''}{effectiveValue}%
+                        </span>
+                      );
+                    })()}
                   </label>
                   <div className="space-y-2">
                     <input
@@ -509,15 +581,35 @@ export default function PredictionForm() {
                       max={10}
                       step={0.5}
                       {...register('migrationChange', { valueAsNumber: true })}
-                      className="range range-accent range-lg w-full"
+                      className={`range range-accent range-lg w-full ${
+                        formValues.conflictIntensity === 'war' && formValues.migrationChange === 0 ? 'opacity-60' : ''
+                      }`}
                       disabled={loading}
                     />
                     <div className="w-full flex justify-between text-xs text-base-content/60 px-2">
-                      <span>-10%</span>
+                      <span className="text-error">-10%</span>
                       <span>0%</span>
-                      <span>+10%</span>
+                      <span className="text-success">+10%</span>
                     </div>
                   </div>
+                  <FieldHelper 
+                    text={
+                      formValues.conflictIntensity === 'war' && formValues.migrationChange === 0
+                        ? '⚠️ Автоматично -10% (війна). Масовий відтік у перший рік.'
+                        : formValues.conflictIntensity === 'tension' && formValues.migrationChange === 0
+                        ? 'ℹ️ Автоматично -3% (напруженість)'
+                        : formValues.migrationChange < -5
+                        ? '⚠️ Значний відтік населення'
+                        : ''
+                    }
+                    variant={
+                      (formValues.conflictIntensity === 'war' && formValues.migrationChange === 0) || 
+                      formValues.migrationChange < -5 ? 'warning' : 'info'
+                    }
+                    show={(formValues.conflictIntensity === 'war' && formValues.migrationChange === 0) || 
+                          (formValues.conflictIntensity === 'tension' && formValues.migrationChange === 0) ||
+                          formValues.migrationChange < -5}
+                  />
                 </div>
               </div>
             </div>
@@ -529,7 +621,11 @@ export default function PredictionForm() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="economicSituation">
-                    <FieldLabel icon={TrendingUp} text="Економічна ситуація" hint="Визначає загальний економічний фон для моделі." />
+                    <FieldLabel 
+                      icon={TrendingUp} 
+                      text="Економічна ситуація" 
+                      hint="Впливає на темпи росту населення через доступність ресурсів та якість життя." 
+                    />
                   </label>
                   <select
                     id="economicSituation"
@@ -545,11 +641,18 @@ export default function PredictionForm() {
 
                 <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="conflictIntensity">
-                    <FieldLabel icon={Shield} text="Рівень конфлікту" hint="Показує силу воєнних чи безпекових ризиків." />
+                    <FieldLabel 
+                      icon={Shield} 
+                      text="Рівень конфлікту" 
+                      hint="Війна автоматично встановлює геополітичний індекс -0.9 та міграцію -8%. Прикордонні регіони матимуть додаткове зменшення на 30%." 
+                    />
                   </label>
                   <select
                     id="conflictIntensity"
-                    className="select select-bordered w-full focus:select-primary transition-colors"
+                    className={`select select-bordered w-full focus:select-primary transition-colors ${
+                      formValues.conflictIntensity === 'war' ? 'border-error' : 
+                      formValues.conflictIntensity === 'tension' ? 'border-warning' : ''
+                    }`}
                     {...register('conflictIntensity')}
                     disabled={loading}
                   >
@@ -557,11 +660,25 @@ export default function PredictionForm() {
                     <option value="tension">Напруженість</option>
                     <option value="war">Війна</option>
                   </select>
+                  <FieldHelper 
+                    text={formValues.conflictIntensity === 'war' 
+                      ? '⚠️ Війна: геополітичний індекс -0.9, міграція -8%, прикордонні регіони -30%'
+                      : formValues.conflictIntensity === 'tension'
+                      ? 'Напруженість: геополітичний індекс -0.3, міграція -3%'
+                      : ''
+                    }
+                    variant={formValues.conflictIntensity === 'war' ? 'warning' : 'info'}
+                    show={formValues.conflictIntensity !== 'peace'}
+                  />
                 </div>
 
                 <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="familySupport">
-                    <FieldLabel icon={Users} text="Підтримка сім&apos;ї" hint="Рівень внутрішньої соціальної підтримки родин." />
+                    <FieldLabel 
+                      icon={Users} 
+                      text="Підтримка сім&apos;ї" 
+                      hint="Рівень соціальної підтримки родин та доступність ресурсів. Впливає на народжуваність." 
+                    />
                   </label>
                   <select
                     id="familySupport"
@@ -584,8 +701,21 @@ export default function PredictionForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="geopoliticalIndex">
-                    <FieldLabel icon={Globe} text="Геополітичний індекс" hint="Стабільність або загрози ззовні: -1 війна, +1 спокій." />
-                    <span className="label-text-alt font-bold text-primary text-lg">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <FieldLabel 
+                        icon={Globe} 
+                        text="Геополітичний індекс" 
+                        hint="Стабільність або загрози ззовні (-1 до +1). Автоматично встановлюється на основі рівня конфлікту." 
+                      />
+                      <span className="badge badge-sm badge-info badge-outline">
+                        Авто
+                      </span>
+                    </div>
+                    <span className={`label-text-alt font-bold text-lg ${
+                      (swingInputs.geopoliticalIndex ?? 0) < -0.5 ? 'text-error' : 
+                      (swingInputs.geopoliticalIndex ?? 0) > 0.5 ? 'text-success' : 
+                      'text-primary'
+                    }`}>
                       {swingInputs.geopoliticalIndex?.toFixed(2)}
                     </span>
                   </label>
@@ -600,14 +730,19 @@ export default function PredictionForm() {
                     disabled={loading}
                   />
                   <div className="w-full flex justify-between text-xs text-base-content/60 px-2">
-                    <span>Війна</span>
-                    <span>Стабільність</span>
+                    <span className="text-error">-1 (Війна)</span>
+                    <span>0 (Нейтрально)</span>
+                    <span className="text-success">+1 (Мир)</span>
                   </div>
                 </div>
 
                 <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="economicCyclePosition">
-                    <FieldLabel icon={TrendingUp} text="Фаза економічного циклу" hint="Положення у циклі: 0 — спад, 1 — пік зростання." />
+                    <FieldLabel 
+                      icon={TrendingUp} 
+                      text="Фаза економічного циклу" 
+                      hint="Положення в економічному циклі (0 = спад, 1 = пік). Створює циклічні коливання у темпах росту." 
+                    />
                     <span className="label-text-alt font-bold text-secondary text-lg">
                       {swingInputs.economicCyclePosition?.toFixed(2)}
                     </span>
@@ -623,14 +758,19 @@ export default function PredictionForm() {
                     disabled={loading}
                   />
                   <div className="w-full flex justify-between text-xs text-base-content/60 px-2">
-                    <span>Спад</span>
-                    <span>Пік</span>
+                    <span className="text-error">0 (Спад)</span>
+                    <span>0.5 (Помірно)</span>
+                    <span className="text-success">1 (Пік)</span>
                   </div>
                 </div>
 
                 <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="internationalSupport">
-                    <FieldLabel icon={LifeBuoy} text="Міжнародна підтримка" hint="Наскільки сильна зовнішня допомога та ресурси." />
+                    <FieldLabel 
+                      icon={LifeBuoy} 
+                      text="Міжнародна підтримка" 
+                      hint="Рівень зовнішньої допомоги (0-1). Висока підтримка пом'якшує негативні ефекти конфліктів." 
+                    />
                     <span className="label-text-alt font-bold text-accent text-lg">
                       {swingInputs.internationalSupport?.toFixed(2)}
                     </span>
@@ -646,14 +786,19 @@ export default function PredictionForm() {
                     disabled={loading}
                   />
                   <div className="w-full flex justify-between text-xs text-base-content/60 px-2">
-                    <span>Низька</span>
-                    <span>Висока</span>
+                    <span className="text-error">0 (Відсутня)</span>
+                    <span>0.5 (Помірна)</span>
+                    <span className="text-success">1 (Максимальна)</span>
                   </div>
                 </div>
 
                 <div className="form-control space-y-2">
                   <label className="label p-0" htmlFor="volatility">
-                    <FieldLabel icon={Waves} text="Волатильність" hint="Ступінь випадкових коливань навколо тренду." />
+                    <FieldLabel 
+                      icon={Waves} 
+                      text="Волатильність" 
+                      hint="Ступінь випадкових коливань (0 = стабільно, 1 = хаотично). Впливає на невизначеність прогнозу." 
+                    />
                     <span className="label-text-alt font-bold text-warning text-lg">
                       {swingInputs.volatility?.toFixed(2)}
                     </span>
@@ -669,8 +814,9 @@ export default function PredictionForm() {
                     disabled={loading}
                   />
                   <div className="w-full flex justify-between text-xs text-base-content/60 px-2">
-                    <span>Стабільно</span>
-                    <span>Хаотично</span>
+                    <span className="text-success">0 (Стабільно)</span>
+                    <span>0.5 (Помірно)</span>
+                    <span className="text-warning">1 (Хаотично)</span>
                   </div>
                 </div>
               </div>
@@ -683,7 +829,11 @@ export default function PredictionForm() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div className="form-control space-y-3">
                   <label className="label p-0" htmlFor="scenarioSelect">
-                    <FieldLabel icon={FileText} text="Сценарії" />
+                    <FieldLabel 
+                      icon={FileText} 
+                      text="Сценарії" 
+                      hint="Зберігайте та завантажуйте різні набори параметрів для порівняння." 
+                    />
                   </label>
                   <div className="flex items-center gap-3 flex-wrap">
                     <select
