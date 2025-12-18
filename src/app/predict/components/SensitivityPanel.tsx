@@ -56,7 +56,7 @@ export default function SensitivityPanel({ sensitivity }: SensitivityPanelProps)
                 <XAxis dataKey="name" hide />
                 <YAxis />
                 <Tooltip
-                  formatter={(value: number) => formatNumber(value)}
+                  formatter={(value: number | undefined) => value !== undefined ? formatNumber(value) : ''}
                   labelFormatter={(label) => label}
                 />
                 <Bar dataKey="population" fill="#2563eb" />
